@@ -309,58 +309,58 @@ void BinaryLoader::LoadMaterialFromFile(MeshInfo meshes, FILE* pInFile)
 		else if (!strcmp(pstrToken, "<AlbedoColor>:"))
 		{
 			XMFLOAT4* m_xmf4AlbedoColor = new XMFLOAT4[nMaterial];
-			nReads = (UINT)::fread(&m_xmf4AlbedoColor, sizeof(float), 4, pInFile);
+			nReads = (UINT)::fread(m_xmf4AlbedoColor, sizeof(XMFLOAT4), 1, pInFile);
 
-			delete[] m_xmf4AlbedoColor;
+			//delete[] m_xmf4AlbedoColor;
 		}
 		else if (!strcmp(pstrToken, "<EmissiveColor>:"))
 		{
 			XMFLOAT4* m_xmf4EmissiveColor = new XMFLOAT4[nMaterial];
-			nReads = (UINT)::fread(&m_xmf4EmissiveColor, sizeof(float), 4, pInFile);
+			nReads = (UINT)::fread(m_xmf4EmissiveColor, sizeof(XMFLOAT4), 1, pInFile);
 
-			delete[] m_xmf4EmissiveColor;
+			//delete[] m_xmf4EmissiveColor;
 		}
 		else if (!strcmp(pstrToken, "<SpecularColor>:"))
 		{
 			XMFLOAT4* m_xmf4SpecularColor = new XMFLOAT4[nMaterial];
-			nReads = (UINT)::fread(m_xmf4SpecularColor, sizeof(float), 4, pInFile);
+			nReads = (UINT)::fread(m_xmf4SpecularColor, sizeof(XMFLOAT4), 1, pInFile);
 
-			delete[] m_xmf4SpecularColor;
+			//delete[] m_xmf4SpecularColor;
 		}
 		else if (!strcmp(pstrToken, "<Glossiness>:"))
 		{
 			float* m_fGlossiness = new float[nMaterial];
 			nReads = (UINT)::fread(m_fGlossiness, sizeof(float), 1, pInFile);
 
-			delete[] m_fGlossiness;
+			//delete[] m_fGlossiness;
 		}
 		else if (!strcmp(pstrToken, "<Smoothness>:"))
 		{
 			float* m_fSmoothness = new float[nMaterial];
 			nReads = (UINT)::fread(m_fSmoothness, sizeof(float), 1, pInFile);
 
-			delete[] m_fSmoothness;
+			//delete[] m_fSmoothness;
 		}
 		else if (!strcmp(pstrToken, "<Metallic>:"))
 		{
 			float* m_fMetallic = new float[nMaterial];
 			nReads = (UINT)::fread(m_fMetallic, sizeof(float), 1, pInFile);
 
-			delete[] m_fMetallic;
+			//delete[] m_fMetallic;
 		}
 		else if (!strcmp(pstrToken, "<SpecularHighlight>:"))
 		{
 			float* m_fSpecularHighlight = new float[nMaterial];
 			nReads = (UINT)::fread(m_fSpecularHighlight, sizeof(float), 1, pInFile);
 
-			delete[] m_fSpecularHighlight;
+			//delete[] m_fSpecularHighlight;
 		}
 		else if (!strcmp(pstrToken, "<GlossyReflection>:"))
 		{
 			float* m_fGlossyReflection = new float[nMaterial];
 			nReads = (UINT)::fread(m_fGlossyReflection, sizeof(float), 1, pInFile);
 
-			delete[] m_fGlossyReflection;
+			//delete[] m_fGlossyReflection;
 		}
 		else if (!strcmp(pstrToken, "<AlbedoMap>:"))
 		{
