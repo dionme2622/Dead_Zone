@@ -164,7 +164,7 @@ void BattleScene::LoadScene()
 
 #pragma region FBX
 	{
-		//shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\FBX\\Dragon.fbx"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\FBX\\Dragon.fbx"); // MeshData* meshData
 
 		//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 

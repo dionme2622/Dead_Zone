@@ -30,7 +30,7 @@ void Mesh::Render(uint32 instanceCount, uint32 idx)
 	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, instanceCount, 0, 0, 0);
 }
 
-void Mesh::LoadMeshFromFile(FILE*)
+shared_ptr<Mesh> Mesh::LoadMeshFromFile(FILE*)
 {
 	// TODO : 파일에서 Mesh 데이터를 읽어온다.
 }
@@ -112,4 +112,29 @@ void Mesh::CreateIndexBuffer(const vector<uint32>& buffer)
 	};
 
 	_vecIndexInfo.push_back(info);
+}
+
+shared_ptr<Mesh> Mesh::CreateBuffer(const FbxMeshInfo* meshInfo, FBXLoader& loader)
+{
+	shared_ptr<Mesh> mesh = make_shared<Mesh>();
+	mesh->CreateVertexBuffer(meshInfo->vertices);
+
+	for (const vector<uint32>& buffer : meshInfo->indices)
+	{
+		if (buffer.empty())
+		{
+			// FBX 파일이 이상하다. IndexBuffer가 없으면 에러 나니까 임시 처리
+			vector<uint32> defaultBuffer{ 0 };
+			mesh->CreateIndexBuffer(defaultBuffer);
+		}
+		else
+		{
+			mesh->CreateIndexBuffer(buffer);
+		}
+	}
+
+	if (meshInfo->hasAnimation)
+		mesh->CreateBonesAndAnimations(loader);
+
+	return mesh;
 }

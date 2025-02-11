@@ -20,6 +20,7 @@ public:
 public:
 	shared_ptr<Mesh> GetMesh() { return _mesh; };
 	shared_ptr<Material> GetMaterial(int idx = 0) { return _materials[idx]; };
+	vector<MeshRenderInfo> GetMeshRenderInfo() { return _meshRenders; };
 
 	static shared_ptr<MeshData> LoadModelFromBinary(const char* path);
 	static void LoadFrameHierarchyFromFile(shared_ptr<MeshData>, FILE*);

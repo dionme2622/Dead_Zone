@@ -61,6 +61,8 @@ void MeshData::LoadFrameHierarchyFromFile(shared_ptr<MeshData> meshData, FILE* p
 
 	int nFrame = 0, nTextures = 0;
 
+	MeshRenderInfo info = {};
+	shared_ptr<Mesh> mesh = make_shared<Mesh>();
 	// юс╫ц
 	char pstrFrameName[64] = {};
 	Matrix matrix = Matrix::Identity;
@@ -89,7 +91,8 @@ void MeshData::LoadFrameHierarchyFromFile(shared_ptr<MeshData> meshData, FILE* p
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
-			meshData->GetMesh()->LoadMeshFromFile(pInFile);
+			 info.mesh = mesh->LoadMeshFromFile(pInFile);
+			 info.mesh = Mesh::CreateBuffer();
 		}
 		else if (!strcmp(pstrToken, "<SkinningInfo>:"))
 		{
@@ -107,6 +110,8 @@ void MeshData::LoadFrameHierarchyFromFile(shared_ptr<MeshData> meshData, FILE* p
 		else if (!strcmp(pstrToken, "<Materials>:"))
 		{
 			meshData->GetMaterial()->LoadMaterialsFromFile(pInFile);
+			info.materials = meshData->GetMaterials();
+
 		}
 		else if (!strcmp(pstrToken, "<Children>:"))
 		{
@@ -123,6 +128,7 @@ void MeshData::LoadFrameHierarchyFromFile(shared_ptr<MeshData> meshData, FILE* p
 		}
 		else if (!strcmp(pstrToken, "</Frame>"))
 		{
+			meshData->GetMeshRenderInfo().push_back(info);
 			break;
 		}
 	}
