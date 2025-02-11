@@ -23,8 +23,6 @@ public:
 	vector<MeshRenderInfo> GetMeshRenderInfo() { return _meshRenders; };
 
 	static shared_ptr<MeshData> LoadModelFromBinary(const char* path);
-	static void LoadFrameHierarchyFromFile(shared_ptr<MeshData>, FILE*);
-	//static void LoadFrameHierarchyFromFile(shared_ptr<MeshData> mesh, FILE* file);
 	//virtual void Load(const wstring& path);
 	//virtual void Save(const wstring& path);
 

@@ -101,8 +101,8 @@ struct Vertex
 {
 	Vertex() {}
 
-	Vertex(Vec3 p, Vec2 u, Vec3 n, Vec3 t)
-		: pos(p), uv(u), normal(n), tangent(t)
+	Vertex(Vec3 p, Vec2 u, Vec3 n, Vec3 t, Vec3 b = Vec3(1.0f, 0.0f, 0.0f))
+		: pos(p), uv(u), normal(n), tangent(t), bitangent(b)
 	{
 	}
 
@@ -110,6 +110,7 @@ struct Vertex
 	Vec2 uv;
 	Vec3 normal;
 	Vec3 tangent;
+	Vec3 bitangent;
 };
 
 #define DECLARE_SINGLE(type)		\

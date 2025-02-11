@@ -133,6 +133,7 @@
       <Filter>Object\Component</Filter>
     </ClInclude>
     <ClInclude Include="MeshData.h" />
+    <ClInclude Include="BinaryLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -235,6 +236,7 @@
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="MeshData.cpp" />
+    <ClCompile Include="BinaryLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

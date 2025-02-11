@@ -20,13 +20,13 @@ public:
 	void Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexbuffer);
 	void Render(uint32 instanceCount = 1, uint32 idx = 0);
 	//void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
+	static shared_ptr<Mesh> CreateFromBinary(const struct MeshInfo* meshInfo, class BinaryLoader& loader);
 
-	shared_ptr<Mesh> LoadMeshFromFile(FILE*);
-	static shared_ptr<Mesh> CreateBuffer(const struct FbxMeshInfo* meshInfo, class FBXLoader& loader);
 
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);
 	void CreateIndexBuffer(const vector<uint32>& buffer);
+
 
 private:
 	ComPtr<ID3D12Resource>		_vertexBuffer;

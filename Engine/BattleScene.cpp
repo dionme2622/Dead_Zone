@@ -162,9 +162,9 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 
-#pragma region FBX
+#pragma region Model
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\FBX\\Dragon.fbx"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Cube.bin"); // MeshData* meshData
 
 		//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
