@@ -36,9 +36,9 @@ public:
 
 public:
 	void LoadModelFromBinary(const char* path);
-	void LoadFrameHierarchyFromFile(MeshInfo, FILE*);
-	void LoadMeshFromFile(MeshInfo, FILE*);
-	void LoadMaterialFromFile(MeshInfo, FILE*);
+	void LoadFrameHierarchyFromFile(FILE*);
+	void LoadMeshFromFile(MeshInfo&, FILE*);
+	void LoadMaterialFromFile(MeshInfo&, FILE*);
 
 public:
 	int32 GetMeshCount() { return static_cast<int32>(_meshes.size()); }

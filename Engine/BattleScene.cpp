@@ -87,7 +87,7 @@ void BattleScene::LoadScene()
 		obj->SetStatic(false);
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
-			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadCubeMesh();
 			meshRenderer->SetMesh(sphereMesh);
 		}
 		{
@@ -102,7 +102,7 @@ void BattleScene::LoadScene()
 		}
 		obj->AddComponent(meshRenderer);
 		//scene->AddGameObject(obj);
-		AddGameObject(obj);
+		//AddGameObject(obj);
 	}
 	
 	
@@ -164,19 +164,21 @@ void BattleScene::LoadScene()
 
 #pragma region Model
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Cube.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Prop_Ambulance_Brokendown_01.bin"); // MeshData* meshData
 
-		//vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		//for (auto& gameObject : gameObjects)
-		//{
-		//	gameObject->SetName(L"Model");
-		//	gameObject->SetCheckFrustum(false);
-		//	gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 300.f));
-		//	gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-		//	gameObject->GetTransform()->SetLocalRotation(Vec3(-90.0f, 0.0f, 0.0f));
-		//	scene->AddGameObject(gameObject);
-		//}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"Model");
+			gameObject->SetCheckFrustum(false);
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
+			gameObject->GetTransform()->SetLocalScale(Vec3(2.0f, 2.0f, 2.0f));
+			gameObject->GetTransform()->SetLocalRotation(Vec3(0.0f, 180.f, 0.0f));
+
+			AddGameObject(gameObject);
+
+		}
 	}
 #pragma endregion
 	//return scene;

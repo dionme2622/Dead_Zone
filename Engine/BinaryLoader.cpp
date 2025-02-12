@@ -19,8 +19,7 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 
 	char pstrToken[64] = { '\0' };
 
-	_meshes.push_back(MeshInfo());
-	MeshInfo& meshInfo = _meshes.back();
+
 
 	for (; ; )
 	{
@@ -28,7 +27,7 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 		{
 			if (!strcmp(pstrToken, "<Hierarchy>:"))
 			{
-				LoadFrameHierarchyFromFile(meshInfo, pInFile);
+				LoadFrameHierarchyFromFile(pInFile);
 				::ReadStringFromFile(pInFile, pstrToken); //"</Hierarchy>"
 			}
 			/*else if (!strcmp(pstrToken, "<Animation>:"))
@@ -48,13 +47,15 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 	}
 }
 
-void BinaryLoader::LoadFrameHierarchyFromFile(MeshInfo meshes, FILE* pInFile)
+void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 {
 	char pstrToken[64] = { '\0' };
 	UINT nReads = 0;
 
 	int nFrame = 0, nTextures = 0;
 
+	_meshes.push_back(MeshInfo());
+	MeshInfo& meshInfo = _meshes.back();
 	// 임시
 	char pstrFrameName[64] = {};
 	Matrix matrix = Matrix::Identity;
@@ -83,7 +84,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(MeshInfo meshes, FILE* pInFile)
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
-			LoadMeshFromFile(meshes, pInFile);
+			LoadMeshFromFile(meshInfo, pInFile);
 		}
 		else if (!strcmp(pstrToken, "<SkinningInfo>:"))
 		{
@@ -100,7 +101,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(MeshInfo meshes, FILE* pInFile)
 		}
 		else if (!strcmp(pstrToken, "<Materials>:"))
 		{
-			LoadMaterialFromFile(meshes, pInFile);
+			LoadMaterialFromFile(meshInfo, pInFile);
 		}
 		else if (!strcmp(pstrToken, "<Children>:"))
 		{
@@ -110,7 +111,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(MeshInfo meshes, FILE* pInFile)
 				for (int i = 0; i < nChilds; i++)
 				{
 					// TODO : 계층구조를 사용하여 자식의 수 만큼 파일을 재귀함수로 읽는다.
-					LoadFrameHierarchyFromFile(meshes, pInFile);
+					LoadFrameHierarchyFromFile(pInFile);
 				}
 			}
 		}
@@ -121,7 +122,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(MeshInfo meshes, FILE* pInFile)
 	}
 }
 
-void BinaryLoader::LoadMeshFromFile(MeshInfo meshes, FILE* pInFile)
+void BinaryLoader::LoadMeshFromFile(MeshInfo& meshes, FILE* pInFile)
 {
 	//// TODO : 파일에서 Mesh 데이터를 읽어온다.
 	char pstrToken[64] = { '\0' };
@@ -192,7 +193,6 @@ void BinaryLoader::LoadMeshFromFile(MeshInfo meshes, FILE* pInFile)
 			nReads = (UINT)::fread(&nTextureCoords, sizeof(int), 1, pInFile);
 			if (nTextureCoords > 0)
 			{
-				
 				XMFLOAT2* m_pxmf2TextureCoords1 = new XMFLOAT2[nTextureCoords];
 				nReads = (UINT)::fread(m_pxmf2TextureCoords1, sizeof(XMFLOAT2), nTextureCoords, pInFile);
 
@@ -281,6 +281,12 @@ void BinaryLoader::LoadMeshFromFile(MeshInfo meshes, FILE* pInFile)
 						}
 					}
 				}
+				delete[] m_pnSubSetIndices;
+				for (int i = 0; i < nSubMeshes; i++) {
+					delete[] m_ppnSubSetIndices[i];  // 각 내부 배열을 삭제
+				}
+				// 그 후, m_ppnSubSetIndices 배열을 삭제
+				delete[] m_ppnSubSetIndices;
 			}
 		}
 		else if (!strcmp(pstrToken, "</Mesh>"))
@@ -290,7 +296,7 @@ void BinaryLoader::LoadMeshFromFile(MeshInfo meshes, FILE* pInFile)
 	}
 }
 
-void BinaryLoader::LoadMaterialFromFile(MeshInfo meshes, FILE* pInFile)
+void BinaryLoader::LoadMaterialFromFile(MeshInfo& meshes, FILE* pInFile)
 {
 	char pstrToken[64] = { '\0' };
 	int nMaterial = 0;
@@ -308,59 +314,51 @@ void BinaryLoader::LoadMaterialFromFile(MeshInfo meshes, FILE* pInFile)
 		}
 		else if (!strcmp(pstrToken, "<AlbedoColor>:"))
 		{
-			XMFLOAT4* m_xmf4AlbedoColor = new XMFLOAT4[nMaterial];
-			nReads = (UINT)::fread(m_xmf4AlbedoColor, sizeof(XMFLOAT4), 1, pInFile);
+			XMFLOAT4 m_xmf4AlbedoColor;
+			nReads = (UINT)::fread(&m_xmf4AlbedoColor, sizeof(XMFLOAT4), 1, pInFile);
 
-			//delete[] m_xmf4AlbedoColor;
 		}
 		else if (!strcmp(pstrToken, "<EmissiveColor>:"))
 		{
-			XMFLOAT4* m_xmf4EmissiveColor = new XMFLOAT4[nMaterial];
-			nReads = (UINT)::fread(m_xmf4EmissiveColor, sizeof(XMFLOAT4), 1, pInFile);
+			XMFLOAT4 m_xmf4EmissiveColor;
+			nReads = (UINT)::fread(&m_xmf4EmissiveColor, sizeof(XMFLOAT4), 1, pInFile);
 
-			//delete[] m_xmf4EmissiveColor;
 		}
 		else if (!strcmp(pstrToken, "<SpecularColor>:"))
 		{
-			XMFLOAT4* m_xmf4SpecularColor = new XMFLOAT4[nMaterial];
-			nReads = (UINT)::fread(m_xmf4SpecularColor, sizeof(XMFLOAT4), 1, pInFile);
+			XMFLOAT4 m_xmf4SpecularColor;
+			nReads = (UINT)::fread(&m_xmf4SpecularColor, sizeof(XMFLOAT4), 1, pInFile);
 
-			//delete[] m_xmf4SpecularColor;
 		}
 		else if (!strcmp(pstrToken, "<Glossiness>:"))
 		{
-			float* m_fGlossiness = new float[nMaterial];
-			nReads = (UINT)::fread(m_fGlossiness, sizeof(float), 1, pInFile);
+			float m_fGlossiness;
+			nReads = (UINT)::fread(&m_fGlossiness, sizeof(float), 1, pInFile);
 
-			//delete[] m_fGlossiness;
 		}
 		else if (!strcmp(pstrToken, "<Smoothness>:"))
 		{
-			float* m_fSmoothness = new float[nMaterial];
-			nReads = (UINT)::fread(m_fSmoothness, sizeof(float), 1, pInFile);
+			float m_fSmoothness;
+			nReads = (UINT)::fread(&m_fSmoothness, sizeof(float), 1, pInFile);
 
-			//delete[] m_fSmoothness;
 		}
 		else if (!strcmp(pstrToken, "<Metallic>:"))
 		{
-			float* m_fMetallic = new float[nMaterial];
-			nReads = (UINT)::fread(m_fMetallic, sizeof(float), 1, pInFile);
+			float m_fMetallic;
+			nReads = (UINT)::fread(&m_fMetallic, sizeof(float), 1, pInFile);
 
-			//delete[] m_fMetallic;
 		}
 		else if (!strcmp(pstrToken, "<SpecularHighlight>:"))
 		{
-			float* m_fSpecularHighlight = new float[nMaterial];
-			nReads = (UINT)::fread(m_fSpecularHighlight, sizeof(float), 1, pInFile);
+			float m_fSpecularHighlight;
+			nReads = (UINT)::fread(&m_fSpecularHighlight, sizeof(float), 1, pInFile);
 
-			//delete[] m_fSpecularHighlight;
 		}
 		else if (!strcmp(pstrToken, "<GlossyReflection>:"))
 		{
-			float* m_fGlossyReflection = new float[nMaterial];
-			nReads = (UINT)::fread(m_fGlossyReflection, sizeof(float), 1, pInFile);
+			float m_fGlossyReflection;
+			nReads = (UINT)::fread(&m_fGlossyReflection, sizeof(float), 1, pInFile);
 
-			//delete[] m_fGlossyReflection;
 		}
 		else if (!strcmp(pstrToken, "<AlbedoMap>:"))
 		{

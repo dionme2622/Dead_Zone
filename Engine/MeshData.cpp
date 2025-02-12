@@ -34,8 +34,18 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		vector<shared_ptr<Material>> materials;
 		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
 		{
-			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			//shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock2", L"..\\Resources\\Texture\\SimpleApocalypse_Texture.png");
+			//shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock_Normal", L"..\\Resources\\Texture\\Cliff_Rock_normal.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			//material->SetTexture(1, texture2);
+
 			materials.push_back(material);
+
 		}
 
 		MeshRenderInfo info = {};
