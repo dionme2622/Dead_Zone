@@ -172,7 +172,7 @@ void BattleScene::LoadScene()
 		{
 			gameObject->SetName(L"Model");
 			gameObject->SetCheckFrustum(false);
-			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
+			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
 			//gameObject->GetTransform()->SetLocalScale(Vec3(2.0f, 2.0f, 2.0f));
 			//gameObject->GetTransform()->SetLocalRotation(Vec3(0.0f, 180.f, 0.0f));
 

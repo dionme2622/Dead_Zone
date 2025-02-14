@@ -75,6 +75,8 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&xmf3Rotation, sizeof(float), 3, pInFile); //Euler Angle
 			nReads = (UINT)::fread(&xmf3Scale, sizeof(float), 3, pInFile);
 			nReads = (UINT)::fread(&xmf4Rotation, sizeof(float), 4, pInFile); //Quaternion
+			meshInfo.positions = xmf3Position;
+
 		}
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
 		{

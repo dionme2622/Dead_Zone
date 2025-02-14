@@ -27,6 +27,7 @@ struct MeshInfo
 	vector<vector<uint32>>				indices;
 	vector<MaterialInfo>				materials;
 	Matrix								matrix;
+	Vec3								positions;
 };
 
 class BinaryLoader
