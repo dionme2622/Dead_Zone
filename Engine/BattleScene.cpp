@@ -164,7 +164,7 @@ void BattleScene::LoadScene()
 
 #pragma region Model
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Prop_Ambulance_Brokendown_01.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Veh_BigMonsterTruck.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -172,9 +172,9 @@ void BattleScene::LoadScene()
 		{
 			gameObject->SetName(L"Model");
 			gameObject->SetCheckFrustum(false);
-			gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
-			gameObject->GetTransform()->SetLocalScale(Vec3(2.0f, 2.0f, 2.0f));
-			gameObject->GetTransform()->SetLocalRotation(Vec3(0.0f, 180.f, 0.0f));
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(2.0f, 2.0f, 2.0f));
+			//gameObject->GetTransform()->SetLocalRotation(Vec3(0.0f, 180.f, 0.0f));
 
 			AddGameObject(gameObject);
 

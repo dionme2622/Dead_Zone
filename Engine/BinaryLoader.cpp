@@ -58,7 +58,6 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 	MeshInfo& meshInfo = _meshes.back();
 	// 임시
 	char pstrFrameName[64] = {};
-	Matrix matrix = Matrix::Identity;
 	for (; ; )
 	{
 		::ReadStringFromFile(pInFile, pstrToken);
@@ -80,7 +79,9 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
 		{
 			// TODO : Transform Local Matrix를 가져온다.
+			Matrix matrix;
 			nReads = (UINT)::fread(&matrix, sizeof(float), 16, pInFile);
+			meshInfo.matrix = matrix;
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{

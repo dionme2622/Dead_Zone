@@ -30,6 +30,8 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 
 		GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
 
+		Matrix matrix = loader.GetMesh(i).matrix;
+
 		// Material 찾아서 연동
 		vector<shared_ptr<Material>> materials;
 		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
@@ -51,6 +53,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		MeshRenderInfo info = {};
 		info.mesh = mesh;
 		info.materials = materials;
+		info.matrix = matrix;
 		meshData->_meshRenders.push_back(info);
 	}
 
@@ -68,7 +71,7 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 		gameObject->AddComponent(make_shared<Transform>());
 		gameObject->AddComponent(make_shared<MeshRenderer>());
 		gameObject->GetMeshRenderer()->SetMesh(info.mesh);
-
+		gameObject->GetTransform()->SetLocalMatrix(info.matrix);
 		for (uint32 i = 0; i < info.materials.size(); i++)
 			gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
 
@@ -83,6 +86,25 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 		v.push_back(gameObject);
 	}
 
+	//for (int i = 0; i < _meshRenders.size(); ++i)
+	//{
+	//	shared_ptr<GameObject> gameObject = make_shared<GameObject>();
+	//	MeshRenderInfo& info = _meshRenders[i];
+
+	//	if (i == 0)		// Root Object
+	//	{
+	//		gameObject->AddComponent(make_shared<Transform>());
+	//		gameObject->AddComponent(make_shared<MeshRenderer>());
+	//		gameObject->GetMeshRenderer()->SetMesh(info.mesh);
+	//		gameObject->GetTransform()->SetLocalMatrix(info.matrix);
+	//		for (uint32 i = 0; i < info.materials.size(); i++)
+	//			gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
+	//	}
+	//	else
+	//	{
+
+	//	}
+	//}
 
 	return v;
 }

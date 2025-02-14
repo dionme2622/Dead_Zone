@@ -29,7 +29,7 @@ public:
 	void SetLocalPosition(const Vec3& position) { _localPosition = position; }
 	void SetLocalRotation(const Vec3& rotation) { _localRotation = rotation; }
 	void SetLocalScale(const Vec3& scale) { _localScale = scale; }
-
+	void SetLocalMatrix(const Matrix& matrix) { _matLocal = matrix; }
 	void LookAt(const Vec3& dir);
 
 	static bool CloseEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon());
@@ -45,7 +45,7 @@ private:
 	Vec3 _localRotation = {};
 	Vec3 _localScale = { 1.f, 1.f, 1.f };
 
-	Matrix _matLocal= {};
+	Matrix _matLocal = {};
 	Matrix _matWorld = {};
 
 	weak_ptr<Transform> _parent;

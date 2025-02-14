@@ -20,7 +20,6 @@ void Transform::FinalUpdate()
 	matRotation *= Matrix::CreateRotationY(_localRotation.y);
 	matRotation *= Matrix::CreateRotationZ(_localRotation.z);
 	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
-
 	_matLocal = matScale * matRotation * matTranslation;
 	_matWorld = _matLocal;
 

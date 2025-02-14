@@ -9,6 +9,7 @@ struct MeshRenderInfo
 {
 	shared_ptr<Mesh>				mesh;
 	vector<shared_ptr<Material>>	materials;
+	Matrix							matrix;
 };
 
 class MeshData : public Object
