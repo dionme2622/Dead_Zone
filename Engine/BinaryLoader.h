@@ -2,6 +2,7 @@
 
 class Mesh;
 class Material;
+class Transform;
 
 struct MaterialInfo
 {
@@ -26,8 +27,9 @@ struct MeshInfo
 	vector<Vertex>						vertices;
 	vector<vector<uint32>>				indices;
 	vector<MaterialInfo>				materials;
-	Matrix								matrix;
-	Vec3								positions;
+	shared_ptr<Transform>				transform;
+	//Matrix								matrix;
+	//Vec3								positions;
 };
 
 class BinaryLoader
@@ -38,7 +40,7 @@ public:
 
 public:
 	void LoadModelFromBinary(const char* path);
-	void LoadFrameHierarchyFromFile(FILE*);
+	void LoadFrameHierarchyFromFile(shared_ptr<Transform>, FILE*);
 	void LoadMeshFromFile(MeshInfo&, FILE*);
 	void LoadMaterialFromFile(MeshInfo&, FILE*);
 

@@ -2,6 +2,7 @@
 #include "BinaryLoader.h"
 #include "Mesh.h"
 #include "Material.h"
+#include "Transform.h"
 
 BinaryLoader::BinaryLoader()
 {
@@ -19,6 +20,7 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 
 	char pstrToken[64] = { '\0' };
 
+	shared_ptr<Transform> parentTransform = make_shared<Transform>();
 
 
 	for (; ; )
@@ -27,7 +29,7 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 		{
 			if (!strcmp(pstrToken, "<Hierarchy>:"))
 			{
-				LoadFrameHierarchyFromFile(pInFile);
+				LoadFrameHierarchyFromFile(parentTransform, pInFile);
 				::ReadStringFromFile(pInFile, pstrToken); //"</Hierarchy>"
 			}
 			/*else if (!strcmp(pstrToken, "<Animation>:"))
@@ -47,7 +49,7 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 	}
 }
 
-void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
+void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, FILE* pInFile)
 {
 	char pstrToken[64] = { '\0' };
 	UINT nReads = 0;
@@ -75,15 +77,19 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			nReads = (UINT)::fread(&xmf3Rotation, sizeof(float), 3, pInFile); //Euler Angle
 			nReads = (UINT)::fread(&xmf3Scale, sizeof(float), 3, pInFile);
 			nReads = (UINT)::fread(&xmf4Rotation, sizeof(float), 4, pInFile); //Quaternion
-			meshInfo.positions = xmf3Position;
 
+			// Local Position 값 넣기
+			transform->SetLocalPosition(Vec3(xmf3Position));
+			transform->SetLocalRotation(Vec3(xmf3Rotation));
+			transform->SetLocalScale(Vec3(xmf3Scale));
+
+			meshInfo.transform = transform;
 		}
 		else if (!strcmp(pstrToken, "<TransformMatrix>:"))
 		{
-			// TODO : Transform Local Matrix를 가져온다.
 			Matrix matrix;
 			nReads = (UINT)::fread(&matrix, sizeof(float), 16, pInFile);
-			meshInfo.matrix = matrix;
+			//meshInfo.matrix = matrix;
 		}
 		else if (!strcmp(pstrToken, "<Mesh>:"))
 		{
@@ -113,8 +119,10 @@ void BinaryLoader::LoadFrameHierarchyFromFile(FILE* pInFile)
 			{
 				for (int i = 0; i < nChilds; i++)
 				{
-					// TODO : 계층구조를 사용하여 자식의 수 만큼 파일을 재귀함수로 읽는다.
-					LoadFrameHierarchyFromFile(pInFile);
+					// TODO : 계층구조를 사용하여 자식의 수 만큼 파일을 재귀함수로 읽는다
+					shared_ptr<Transform> childTransform = make_shared<Transform>();
+					childTransform->SetParent(transform);
+					LoadFrameHierarchyFromFile(childTransform, pInFile);
 				}
 			}
 		}
@@ -320,52 +328,73 @@ void BinaryLoader::LoadMaterialFromFile(MeshInfo& meshes, FILE* pInFile)
 			XMFLOAT4 m_xmf4AlbedoColor;
 			nReads = (UINT)::fread(&m_xmf4AlbedoColor, sizeof(XMFLOAT4), 1, pInFile);
 
+			meshes.materials[nMaterial].albedo = m_xmf4AlbedoColor;
 		}
 		else if (!strcmp(pstrToken, "<EmissiveColor>:"))
 		{
 			XMFLOAT4 m_xmf4EmissiveColor;
 			nReads = (UINT)::fread(&m_xmf4EmissiveColor, sizeof(XMFLOAT4), 1, pInFile);
 
+			meshes.materials[nMaterial].emissive = m_xmf4EmissiveColor;
 		}
 		else if (!strcmp(pstrToken, "<SpecularColor>:"))
 		{
 			XMFLOAT4 m_xmf4SpecularColor;
 			nReads = (UINT)::fread(&m_xmf4SpecularColor, sizeof(XMFLOAT4), 1, pInFile);
 
+			meshes.materials[nMaterial].specular = m_xmf4SpecularColor;
 		}
 		else if (!strcmp(pstrToken, "<Glossiness>:"))
 		{
 			float m_fGlossiness;
 			nReads = (UINT)::fread(&m_fGlossiness, sizeof(float), 1, pInFile);
 
+			meshes.materials[nMaterial].glossiness = m_fGlossiness;
 		}
 		else if (!strcmp(pstrToken, "<Smoothness>:"))
 		{
 			float m_fSmoothness;
 			nReads = (UINT)::fread(&m_fSmoothness, sizeof(float), 1, pInFile);
 
+			meshes.materials[nMaterial].smoothness = m_fSmoothness;
 		}
 		else if (!strcmp(pstrToken, "<Metallic>:"))
 		{
 			float m_fMetallic;
 			nReads = (UINT)::fread(&m_fMetallic, sizeof(float), 1, pInFile);
 
+			meshes.materials[nMaterial].metalic = m_fMetallic;
 		}
 		else if (!strcmp(pstrToken, "<SpecularHighlight>:"))
 		{
 			float m_fSpecularHighlight;
 			nReads = (UINT)::fread(&m_fSpecularHighlight, sizeof(float), 1, pInFile);
 
+			meshes.materials[nMaterial].specularhighlight = m_fSpecularHighlight;
 		}
 		else if (!strcmp(pstrToken, "<GlossyReflection>:"))
 		{
 			float m_fGlossyReflection;
 			nReads = (UINT)::fread(&m_fGlossyReflection, sizeof(float), 1, pInFile);
 
+			meshes.materials[nMaterial].glossyreflection = m_fGlossyReflection;
 		}
 		else if (!strcmp(pstrToken, "<AlbedoMap>:"))
 		{
+			BYTE nStrLength = 64;
+			UINT nReads = (UINT)::fread(&nStrLength, sizeof(BYTE), 1, pInFile);
 
+			vector<char> buffer(nStrLength + 1, '\0'); // +1은 널 종료 문자 포함
+			nReads = (UINT)::fread(buffer.data(), sizeof(char), nStrLength, pInFile); // 문자열 데이터 읽기
+
+			string sTextureName;
+			for (char c : buffer) {
+				if (c == '\0') break;  // 널 종료 문자 만나면 중단
+				if (c != '@') sTextureName += c; // @이 아닌 문자만 추가
+			}
+
+			wstring wTextureName = s2ws(sTextureName); // string → wstring 변환
+			meshes.materials[nMaterial].albedoTexName = wTextureName;
 		}
 		else if (!strcmp(pstrToken, "<SpecularMap>:"))
 		{

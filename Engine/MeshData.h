@@ -4,13 +4,15 @@
 class Mesh;
 class Material;
 class GameObject;
+class Transform;
 
 struct MeshRenderInfo
 {
 	shared_ptr<Mesh>				mesh;
 	vector<shared_ptr<Material>>	materials;
-	Matrix							matrix;
-	Vec3							positions;
+	//Matrix							matrix;
+	//Vec3							positions;
+	shared_ptr<Transform>			transform;
 };
 
 class MeshData : public Object
