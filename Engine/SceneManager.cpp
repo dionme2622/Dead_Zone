@@ -12,7 +12,7 @@
 
 #include "TestCameraScript.h"
 #include "Resources.h"
-#include "Input.h"
+#include "KeyInput.h"
 #include "Player.h"
 #include "Timer.h"
 

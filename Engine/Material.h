@@ -51,7 +51,8 @@ public:
 	void SetMatrix(uint8 index, Matrix& value) { _params.matrixParams[index] = value; }
 
 	void PushGraphicsData();
-
+	void PushComputeData();
+	void Dispatch(uint32 x, uint32 y, uint32 z);
 private:
 	shared_ptr<Shader>	_shader;
 	MaterialParams		_params;

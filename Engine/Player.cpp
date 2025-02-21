@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Resources.h"
 #include "Transform.h"
-#include "Input.h"
+#include "KeyInput.h"
 #include "Timer.h"
 
 Player::Player() : Component(COMPONENT_TYPE::PLAYER)
@@ -16,6 +16,7 @@ Player::Player() : Component(COMPONENT_TYPE::PLAYER)
 	_meshRenderer = make_shared<MeshRenderer>();
 
 	_characterMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+	_characterMesh->SetName(L"player");
 	_material = make_shared<Material>();
 	_shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
 	_texture = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock", L"..\\Resources\\Texture\\Cliff_Rock_basecolor.png");
@@ -29,6 +30,7 @@ Player::Player() : Component(COMPONENT_TYPE::PLAYER)
 	_meshRenderer->SetMaterial(_material);
 
 	_obj->AddComponent(_meshRenderer);
+
 }
 
 Player::~Player()
@@ -37,21 +39,24 @@ Player::~Player()
 
 void Player::LateUpdate()
 {
-	Vec3 pos = GetTransform()->GetLocalPosition();
-
-	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-
-
-
-	GetTransform()->SetLocalPosition(pos);
+	//UpdateRotation()
 }
+
+
+
+void Player::UpdateRotation(float deltaX, float deltaY)
+{
+	// X축 회전 (Pitch, 위아래)
+	_pitch += deltaY * sensitivity;
+	_pitch = max(-90 * XM_PI / 180, min(90 * XM_PI / 180, _pitch));
+	printf("%f\r", _pitch);
+
+	_yaw += deltaX * sensitivity;
+
+	rotation.x = _pitch;
+	rotation.y = _yaw;
+	rotation.z = 0.0;
+
+	_obj->GetTransform()->SetLocalRotation(rotation);
+}
+

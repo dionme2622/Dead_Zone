@@ -105,5 +105,28 @@ float4 PS_Tex(VS_TEX_OUT input) : SV_Target
     return color;
 }
 
+VS_TEX_OUT VS_UI(VS_TEX_IN input)
+{
+    VS_TEX_OUT output = (VS_TEX_OUT) 0;
+
+    output.pos = mul(float4(input.pos, 1.f), g_matWVP);
+    output.uv = input.uv;
+
+    return output;
+}
+
+float4 PS_UI(VS_TEX_OUT input) : SV_Target
+{
+    float4 color = float4(1.f, 1.f, 1.f, 1.f);
+    if (g_tex_on_0)
+        color = g_tex_0.Sample(g_sam_0, input.uv);
+        
+    if (color.a == 0.f)
+        discard;
+
+    
+    return color;
+}
+
 
 #endif
