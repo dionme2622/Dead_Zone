@@ -2,6 +2,8 @@
 #include "Game.h"
 #include "Engine.h"
 #include "SceneManager.h"
+#include "KeyInput.h"
+
 
 void Game::Init(const WindowInfo& info)
 {
@@ -12,5 +14,6 @@ void Game::Init(const WindowInfo& info)
 
 void Game::Update()
 {
+	if (INPUT->GetButtonDown(KEY_TYPE::ESC)) exit(0);
 	GEngine->Update();
 }

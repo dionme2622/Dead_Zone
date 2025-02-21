@@ -1,21 +1,24 @@
 #include "pch.h"
-#include "TestCameraScript.h"
+#include "PlayerCameraScript.h"
+#include "Engine.h"
 #include "Transform.h"
 #include "Camera.h"
 #include "GameObject.h"
 #include "KeyInput.h"
 #include "Timer.h"
+#include "MouseInput.h"
 
-TestCameraScript::TestCameraScript()
+PlayerCameraScript::PlayerCameraScript()
 {
 }
 
-TestCameraScript::~TestCameraScript()
+PlayerCameraScript::~PlayerCameraScript()
 {
 }
 
-void TestCameraScript::LateUpdate()
+void PlayerCameraScript::LateUpdate()
 {
+
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
 	if (INPUT->GetButton(KEY_TYPE::W))
