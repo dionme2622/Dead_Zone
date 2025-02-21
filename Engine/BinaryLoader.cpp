@@ -41,6 +41,10 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 			{
 				break;
 			}*/
+			else
+			{
+				break;
+			}
 		}
 		else
 		{
@@ -56,8 +60,8 @@ void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, F
 
 	int nFrame = 0, nTextures = 0;
 
-	_meshes.push_back(MeshInfo());
-	MeshInfo& meshInfo = _meshes.back();
+	_meshes.push_back(BinaryMeshInfo());
+	BinaryMeshInfo& meshInfo = _meshes.back();
 	// 임시
 	char pstrFrameName[64] = {};
 	for (; ; )
@@ -67,7 +71,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, F
 		{
 			nFrame = ::ReadIntegerFromFile(pInFile);
 			nTextures = ::ReadIntegerFromFile(pInFile);
-			::ReadStringFromFile(pInFile, pstrFrameName);
+			::ReadStringFromFile(pInFile, meshInfo.frameName);
 		}
 		else if (!strcmp(pstrToken, "<Transform>:"))
 		{
@@ -97,16 +101,11 @@ void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, F
 		}
 		else if (!strcmp(pstrToken, "<SkinningInfo>:"))
 		{
-			//if (pnSkinnedMeshes) (*pnSkinnedMeshes)++;
+			LoadSkinInfoFromFile(meshInfo, pInFile);
 
-			//CSkinnedMesh* pSkinnedMesh = new CSkinnedMesh(pd3dDevice, pd3dCommandList);
-			//pSkinnedMesh->LoadSkinInfoFromFile(pd3dDevice, pd3dCommandList, pInFile);
-			//pSkinnedMesh->CreateShaderVariables(pd3dDevice, pd3dCommandList);
+			::ReadStringFromFile(pInFile, pstrToken); //<Mesh>:
+			if (!strcmp(pstrToken, "<Mesh>:")) LoadMeshFromFile(meshInfo, pInFile);
 
-			//::ReadStringFromFile(pInFile, pstrToken); //<Mesh>:
-			//if (!strcmp(pstrToken, "<Mesh>:")) pSkinnedMesh->LoadMeshFromFile(pd3dDevice, pd3dCommandList, pInFile);
-
-			//pGameObject->SetMesh(pSkinnedMesh);
 		}
 		else if (!strcmp(pstrToken, "<Materials>:"))
 		{
@@ -133,7 +132,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, F
 	}
 }
 
-void BinaryLoader::LoadMeshFromFile(MeshInfo& meshes, FILE* pInFile)
+void BinaryLoader::LoadMeshFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 {
 	//// TODO : 파일에서 Mesh 데이터를 읽어온다.
 	char pstrToken[64] = { '\0' };
@@ -142,8 +141,10 @@ void BinaryLoader::LoadMeshFromFile(MeshInfo& meshes, FILE* pInFile)
 	int32 vertexCount = 0;
 	UINT nReads = (UINT)::fread(&vertexCount, sizeof(int), 1, pInFile);
 
+	char name[64] = {};
+
 	meshes.vertices.resize(vertexCount);
-	::ReadStringFromFile(pInFile, meshes.name);			// Mesh의 이름 저장
+	::ReadStringFromFile(pInFile, name);			// Mesh의 이름 저장
 	// 임시
 	XMFLOAT3 temp = {};
 	for (; ; )
@@ -307,7 +308,7 @@ void BinaryLoader::LoadMeshFromFile(MeshInfo& meshes, FILE* pInFile)
 	}
 }
 
-void BinaryLoader::LoadMaterialFromFile(MeshInfo& meshes, FILE* pInFile)
+void BinaryLoader::LoadMaterialFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 {
 	char pstrToken[64] = { '\0' };
 	int nMaterial = 0;
@@ -428,11 +429,109 @@ void BinaryLoader::LoadMaterialFromFile(MeshInfo& meshes, FILE* pInFile)
 	}
 }
 
+void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
+{
+	char pstrToken[64] = { '\0' };
+	UINT nReads = 0;
+
+	char name[64] = {};
+	::ReadStringFromFile(pInFile, name);		// Mesh의 이름 저장
+
+	// 임시
+	XMFLOAT3 temp = {};
+
+	for (; ; )
+	{
+		::ReadStringFromFile(pInFile, pstrToken);
+		if (!strcmp(pstrToken, "<BonesPerVertex>:"))
+		{
+			int nBonesPerVertex = ::ReadIntegerFromFile(pInFile);
+			meshes.boneWeights.resize(nBonesPerVertex);				// 가중치 개수 만큼 vector Resize
+		}
+		else if (!strcmp(pstrToken, "<Bounds>:"))
+		{
+			nReads = (UINT)::fread(&temp, sizeof(XMFLOAT3), 1, pInFile);
+			nReads = (UINT)::fread(&temp, sizeof(XMFLOAT3), 1, pInFile);
+		}
+		else if (!strcmp(pstrToken, "<BoneNames>:"))
+		{
+			int nSkinningBones = ::ReadIntegerFromFile(pInFile);
+			if (nSkinningBones > 0)
+			{
+				_bones.resize(nSkinningBones);
+
+				for (int i = 0; i < nSkinningBones; ++i) {
+					_bones[i] = std::make_shared<BinaryBoneInfo>();
+					::ReadStringFromFile(pInFile, _bones[i]->boneName);
+				}
+			}
+		}
+		else if (!strcmp(pstrToken, "<BoneOffsets>:"))
+		{
+			int nSkinningBones = ::ReadIntegerFromFile(pInFile);
+			if (nSkinningBones > 0)
+			{
+				XMFLOAT4X4* m_pxmf4x4BindPoseBoneOffsets = new XMFLOAT4X4[nSkinningBones];
+				for (int i = 0; i < nSkinningBones; ++i) {
+					nReads = (UINT)::fread(&m_pxmf4x4BindPoseBoneOffsets[i], sizeof(XMFLOAT4X4), 1, pInFile);
+					XMMATRIX xmMatrix = XMLoadFloat4x4(&m_pxmf4x4BindPoseBoneOffsets[i]);
+					XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&_bones[i]->matOffset), xmMatrix);
+				}
+				delete[] m_pxmf4x4BindPoseBoneOffsets;
+			}
+		}
+		else if (!strcmp(pstrToken, "<BoneIndices>:"))
+		{
+			int nVertices = ::ReadIntegerFromFile(pInFile);
+			meshes.vertices.resize(nVertices);
+
+			if (nVertices > 0)
+			{
+				XMINT4* m_pxmn4BoneIndices = new XMINT4[nVertices];
+
+				nReads = (UINT)::fread(m_pxmn4BoneIndices, sizeof(XMINT4), nVertices, pInFile);
+				
+				for (UINT i = 0; i < nVertices; ++i)
+				{
+					meshes.vertices[i].indices.x = static_cast<float>(m_pxmn4BoneIndices[i].x);
+					meshes.vertices[i].indices.y = static_cast<float>(m_pxmn4BoneIndices[i].y);
+					meshes.vertices[i].indices.z = static_cast<float>(m_pxmn4BoneIndices[i].z);
+					meshes.vertices[i].indices.w = static_cast<float>(m_pxmn4BoneIndices[i].w);
+				}
+				delete[] m_pxmn4BoneIndices;
+			}
+		}
+		else if (!strcmp(pstrToken, "<BoneWeights>:"))
+		{
+
+			int nVertices = ::ReadIntegerFromFile(pInFile);
+			if (nVertices > 0)
+			{
+				XMFLOAT4* m_pxmf4BoneWeights = new XMFLOAT4[nVertices];
+
+				nReads = (UINT)::fread(m_pxmf4BoneWeights, sizeof(XMFLOAT4), nVertices, pInFile);
+				for (UINT i = 0; i < nVertices; ++i)
+				{
+					meshes.vertices[i].weights.x = static_cast<float>(m_pxmf4BoneWeights[i].x);
+					meshes.vertices[i].weights.y = static_cast<float>(m_pxmf4BoneWeights[i].y);
+					meshes.vertices[i].weights.z = static_cast<float>(m_pxmf4BoneWeights[i].z);
+					meshes.vertices[i].weights.w = static_cast<float>(m_pxmf4BoneWeights[i].w);
+				}
+				delete[] m_pxmf4BoneWeights;
+			}
+		}
+		else if (!strcmp(pstrToken, "</SkinningInfo>"))
+		{
+			break;
+		}
+	}
+}
+
 void BinaryLoader::LoadMesh(Mesh* mesh)
 {
 	// TODO : Mesh 데이터를 불러온다.
-	_meshes.push_back(MeshInfo());
-	MeshInfo& meshInfo = _meshes.back();	
+	_meshes.push_back(BinaryMeshInfo());
+	BinaryMeshInfo& meshInfo = _meshes.back();	
 
 
 }

@@ -11,6 +11,13 @@ struct IndexBufferInfo
 	uint32						count;
 };
 
+struct BoneInfo
+{
+	wstring					boneName;
+	int32					parentIdx;
+	Matrix					matOffset;
+};
+
 class Mesh : public Object
 {
 public:
@@ -20,7 +27,7 @@ public:
 	void Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexbuffer);
 	void Render(uint32 instanceCount = 1, uint32 idx = 0);
 	//void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
-	static shared_ptr<Mesh> CreateFromBinary(const struct MeshInfo* meshInfo, class BinaryLoader& loader);
+	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class BinaryLoader& loader);
 
 
 private:
@@ -34,5 +41,8 @@ private:
 	uint32 _vertexCount = 0;
 
 	vector<IndexBufferInfo>		_vecIndexInfo;
+
+	// Animation
+	vector<BoneInfo>				_bones;
 };
 

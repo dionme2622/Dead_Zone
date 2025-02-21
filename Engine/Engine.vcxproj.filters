@@ -132,8 +132,12 @@
     <ClInclude Include="Player.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
-    <ClInclude Include="MeshData.h" />
-    <ClInclude Include="BinaryLoader.h" />
+    <ClInclude Include="BinaryLoader.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshData.h">
+      <Filter>Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -235,8 +239,12 @@
     <ClCompile Include="Player.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
-    <ClCompile Include="MeshData.cpp" />
-    <ClCompile Include="BinaryLoader.cpp" />
+    <ClCompile Include="BinaryLoader.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshData.cpp">
+      <Filter>Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

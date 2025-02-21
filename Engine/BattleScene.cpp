@@ -82,8 +82,8 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
+		obj->GetTransform()->SetLocalScale(Vec3(1000.f, 1000.f, 1000.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 1000.f, 500.f));
 		obj->SetStatic(false);
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -148,9 +148,9 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
+		light->GetTransform()->SetLocalPosition(Vec3(0, -100, 0));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
+		light->GetLight()->SetLightDirection(Vec3(0, 1, 0.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
@@ -164,24 +164,21 @@ void BattleScene::LoadScene()
 
 #pragma region Model
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Veh_BigMonsterTruck.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FarmerSurvivor.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetName(L"Model");
+			gameObject->SetName(L"SA_Character_FemaleHero");
 			gameObject->SetCheckFrustum(false);
-			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
-			//gameObject->GetTransform()->SetLocalScale(Vec3(2.0f, 2.0f, 2.0f));
-			//gameObject->GetTransform()->SetLocalRotation(Vec3(0.0f, 180.f, 0.0f));
-
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(150.f, 15.f, 15.f));
 			AddGameObject(gameObject);
-
 		}
-		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-		gameObjects[0]->GetTransform()->SetLocalRotation(Vec3(0.0f, 180.f, 0.0f));
+		gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		gameObjects[23]->GetTransform()->SetLocalScale(Vec3(150.f, 15.f, 15.f));
+		//gameObjects[0]->GetTransform()->SetLocalRotation(Vec3(0.0f, 180.f, 0.0f));
 
 	}
 #pragma endregion

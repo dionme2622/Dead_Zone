@@ -31,11 +31,19 @@ void Mesh::Render(uint32 instanceCount, uint32 idx)
 	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, instanceCount, 0, 0, 0);
 }
 
-shared_ptr<Mesh> Mesh::CreateFromBinary(const MeshInfo* meshInfo, BinaryLoader& loader)
+shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLoader& loader)
 {
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
-	mesh->CreateVertexBuffer(meshInfo->vertices);
-
+	if (meshInfo->vertices.empty())
+	{
+		/*vector<Vertex> defaultBuffer{ 0 };
+		defaultBuffer.resize(1);
+		mesh->CreateVertexBuffer(defaultBuffer);*/
+	}
+	else
+	{
+		mesh->CreateVertexBuffer(meshInfo->vertices);
+	}
 	for (const vector<uint32>& buffer : meshInfo->indices)
 	{
 		if (buffer.empty())

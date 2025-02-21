@@ -111,6 +111,8 @@ struct Vertex
 	Vec3 normal;
 	Vec3 tangent;
 	Vec3 bitangent;
+	Vec4 weights;
+	Vec4 indices;
 };
 
 #define DECLARE_SINGLE(type)		\
