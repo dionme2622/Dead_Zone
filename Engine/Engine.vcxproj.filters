@@ -138,6 +138,9 @@
     <ClInclude Include="MeshData.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="StructedBuffer.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -244,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="MeshData.cpp">
       <Filter>Object</Filter>
+    </ClCompile>
+    <ClCompile Include="StructedBuffer.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -164,7 +164,7 @@ void BattleScene::LoadScene()
 
 #pragma region Model
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FarmerSurvivor.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 

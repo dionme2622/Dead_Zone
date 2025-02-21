@@ -2,6 +2,7 @@
 #include "Object.h"
 
 class Material;
+class StructuredBuffer;
 
 struct IndexBufferInfo
 {
@@ -16,6 +17,23 @@ struct BoneInfo
 	wstring					boneName;
 	int32					parentIdx;
 	Matrix					matOffset;
+};
+
+struct KeyFrameInfo
+{
+	double	time;
+	int32	frame;
+	Vec3	scale;
+	Vec4	rotation;
+	Vec3	translate;
+};
+
+struct AnimClipInfo
+{
+	wstring							animName;
+	int32							frameCount;
+	double							duration;
+	vector<vector<KeyFrameInfo>>	keyFrames;
 };
 
 class Mesh : public Object
@@ -43,6 +61,10 @@ private:
 	vector<IndexBufferInfo>		_vecIndexInfo;
 
 	// Animation
+	vector<AnimClipInfo>			_animClips;
 	vector<BoneInfo>				_bones;
+
+	shared_ptr<StructuredBuffer>	_offsetBuffer; // 각 뼈의 offset 행렬
+	vector<shared_ptr<StructuredBuffer>> _frameBuffer; // 전체 본 프레임 정보
 };
 
