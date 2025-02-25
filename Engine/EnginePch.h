@@ -167,7 +167,13 @@ struct TransformParams
 	Matrix matWV;
 	Matrix matWVP;
 	Matrix matViewInv;
+};
 
+struct AnimFrameParams
+{
+	Vec4	scale;
+	Vec4	rotation; // Quaternion
+	Vec4	translation;
 };
 
 // Utils

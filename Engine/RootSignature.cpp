@@ -48,8 +48,8 @@ void RootSignature::CreateComputeRootSignature()
 
 	ComPtr<ID3DBlob> blobSignature;
 	ComPtr<ID3DBlob> blobError;
-	::D3D12SerializeRootSignature(&sigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &blobSignature, &blobError);
-	HRESULT hResult = DEVICE->CreateRootSignature(0, blobSignature->GetBufferPointer(), blobSignature->GetBufferSize(), IID_PPV_ARGS(&_computeRootSignature));
+	HRESULT hResult = ::D3D12SerializeRootSignature(&sigDesc, D3D_ROOT_SIGNATURE_VERSION_1, &blobSignature, &blobError);
+	hResult = DEVICE->CreateRootSignature(0, blobSignature->GetBufferPointer(), blobSignature->GetBufferSize(), IID_PPV_ARGS(&_computeRootSignature));
 
 	COMPUTE_CMD_LIST->SetComputeRootSignature(_computeRootSignature.Get());
 }

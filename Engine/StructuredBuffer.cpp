@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "StructedBuffer.h"
+#include "StructuredBuffer.h"
 #include "Engine.h"
 
 StructuredBuffer::StructuredBuffer()

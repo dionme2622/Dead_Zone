@@ -32,16 +32,11 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 				LoadFrameHierarchyFromFile(parentTransform, pInFile);
 				::ReadStringFromFile(pInFile, pstrToken); //"</Hierarchy>"
 			}
-			/*else if (!strcmp(pstrToken, "<Animation>:"))
+			else if (!strcmp(pstrToken, "<Animation>:"))
 			{
-				CGameObject::LoadAnimationFromFile(pInFile, pLoadedModel);
-				pLoadedModel->PrepareSkinning();
+				LoadAnimationFromFile(pInFile);
 			}
 			else if (!strcmp(pstrToken, "</Animation>:"))
-			{
-				break;
-			}*/
-			else
 			{
 				break;
 			}
@@ -437,9 +432,10 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 	char name[64] = {};
 	::ReadStringFromFile(pInFile, name);		// Mesh의 이름 저장
 
+	meshes.hasAnimation = true;
 	// 임시
 	XMFLOAT3 temp = {};
-
+	
 	for (; ; )
 	{
 		::ReadStringFromFile(pInFile, pstrToken);
@@ -461,8 +457,11 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 				_bones.resize(nSkinningBones);
 
 				for (int i = 0; i < nSkinningBones; ++i) {
+					char name[64] = {};
 					_bones[i] = std::make_shared<BinaryBoneInfo>();
-					::ReadStringFromFile(pInFile, _bones[i]->boneName);
+					::ReadStringFromFile(pInFile, name);
+					string sboneName(name);
+					_bones[i]->boneName = s2ws(sboneName);
 				}
 			}
 		}
@@ -474,10 +473,9 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 				XMFLOAT4X4* m_pxmf4x4BindPoseBoneOffsets = new XMFLOAT4X4[nSkinningBones];
 				for (int i = 0; i < nSkinningBones; ++i) {
 					nReads = (UINT)::fread(&m_pxmf4x4BindPoseBoneOffsets[i], sizeof(XMFLOAT4X4), 1, pInFile);
-					XMMATRIX xmMatrix = XMLoadFloat4x4(&m_pxmf4x4BindPoseBoneOffsets[i]);
-					XMStoreFloat4x4(reinterpret_cast<XMFLOAT4X4*>(&_bones[i]->matOffset), xmMatrix);
+					_bones[i]->matOffset = XMLoadFloat4x4(&m_pxmf4x4BindPoseBoneOffsets[i]);
 				}
-				delete[] m_pxmf4x4BindPoseBoneOffsets;
+			delete[] m_pxmf4x4BindPoseBoneOffsets;
 			}
 		}
 		else if (!strcmp(pstrToken, "<BoneIndices>:"))
@@ -527,13 +525,99 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 	}
 }
 
+void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
+{
+	char pstrToken[64] = { '\0' };
+	vector<wstring> frameName;
+	UINT nReads = 0;
+
+	int32 animCount = 0;
+	int32 frameCount = 0;
+	for (; ; )
+	{
+		::ReadStringFromFile(pInFile, pstrToken);
+		if (!strcmp(pstrToken, "<AnimationSets>:"))
+		{
+			animCount = ::ReadIntegerFromFile(pInFile);
+			//_animClips.resize(animCount);
+		}
+		else if (!strcmp(pstrToken, "<FrameNames>:"))
+		{
+			frameCount = ::ReadIntegerFromFile(pInFile);
+
+			for (int j = 0; j < frameCount; j++)
+			{
+				::ReadStringFromFile(pInFile, pstrToken);
+				string name(pstrToken);
+				frameName.push_back(s2ws(name));
+			}
+		}
+		else if (!strcmp(pstrToken, "<AnimationSet>:"))
+		{
+			int animIndex = ::ReadIntegerFromFile(pInFile);
+			shared_ptr<BinaryAnimClipInfo> animClip = make_shared<BinaryAnimClipInfo>();
+
+			char name[32] = {};
+			::ReadStringFromFile(pInFile, name); //Animation Set Name
+			string animName(name);
+
+			float fLength = ::ReadFloatFromFile(pInFile);
+			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);
+			int nKeyFrames = ::ReadIntegerFromFile(pInFile);
+
+
+			animClip->name = s2ws(animName);
+			animClip->duration = fLength;;
+			animClip->frameCount = nKeyFrames;
+			animClip->keyFrames.resize(nKeyFrames); // 키프레임 개수만큼
+
+
+			for (int i = 0; i < nKeyFrames; i++)
+			{
+				animClip->keyFrames[i].resize(_bones.size());
+				::ReadStringFromFile(pInFile, pstrToken);
+				if (!strcmp(pstrToken, "<Transforms>:"))
+				{
+					vector<BinaryKeyFrameInfo> keyFrameInfo(frameCount);
+					int nKey = ::ReadIntegerFromFile(pInFile); //i
+					float fKeyTime = ::ReadFloatFromFile(pInFile);
+
+					XMFLOAT4X4* matrix = new XMFLOAT4X4[frameCount];
+					for (int j = 0; j < frameCount; ++j)
+					{
+						keyFrameInfo[j].time = fKeyTime;
+						nReads = (UINT)::fread(&matrix[j], sizeof(XMFLOAT4X4), 1, pInFile);
+						keyFrameInfo[j].matTransform = XMLoadFloat4x4(&matrix[j]);
+						// 뼈 인덱스와 애니메이션 프레임 인덱스를 맞춰야한다. 이름으로 비교하면서
+						for (int b = 0; b < _bones.size(); ++b)
+						{
+							if (frameName[j] == _bones[b]->boneName)
+							{
+								keyFrameInfo[j].boneName = frameName[j];
+								animClip->keyFrames[i][b] = keyFrameInfo[j];
+								break;
+							}
+						}
+					}
+					delete[] matrix;
+				}
+			}
+			_animClips.push_back(animClip);
+
+		}
+		else if (!strcmp(pstrToken, "</AnimationSets>"))
+		{
+			break;
+		}
+	}
+}
+
+
 void BinaryLoader::LoadMesh(Mesh* mesh)
 {
 	// TODO : Mesh 데이터를 불러온다.
 	_meshes.push_back(BinaryMeshInfo());
 	BinaryMeshInfo& meshInfo = _meshes.back();	
-
-
 }
 
 void BinaryLoader::LoadMaterial(Material* surfaceMaterial)

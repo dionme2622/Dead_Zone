@@ -138,8 +138,14 @@
     <ClInclude Include="MeshData.h">
       <Filter>Object</Filter>
     </ClInclude>
-    <ClInclude Include="StructedBuffer.h">
+    <ClInclude Include="StructuredBuffer.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="TestAnimation.h">
+      <Filter>Object\Test</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -248,8 +254,14 @@
     <ClCompile Include="MeshData.cpp">
       <Filter>Object</Filter>
     </ClCompile>
-    <ClCompile Include="StructedBuffer.cpp">
+    <ClCompile Include="StructuredBuffer.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAnimation.cpp">
+      <Filter>Object\Test</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -277,6 +289,15 @@
       <Filter>Shader</Filter>
     </FxCompile>
     <FxCompile Include="..\Resources\Shader\shadow.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\compute.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\animation.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="..\Resources\Shader\math.fx">
       <Filter>Shader</Filter>
     </FxCompile>
   </ItemGroup>

@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "Material.h"
 #include "BinaryLoader.h"
+#include "StructuredBuffer.h"
 
 Mesh::Mesh() : Object(OBJECT_TYPE::MESH)
 {
@@ -34,15 +35,10 @@ void Mesh::Render(uint32 instanceCount, uint32 idx)
 shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLoader& loader)
 {
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
-	if (meshInfo->vertices.empty())
-	{
-		/*vector<Vertex> defaultBuffer{ 0 };
-		defaultBuffer.resize(1);
-		mesh->CreateVertexBuffer(defaultBuffer);*/
-	}
-	else
+	if (!meshInfo->vertices.empty())
 	{
 		mesh->CreateVertexBuffer(meshInfo->vertices);
+
 	}
 	for (const vector<uint32>& buffer : meshInfo->indices)
 	{
@@ -58,8 +54,8 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 		}
 	}
 
-	/*if (meshInfo->hasAnimation)
-		mesh->CreateBonesAndAnimations(loader);*/
+	if (meshInfo->hasAnimation)
+		mesh->CreateBonesAndAnimations(loader);
 
 	return mesh;
 }
@@ -142,5 +138,105 @@ void Mesh::CreateIndexBuffer(const vector<uint32>& buffer)
 	};
 
 	_vecIndexInfo.push_back(info);
+}
+
+void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
+{
+#pragma region AnimClip
+	uint32 frameCount = 0;
+	vector<shared_ptr<BinaryAnimClipInfo>>& animClips = loader.GetAnimClip();
+	for (shared_ptr<BinaryAnimClipInfo>& ac : animClips)
+	{
+		AnimClipInfo info = {};
+
+		info.animName = ac->name;
+		info.duration = ac->duration;
+
+		info.frameCount = ac->frameCount;
+
+		info.keyFrames.resize(ac->keyFrames.size());
+		const int32 keyFrameCount = static_cast<int32>(ac->keyFrames.size());
+		for (int32 f = 0; f < keyFrameCount; f++)
+		{
+			auto& vec = ac->keyFrames[f];
+
+			const int32 boneCount = vec.size();
+			info.keyFrames[f].resize(boneCount);
+
+			for (int32 b = 0; b < boneCount; b++)
+			{
+				XMVECTOR scale, rotation, translation;
+				BinaryKeyFrameInfo& kf = vec[b]; // = ac->keyFrames[f][b]
+				// Binary에서 파싱한 정보들로 채워준다
+				KeyFrameInfo& kfInfo = info.keyFrames[f][b];
+				kfInfo.boneName = kf.boneName;
+				kfInfo.time = kf.time;
+				XMMatrixDecompose(&scale, &rotation, &translation, kf.matTransform);
+				kfInfo.scale = scale;
+				kfInfo.rotation = rotation;
+				kfInfo.translate = translation;
+			}
+		}	
+
+		_animClips.push_back(info);
+	}
+#pragma endregion
+
+#pragma region Bones
+	vector<shared_ptr<BinaryBoneInfo>>& bones = loader.GetBones();
+	for (shared_ptr<BinaryBoneInfo>& bone : bones)
+	{
+		BoneInfo boneInfo = {};
+		boneInfo.matOffset = bone->matOffset;
+		boneInfo.boneName = bone->boneName;
+		_bones.push_back(boneInfo);
+	}
+#pragma endregion
+
+#pragma region SkinData
+	if (IsAnimMesh())
+	{
+		// BoneOffet 행렬
+		const int32 boneCount = static_cast<int32>(_bones.size());
+		vector<Matrix> offsetVec(boneCount);
+		for (size_t b = 0; b < boneCount; b++)
+			offsetVec[b] = _bones[b].matOffset;
+
+		// OffsetMatrix StructuredBuffer 세팅
+		_offsetBuffer = make_shared<StructuredBuffer>();
+		_offsetBuffer->Init(sizeof(Matrix), static_cast<uint32>(offsetVec.size()), offsetVec.data());
+
+		const int32 animCount = static_cast<int32>(_animClips.size());
+		for (int32 i = 0; i < animCount; i++)
+		{
+			AnimClipInfo& animClip = _animClips[i];
+
+			// 애니메이션 프레임 정보
+			vector<AnimFrameParams> frameParams;
+			frameParams.resize(animClip.frameCount * _bones.size());
+
+			const int32 keyFrameCount = static_cast<int32>(animClip.frameCount);
+			for (int32 f = 0; f < keyFrameCount; f++)			// n번째 뼈에서 m번 프레임(시간)의 행렬들
+			{												// n번째 프레임에서 m번 뼈의 행렬들
+				for (int32 b = 0; b < boneCount; b++)
+				{
+					int32 idx = static_cast<int32>(keyFrameCount * b + f);
+
+					//frameParams[idx] = animClip.keyFrames[f][b].matTransform;
+					frameParams[idx] = AnimFrameParams
+					{
+						animClip.keyFrames[f][b].scale,
+						animClip.keyFrames[f][b].rotation, // Quaternion
+						animClip.keyFrames[f][b].translate
+					};
+				}
+			}
+
+			// StructuredBuffer 세팅
+			_frameBuffer.push_back(make_shared<StructuredBuffer>());
+			_frameBuffer.back()->Init(sizeof(AnimFrameParams), static_cast<uint32>(frameParams.size()), frameParams.data());
+		}
+	}
+#pragma endregion
 }
 

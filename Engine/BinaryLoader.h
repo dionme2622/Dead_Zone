@@ -65,9 +65,23 @@ struct BinaryMeshInfo
 
 struct BinaryBoneInfo
 {
-	char					boneName[64];
-	int32					parentIndex;
+	wstring					boneName;
 	Matrix					matOffset;
+};
+
+struct BinaryKeyFrameInfo
+{
+	wstring		boneName;
+	Matrix		matTransform;
+	double		time;
+};
+
+struct BinaryAnimClipInfo
+{
+	wstring								name;
+	double								duration;
+	int32								frameCount;
+	vector<vector<BinaryKeyFrameInfo>>	keyFrames;
 };
 
 class BinaryLoader
@@ -82,18 +96,23 @@ public:
 	void LoadMeshFromFile(BinaryMeshInfo&, FILE*);
 	void LoadMaterialFromFile(BinaryMeshInfo&, FILE*);
 	void LoadSkinInfoFromFile(BinaryMeshInfo&, FILE*);
+	void LoadAnimationFromFile(FILE*);
 
 public:
 	int32 GetMeshCount() { return static_cast<int32>(_meshes.size()); }
 	const BinaryMeshInfo& GetMesh(int32 idx) { return _meshes[idx]; }
 
+	vector<shared_ptr<BinaryBoneInfo>>& GetBones() { return _bones; }
+	vector<shared_ptr<BinaryAnimClipInfo>>& GetAnimClip() { return _animClips; }
 private:
 	void LoadMesh(Mesh* mesh);
 	void LoadMaterial(Material* surfaceMaterial);
 
 private:
 	vector<BinaryMeshInfo>					_meshes;
-	vector<shared_ptr<BinaryBoneInfo>>			_bones;
+	vector<shared_ptr<BinaryBoneInfo>>		_bones;
+	vector<shared_ptr<BinaryAnimClipInfo>>	_animClips;
+
 
 };
 

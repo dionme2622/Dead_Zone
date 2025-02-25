@@ -5,7 +5,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "MonoBehaviour.h"
-
+#include "Animator.h"
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
 
@@ -98,6 +98,12 @@ shared_ptr<MeshRenderer> GameObject::GetMeshRenderer()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::MESH_RENDERER);
 	return static_pointer_cast<MeshRenderer>(component);
+}
+
+shared_ptr<Animator> GameObject::GetAnimator()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::ANIMATOR);
+	return static_pointer_cast<Animator>(component);
 }
 
 shared_ptr<Camera> GameObject::GetCamera()

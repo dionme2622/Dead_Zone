@@ -15,24 +15,25 @@ struct IndexBufferInfo
 struct BoneInfo
 {
 	wstring					boneName;
-	int32					parentIdx;
 	Matrix					matOffset;
 };
 
 struct KeyFrameInfo
 {
+	wstring boneName;
 	double	time;
-	int32	frame;
-	Vec3	scale;
+	//int32	frame;
+	//Matrix  matTransform;
+	Vec4	scale;
 	Vec4	rotation;
-	Vec3	translate;
+	Vec4	translate;
 };
 
 struct AnimClipInfo
 {
 	wstring							animName;
-	int32							frameCount;
 	double							duration;
+	int32							frameCount;
 	vector<vector<KeyFrameInfo>>	keyFrames;
 };
 
@@ -51,8 +52,18 @@ public:
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);
 	void CreateIndexBuffer(const vector<uint32>& buffer);
+	void CreateBonesAndAnimations(class BinaryLoader& loader);
 
 
+public:
+	uint32 GetSubsetCount() { return static_cast<uint32>(_vecIndexInfo.size()); }
+	const vector<BoneInfo>* GetBones() { return &_bones; }
+	uint32						GetBoneCount() { return static_cast<uint32>(_bones.size()); }
+	const vector<AnimClipInfo>* GetAnimClip() { return &_animClips; }
+
+	bool							IsAnimMesh() { return !_animClips.empty(); }
+	shared_ptr<StructuredBuffer>	GetBoneFrameDataBuffer(int32 index = 0) { return _frameBuffer[index]; } // 전체 본 프레임 정보
+	shared_ptr<StructuredBuffer>	GetBoneOffsetBuffer() { return  _offsetBuffer; }
 private:
 	ComPtr<ID3D12Resource>		_vertexBuffer;
 	D3D12_VERTEX_BUFFER_VIEW	_vertexBufferView = {};
