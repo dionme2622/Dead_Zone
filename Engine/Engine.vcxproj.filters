@@ -163,7 +163,7 @@
       <Filter>Object\Component</Filter>
     </ClInclude>
     <ClInclude Include="TestAnimation.h">
-      <Filter>Object\Test</Filter>
+      <Filter>Object\Script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -294,7 +294,7 @@
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="TestAnimation.cpp">
-      <Filter>Object\Test</Filter>
+      <Filter>Object\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

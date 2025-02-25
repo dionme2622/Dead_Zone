@@ -77,9 +77,7 @@ private:
 	void CreateDomainShader(const wstring& path, const string& name, const string& version);
 	void CreateGeometryShader(const wstring& path, const string& name, const string& version);
 	void CreatePixelShader(const wstring& path, const string& name, const string& version);
-	void CreateGeometryShader(const wstring& path, const string& name, const string& version);
 
-	D3D12_PRIMITIVE_TOPOLOGY_TYPE GetTopologyType(D3D_PRIMITIVE_TOPOLOGY topology);
 
 private:
 	ShaderInfo _info;
@@ -91,7 +89,6 @@ private:
 	ComPtr<ID3DBlob>					_dsBlob;
 	ComPtr<ID3DBlob>					_gsBlob;
 	ComPtr<ID3DBlob>					_psBlob;
-	ComPtr<ID3DBlob>					_gsBlob;
 	ComPtr<ID3DBlob>					_errBlob;
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC  _graphicsPipelineDesc = {};
 

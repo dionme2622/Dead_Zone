@@ -360,7 +360,7 @@ void Resources::CreateDefaultShader()
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info, "VS_UI", "PS_UI");
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info);
 		Add<Shader>(L"UI", shader);
 	}
 
@@ -462,8 +462,6 @@ void Resources::CreateDefaultShader()
 		shader->CreateComputeShader(L"..\\Resources\\Shader\\animation.fx", "CS_Main", "cs_5_0");
 		Add<Shader>(L"ComputeAnimation", shader);
 	}
-}
-
 	// Particle
 	{
 		ShaderInfo info =
@@ -475,8 +473,17 @@ void Resources::CreateDefaultShader()
 			D3D_PRIMITIVE_TOPOLOGY_POINTLIST
 		};
 
+		ShaderArg arg =
+		{
+			"VS_Main",
+			"",
+			"",
+			"GS_Main",
+			"PS_Main"
+		};
+
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\particle.fx", info, "VS_Main", "PS_Main", "GS_Main");
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\particle.fx", info, arg);
 		Add<Shader>(L"Particle", shader);
 	}
 
@@ -488,6 +495,8 @@ void Resources::CreateDefaultShader()
 	}
 
 }
+
+	
 
 void Resources::CreateDefaultMaterial()
 {

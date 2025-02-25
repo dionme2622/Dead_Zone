@@ -1,10 +1,9 @@
 #include "pch.h"
 #include "TestAnimation.h"
-#include "Input.h"
+#include "KeyInput.h"
 #include "Animator.h"
 #include "Transform.h"
 #include "Timer.h"
-
 void TestAnimation::Update()
 {
 	if (INPUT->GetButtonDown(KEY_TYPE::KEY_1))

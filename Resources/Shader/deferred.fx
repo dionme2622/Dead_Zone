@@ -14,9 +14,9 @@ struct VS_IN
     float4 weight : WEIGHT;
     float4 indices : INDICES;
 
-    row_major matrix matWorld : W;
-    row_major matrix matWV : WV;
-    row_major matrix matWVP : WVP;
+    //row_major matrix matWorld : W;
+    //row_major matrix matWV : WV;
+    //row_major matrix matWVP : WVP;
 };
 
 struct VS_OUT
