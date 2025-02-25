@@ -119,8 +119,8 @@ struct Vertex
 {
 	Vertex() {}
 
-	Vertex(Vec3 p, Vec2 u, Vec3 n, Vec3 t)
-		: pos(p), uv(u), normal(n), tangent(t)
+	Vertex(Vec3 p, Vec2 u, Vec3 n, Vec3 t, Vec3 b = Vec3(1.0f, 0.0f, 0.0f))
+		: pos(p), uv(u), normal(n), tangent(t), bitangent(b)
 	{
 	}
 
@@ -128,6 +128,9 @@ struct Vertex
 	Vec2 uv;
 	Vec3 normal;
 	Vec3 tangent;
+	Vec3 bitangent;
+	Vec4 weights;
+	Vec4 indices;
 };
 
 #define DECLARE_SINGLE(type)		\
@@ -165,7 +168,20 @@ struct TransformParams
 	Matrix matWV;
 	Matrix matWVP;
 	Matrix matViewInv;
-
 };
+
+struct AnimFrameParams
+{
+	Vec4	scale;
+	Vec4	rotation; // Quaternion
+	Vec4	translation;
+};
+
+// Utils
+wstring s2ws(const string& s);
+string ws2s(const wstring& s);
+int ReadIntegerFromFile(FILE* pInFile);
+float ReadFloatFromFile(FILE* pInFile);
+BYTE ReadStringFromFile(FILE* pInFile, char* pstrToken);
 
 extern unique_ptr<class Engine> GEngine;

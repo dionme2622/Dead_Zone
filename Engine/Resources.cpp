@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Resources.h"
 #include "Engine.h"
+#include "MeshData.h"
 
 void Resources::Init()
 {
@@ -246,6 +247,25 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 	return mesh;
 }
 
+shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
+{
+	wstring key = path;
+
+	shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	if (meshData)
+		return meshData;
+
+	// TODO: wstring -> char
+	const string& spath = ws2s(path);
+	const char* Filepath = spath.c_str();
+
+	meshData = MeshData::LoadModelFromBinary(Filepath);
+	meshData->SetName(key);
+	Add(key, meshData);
+
+	return meshData;
+}
+
 shared_ptr<Texture> Resources::CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height,
 	const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
 	D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor)
@@ -286,7 +306,8 @@ void Resources::CreateDefaultShader()
 	{
 		ShaderInfo info =
 		{
-			SHADER_TYPE::DEFERRED
+			SHADER_TYPE::DEFERRED,
+			RASTERIZER_TYPE::CULL_NONE
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
@@ -315,8 +336,17 @@ void Resources::CreateDefaultShader()
 			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE
 		};
 
+		ShaderArg arg =
+		{
+			"VS_Tex",
+			"",
+			"",
+			"",
+			"PS_Tex"
+		};
+
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info, "VS_Tex", "PS_Tex");
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info, arg);
 		Add<Shader>(L"Texture", shader);
 	}
 
@@ -344,8 +374,17 @@ void Resources::CreateDefaultShader()
 			BLEND_TYPE::ONE_TO_ONE_BLEND
 		};
 
+		ShaderArg arg =
+		{
+			"VS_DirLight",
+			"",
+			"",
+			"",
+			"PS_DirLight"
+		};
+
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, "VS_DirLight", "PS_DirLight");
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
 		Add<Shader>(L"DirLight", shader);
 	}
 
@@ -359,8 +398,17 @@ void Resources::CreateDefaultShader()
 			BLEND_TYPE::ONE_TO_ONE_BLEND
 		};
 
+		ShaderArg arg =
+		{
+			"VS_PointLight",
+			"",
+			"",
+			"",
+			"PS_PointLight"
+		};
+
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, "VS_PointLight", "PS_PointLight");
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
 		Add<Shader>(L"PointLight", shader);
 	}
 
@@ -373,8 +421,17 @@ void Resources::CreateDefaultShader()
 			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
 		};
 
+		ShaderArg arg =
+		{
+			"VS_Final",
+			"",
+			"",
+			"",
+			"PS_Final"
+		};
+
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, "VS_Final", "PS_Final");
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
 		Add<Shader>(L"Final", shader);
 	}
 
@@ -398,6 +455,14 @@ void Resources::CreateDefaultShader()
 		shader->CreateComputeShader(L"..\\Resources\\Shader\\compute.fx", "CS_Main", "cs_5_0");
 		Add<Shader>(L"ComputeShader", shader);
 	}
+
+	// ComputeAnimation
+	{
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateComputeShader(L"..\\Resources\\Shader\\animation.fx", "CS_Main", "cs_5_0");
+		Add<Shader>(L"ComputeAnimation", shader);
+	}
+}
 
 	// Particle
 	{
@@ -500,5 +565,14 @@ void Resources::CreateDefaultMaterial()
 		material->SetShader(shader);
 
 		Add<Material>(L"ComputeParticle", material);
+	}
+
+	// ComputeAnimation
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeAnimation");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+
+		Add<Material>(L"ComputeAnimation", material);
 	}
 }

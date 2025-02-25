@@ -13,6 +13,8 @@
 #include "TestCameraScript.h"
 #include "Engine.h"
 #include "Resources.h"
+#include "MeshData.h"
+#include "TestAnimation.h"
 #include "MouseInput.h"
 #include "ParticleSystem.h"
 
@@ -68,6 +70,7 @@ void BattleScene::LoadScene()
 		skybox->SetLayerIndex(LayerNameToIndex(L"Battle"));
 		skybox->AddComponent(make_shared<Transform>());
 		skybox->SetCheckFrustum(false);
+		skybox->GetTransform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
 			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
@@ -218,9 +221,9 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 1000, 500));
+		light->GetTransform()->SetLocalPosition(Vec3(0, -100, 0));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
+		light->GetLight()->SetLightDirection(Vec3(0, 1, 0.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
@@ -249,6 +252,31 @@ void BattleScene::Update()
 	}
 
 	Scene::Update();
+
+
+#pragma region Model
+	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero1.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"SA_Character_FemaleHero");
+			gameObject->SetCheckFrustum(false);
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+			//gameObject->AddComponent(make_shared<TestAnimation>());
+			AddGameObject(gameObject);
+		}
+		/*gameObjects[1]->GetTransform()->SetLocalPosition(Vec3(500.f, 0.f, 0.f));
+		gameObjects[1]->GetTransform()->SetLocalScale(Vec3(500.f, 10.f, 10.f));*/
+
+		//gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0f, 200.f, 0.0f));
+
+	}
+#pragma endregion
+	//return scene;
 }
 
 
