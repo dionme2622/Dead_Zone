@@ -242,21 +242,10 @@ void BattleScene::LoadScene()
 		AddGameObject(particle);
 	}
 #pragma endregion
-}
-
-void BattleScene::Update()
-{
-	if (_player->GetGameObject())
-	{
-		GET_SINGLE(MouseInput)->Update(*_player);
-	}
-
-	Scene::Update();
-
 
 #pragma region Model
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero1.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Veh_BigMonsterTruck.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -272,11 +261,20 @@ void BattleScene::Update()
 		/*gameObjects[1]->GetTransform()->SetLocalPosition(Vec3(500.f, 0.f, 0.f));
 		gameObjects[1]->GetTransform()->SetLocalScale(Vec3(500.f, 10.f, 10.f));*/
 
-		//gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0f, 200.f, 0.0f));
-
+		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0f, 400.f, 0.0f));
+		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
 	}
 #pragma endregion
 	//return scene;
 }
 
 
+void BattleScene::Update()
+{
+	if (_player->GetGameObject())
+	{
+		GET_SINGLE(MouseInput)->Update(*_player);
+	}
+
+	Scene::Update();
+}

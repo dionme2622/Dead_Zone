@@ -21,14 +21,14 @@ void Shader::CreateGraphicsShader(const wstring& path, ShaderInfo info, ShaderAr
 	CreateVertexShader(path, arg.vs, "vs_5_0");
 	CreatePixelShader(path, arg.ps, "ps_5_0");
 
-	/*if (arg.hs.empty() == false)
+	if (arg.hs.empty() == false)
 		CreateHullShader(path, arg.hs, "hs_5_0");
 
 	if (arg.ds.empty() == false)
 		CreateDomainShader(path, arg.ds, "ds_5_0");
 
 	if (arg.gs.empty() == false)
-		CreateGeometryShader(path, arg.gs, "gs_5_0");*/
+		CreateGeometryShader(path, arg.gs, "gs_5_0");
 
 	D3D12_INPUT_ELEMENT_DESC desc[] =
 	{
