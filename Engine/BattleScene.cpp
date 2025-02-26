@@ -205,7 +205,7 @@ void BattleScene::LoadScene()
 			meshRenderer->SetMesh(mesh);
 		}
 		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"UI");
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"AimPoint", L"..\\Resources\\Texture\\AimPoint.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
@@ -245,6 +245,27 @@ void BattleScene::LoadScene()
 
 #pragma region Model
 	{
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero1.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetName(L"SA_Character_FemaleHero");
+			gameObject->SetCheckFrustum(false);
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+			//gameObject->AddComponent(make_shared<TestAnimation>());
+			AddGameObject(gameObject);
+		}
+		/*gameObjects[1]->GetTransform()->SetLocalPosition(Vec3(500.f, 0.f, 0.f));
+		gameObjects[1]->GetTransform()->SetLocalScale(Vec3(500.f, 10.f, 10.f));*/
+
+		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(-150.0f, 0.f, 0.0f));
+		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(15.f, 15.f, 15.f));
+	}
+
+	{
 		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Veh_BigMonsterTruck.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
@@ -261,8 +282,8 @@ void BattleScene::LoadScene()
 		/*gameObjects[1]->GetTransform()->SetLocalPosition(Vec3(500.f, 0.f, 0.f));
 		gameObjects[1]->GetTransform()->SetLocalScale(Vec3(500.f, 10.f, 10.f));*/
 
-		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0f, 400.f, 0.0f));
-		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(150.0f, 0.f, 0.0f));
+		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(15.f, 15.f, 15.f));
 	}
 #pragma endregion
 	//return scene;
