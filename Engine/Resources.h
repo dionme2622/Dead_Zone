@@ -30,6 +30,7 @@ public:
 	shared_ptr<Mesh> LoadCubeMesh();
 	shared_ptr<Mesh> LoadSphereMesh();
 	shared_ptr<class MeshData> LoadModelFromBinary(const wstring& path);
+	void LoadSceneFromBinary(const wstring& path);
 
 	shared_ptr<Texture> CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height,
 		const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,

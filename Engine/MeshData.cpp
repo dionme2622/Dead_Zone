@@ -76,13 +76,13 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
 
 
-			//if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
-			//{
-			//	shared_ptr<Animator> animator = make_shared<Animator>();
-			//	gameObject->AddComponent(animator);
-			//	animator->SetBones(info.mesh->GetBones());
-			//	animator->SetAnimClip(info.mesh->GetAnimClip());
-			//}
+			if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
+			{
+				shared_ptr<Animator> animator = make_shared<Animator>();
+				gameObject->AddComponent(animator);
+				animator->SetBones(info.mesh->GetBones());
+				animator->SetAnimClip(info.mesh->GetAnimClip());
+			}
 		}
 		v.push_back(gameObject);
 	}

@@ -266,6 +266,15 @@ shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
 	return meshData;
 }
 
+void Resources::LoadSceneFromBinary(const wstring& path)
+{
+	wstring name;
+	for (; ;)		// °´Ã¼ ¼ö ¸¸Å­
+	{
+		LoadModelFromBinary(L"..\\Resources\\Model\\" + name + L".bin");
+	}
+}
+
 shared_ptr<Texture> Resources::CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height,
 	const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
 	D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor)
