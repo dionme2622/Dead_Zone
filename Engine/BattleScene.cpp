@@ -221,9 +221,9 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 500, 0));
+		light->GetTransform()->SetLocalPosition(Vec3(0, 500, 500));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
+		light->GetLight()->SetLightDirection(Vec3(0, -1, -1.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
@@ -254,8 +254,10 @@ void BattleScene::LoadScene()
 		{
 			gameObject->SetName(L"SA_Character_FemaleHero");
 			gameObject->SetCheckFrustum(false);
+			gameObject->SetStatic(false);
+
 			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-			//gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+			//gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			//gameObject->AddComponent(make_shared<TestAnimation>());
 			AddGameObject(gameObject);
 		}
