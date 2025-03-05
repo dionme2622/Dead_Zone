@@ -107,7 +107,7 @@ void Engine::CreateRenderTargetGroups()
 		DXGI_FORMAT_D32_FLOAT, _window.width, _window.height,
 		CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
-
+	
 	// SwapChain Group
 	{
 		vector<RenderTarget> rtVec(SWAP_CHAIN_BUFFER_COUNT);
@@ -115,7 +115,6 @@ void Engine::CreateRenderTargetGroups()
 		for (uint32 i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 		{
 			wstring name = L"SwapChainTarget_" + std::to_wstring(i);
-
 			ComPtr<ID3D12Resource> resource;
 			_swapChain->GetSwapChain()->GetBuffer(i, IID_PPV_ARGS(&resource));
 			rtVec[i].target = GET_SINGLE(Resources)->CreateTextureFromResource(name, resource);
@@ -182,5 +181,23 @@ void Engine::CreateRenderTargetGroups()
 
 		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::LIGHTING)] = make_shared<RenderTargetGroup>();
 		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::LIGHTING)]->Create(RENDER_TARGET_GROUP_TYPE::LIGHTING, rtVec, dsTexture);
+	}
+
+	// Final Render Group
+	{
+		vector<RenderTarget> rtVec(RENDER_TARGET_BLUR_GROUP_MEMBER_COUNT);
+
+		rtVec[0].target = GET_SINGLE(Resources)->CreateTexture(L"FinalTarget",
+			DXGI_FORMAT_R8G8B8A8_UNORM, _window.width, _window.height,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+
+		shared_ptr<Texture> blurDepthTexture = GET_SINGLE(Resources)->CreateTexture(L"FinalDepthStencil",
+			DXGI_FORMAT_D32_FLOAT, _window.width, _window.height,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+
+		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::BLUR)] = make_shared<RenderTargetGroup>();
+		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::BLUR)]->Create(RENDER_TARGET_GROUP_TYPE::BLUR, rtVec, blurDepthTexture);
 	}
 }

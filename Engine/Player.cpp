@@ -37,12 +37,10 @@ Player::~Player()
 {
 }
 
-void Player::LateUpdate()
+void Player::FinalUpdate()
 {
-	//UpdateRotation()
+
 }
-
-
 
 void Player::UpdateRotation(float deltaX, float deltaY)
 {
@@ -59,4 +57,10 @@ void Player::UpdateRotation(float deltaX, float deltaY)
 
 	_obj->GetTransform()->SetLocalRotation(rotation);
 }
+
+
+
+
+
+
 

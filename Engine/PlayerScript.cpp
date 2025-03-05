@@ -8,6 +8,11 @@
 
 PlayerScript::PlayerScript()
 {
+	_speed = 1.0f;
+	_jumpVelocity = 500.0f;
+	_currentVelocity = 0.0f;
+	_gravity = 9.8f;
+	_isGrounded = true;
 }
 
 PlayerScript::~PlayerScript()
@@ -16,13 +21,22 @@ PlayerScript::~PlayerScript()
 
 void PlayerScript::LateUpdate()
 {
-	Vec3 pos = GetTransform()->GetLocalPosition();
+	UpdatePlayerInput();
 
+	UpdatePlayerOnTerrain();
+}
+
+
+
+void PlayerScript::UpdatePlayerInput()
+{
+	Vec3 pos = GetTransform()->GetLocalPosition();
+	
 	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += GetTransform()->GetLook()  * _speed * DELTA_TIME;
+		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= GetTransform()->GetLook()  * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::A))
 		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
@@ -31,13 +45,40 @@ void PlayerScript::LateUpdate()
 		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::CTRL))
-		pos -= GetTransform()->GetUp()	  * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
 
-	if (INPUT->GetButton(KEY_TYPE::SPACE))
-		pos += GetTransform()->GetUp()    * _speed * DELTA_TIME;
+	if (_isGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
+	{
+		_currentVelocity = _jumpVelocity;
+		pos.y += _currentVelocity * DELTA_TIME;
+		_isGrounded = false;
+	}
 
 
 	GetTransform()->SetLocalPosition(pos);
 }
+
+void PlayerScript::UpdatePlayerOnTerrain()
+{
+	Vec3 pos = GetTransform()->GetLocalPosition();
+	float terrainHeight = 0.0f;  // 수정해야됨
+
+	if (pos.y <= terrainHeight + 100)
+	{
+		pos.y = terrainHeight + 100;
+		_currentVelocity = 0.0f;
+		_isGrounded = true;
+	}
+	else
+	{
+		_currentVelocity -= _gravity * DELTA_TIME * 100;
+		pos.y += _currentVelocity * DELTA_TIME;
+		_isGrounded = false;
+	}
+
+	GetTransform()->SetLocalPosition(pos);
+}
+
+
 
 

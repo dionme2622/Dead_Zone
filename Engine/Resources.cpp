@@ -392,12 +392,12 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Shadow", shader);
 	}
 
-	// Compute Shader
-	{
-		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateComputeShader(L"..\\Resources\\Shader\\compute.fx", "CS_Main", "cs_5_0");
-		Add<Shader>(L"ComputeShader", shader);
-	}
+	//// Compute Shader
+	//{
+	//	shared_ptr<Shader> shader = make_shared<Shader>();
+	//	shader->CreateComputeShader(L"..\\Resources\\Shader\\compute.fx", "CS_Main", "cs_5_0");
+	//	Add<Shader>(L"ComputeShader", shader);
+	//}
 
 	// Particle
 	{
@@ -422,6 +422,26 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"ComputeParticle", shader);
 	}
 
+	// SwapChain
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::DEFERRED,
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\swapchain.fx", info, "VS_Main", "PS_Main");
+		Add<Shader>(L"SwapChain", shader);
+	}
+
+	// Compute SwapChain
+	{
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateComputeShader(L"..\\Resources\\Shader\\swapchain.fx", "CS_Main", "cs_5_0");
+		Add<Shader>(L"ComputeSwapChain", shader);
+	}
 }
 
 void Resources::CreateDefaultMaterial()
@@ -477,13 +497,13 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"Shadow", material);
 	}
 
-	// Compute Shader
-	{
-		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
-		shared_ptr<Material> material = make_shared<Material>();
-		material->SetShader(shader);
-		Add<Material>(L"ComputeShader", material);
-	}
+	//// Compute Shader
+	//{
+	//	shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
+	//	shared_ptr<Material> material = make_shared<Material>();
+	//	material->SetShader(shader);
+	//	Add<Material>(L"ComputeShader", material);
+	//}
 
 	// Particle
 	{
@@ -500,5 +520,23 @@ void Resources::CreateDefaultMaterial()
 		material->SetShader(shader);
 
 		Add<Material>(L"ComputeParticle", material);
+	}
+
+	// SwapChain
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"SwapChain");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+
+		Add<Material>(L"SwapChain", material);
+	}
+
+	// Compute SwapChain
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeSwapChain");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+
+		Add<Material>(L"ComputeSwapChain", material);
 	}
 }

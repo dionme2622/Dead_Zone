@@ -185,4 +185,64 @@ float4 PS_Final(VS_OUT input) : SV_Target
     return output;
 }
 
+
+//VS_OUT VS_Final(VS_IN input)
+//{
+//    VS_OUT output;
+//    output.pos = float4(input.pos * 2.0f, 1.0f);
+//    output.uv = input.uv;
+//    return output;
+//}
+
+
+//// 블러링 강도 조절 (큰 값일수록 블러 범위 증가)
+//static const float BlurRadius = 0.01f;
+//static const int BlurSamples = 20;
+
+//float4 PS_Final(VS_OUT input) : SV_Target
+//{
+//    float4 lightPower = g_tex_1.Sample(g_sam_0, input.uv);
+//    if (all(lightPower.rgb == 0.0f))
+//        clip(-1);
+
+//    float4 color = g_tex_0.Sample(g_sam_0, input.uv);
+//    float4 specular = g_tex_2.Sample(g_sam_0, input.uv);
+
+//    float2 center = float2(0.5f, 0.5f);
+//    float dist = distance(input.uv, center);
+
+//    // 블러 강도 조정 (부드럽게 확산)
+//    float blurFactor = smoothstep(0.3f, 0.8f, dist);
+//    blurFactor = pow(blurFactor, 6.0f); // 너무 급격히 변화하지 않도록 조정
+
+//    float4 blurredColor = float4(0, 0, 0, 0);
+//    float totalWeight = 0.0f;
+
+//    // 블러링을 더 자연스럽게 만들기 위해 랜덤한 방향 추가
+//    for (int i = -BlurSamples; i <= BlurSamples; i++)
+//    {
+//        for (int j = -BlurSamples; j <= BlurSamples; j++)
+//        {
+//            float2 offset = float2(i, j) * BlurRadius;
+
+//            // 가우시안 가중치 계산 (멀리 있는 픽셀도 더 기여하도록 수정)
+//            float weight = exp(-dot(offset, offset) * 1.5f);
+//            float4 sampleColor = g_tex_0.Sample(g_sam_0, input.uv + offset);
+
+//            // 주변 픽셀과 섞이는 느낌을 주기 위해 현재 픽셀과 조합
+//            sampleColor = lerp(sampleColor, color, 0.5f);
+
+//            blurredColor += sampleColor * weight;
+//            totalWeight += weight;
+//        }
+//    }
+
+//    blurredColor /= totalWeight; // 정규화
+
+//    // 원형 블러 블렌딩 (경계 부드럽게)
+//    float4 finalColor = lerp(color, blurredColor, blurFactor);
+    
+//    return (finalColor * lightPower) + specular;
+//}
+
 #endif
