@@ -43,7 +43,7 @@ private:
 
 	shared_ptr<GameObject>		_camera;
 
-	float						_speed = 1.f;
+	float						_speed = 0.01f;
 
 
 	// 입력 관련
