@@ -17,7 +17,7 @@ public:
 	const Vec3& GetLocalScale() { return _localScale; }
 
 	// TEMP
-	float GetBoundingSphereRadius() { return max(max(_localScale.x / 100, _localScale.y / 100), _localScale.z / 100); }
+	float GetBoundingSphereRadius() { return max(max(_localScale.x, _localScale.y), _localScale.z); }
 
 	const Matrix& GetLocalToWorldMatrix() { return _matWorld; }
 	Vec3 GetWorldPosition() { return _matWorld.Translation(); }

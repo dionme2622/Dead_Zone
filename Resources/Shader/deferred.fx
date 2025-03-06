@@ -11,8 +11,8 @@ struct VS_IN
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
     float3 bitangent : BITANGENT;
-    float4 weight : WEIGHT;
-    float4 indices : INDICES;
+    //float4 weight : WEIGHT;
+  // float4 indices : INDICES;
 
     //row_major matrix matWorld : W;
     //row_major matrix matWV : WV;
@@ -34,8 +34,8 @@ VS_OUT VS_Main(VS_IN input)
 {
     VS_OUT output = (VS_OUT) 0;
 
-    if (g_int_1 == 1)       // Skinning이 적용되었는가?
-        Skinning(input.pos, input.normal, input.tangent, input.weight, input.indices);
+    //if (g_int_1 == 1)       // Skinning이 적용되었는가?
+    //    Skinning(input.pos, input.normal, input.tangent, input.weight, input.indices);
 
     //output.pos = mul(float4(input.pos, 1.f), input.matWVP);
     //output.uv = input.uv;

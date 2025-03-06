@@ -26,10 +26,10 @@ Player::Player() : Component(COMPONENT_TYPE::PLAYER)
 	_material->SetTexture(0, _texture);
 	_material->SetTexture(1, _normal);
 
-	_meshRenderer->SetMesh(_characterMesh);
-	_meshRenderer->SetMaterial(_material);
+	//_meshRenderer->SetMesh(_characterMesh);
+	//_meshRenderer->SetMaterial(_material);
 
-	_obj->AddComponent(_meshRenderer);
+	//_obj->AddComponent(_meshRenderer);
 
 }
 
@@ -39,7 +39,7 @@ Player::~Player()
 
 void Player::LateUpdate()
 {
-	//UpdateRotation()
+	//UpdateRotation();
 }
 
 

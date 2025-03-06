@@ -8,6 +8,7 @@ class Transform;
 
 struct MeshRenderInfo
 {
+	wstring							name;
 	shared_ptr<Mesh>				mesh;
 	vector<shared_ptr<Material>>	materials;
 	shared_ptr<Transform>			transform;

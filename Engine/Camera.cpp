@@ -123,10 +123,14 @@ void Camera::Render_Deferred()
 	S_MatView = _matView;
 	S_MatProjection = _matProjection;
 
+	printf("%d\n", _vecDeferred.size());
 	for (auto& gameObject : _vecDeferred)
 	{
 		gameObject->GetMeshRenderer()->Render();
+
+
 	}
+
 }
 
 void Camera::Render_Forward()
