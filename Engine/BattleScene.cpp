@@ -260,43 +260,14 @@ void BattleScene::LoadScene()
 			//gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			//gameObject->AddComponent(make_shared<TestAnimation>());
 			AddGameObject(gameObject);
-
 		}
-		/*gameObjects[0]->GetTransform()->SetLocalScale(Vec3(0.f, 0.f, 0.f));
-		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));*/
+		/*gameObjects[1]->GetTransform()->SetLocalPosition(Vec3(500.f, 0.f, 0.f));
+		gameObjects[1]->GetTransform()->SetLocalScale(Vec3(500.f, 10.f, 10.f));*/
+
+		//gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.0f));
+		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 	}
 
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\BldDemo.bin"); // MeshData* meshData
-
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"SA_Character_FemaleHero");
-	//		gameObject->SetCheckFrustum(false);
-	//		//gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-	//		//gameObject->AddComponent(make_shared<TestAnimation>());
-	//		AddGameObject(gameObject);
-	//	}
-	//	gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	//}
-
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
-
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetName(L"SA_Character_FemaleHero");
-	//		gameObject->SetCheckFrustum(false);
-	//		//gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
-	//		//gameObject->AddComponent(make_shared<TestAnimation>());
-	//		AddGameObject(gameObject);
-	//	}
-	//	gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	//}
 
 #pragma endregion
 
