@@ -43,10 +43,10 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 			//shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
 
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(loader.GetMesh(i).materials[j].albedoTexName, L"..\\Resources\\Texture\\" + loader.GetMesh(i).materials[j].albedoTexName + L".png");
+			//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(loader.GetMesh(i).materials[j].albedoTexName, L"..\\Resources\\Texture\\" + loader.GetMesh(i).materials[j].albedoTexName + L".dds");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
-			material->SetTexture(0, texture);
+			//material->SetTexture(0, texture);
 
 			materials.push_back(material);
 		}
@@ -76,13 +76,13 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
 
 
-			if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
-			{
-				shared_ptr<Animator> animator = make_shared<Animator>();
-				gameObject->AddComponent(animator);
-				animator->SetBones(info.mesh->GetBones());
-				animator->SetAnimClip(info.mesh->GetAnimClip());
-			}
+			//if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
+			//{
+			//	shared_ptr<Animator> animator = make_shared<Animator>();
+			//	gameObject->AddComponent(animator);
+			//	animator->SetBones(info.mesh->GetBones());
+			//	animator->SetAnimClip(info.mesh->GetAnimClip());
+			//}
 		}
 		v.push_back(gameObject);
 	}

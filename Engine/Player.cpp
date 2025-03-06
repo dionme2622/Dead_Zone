@@ -53,8 +53,8 @@ void Player::UpdateRotation(float deltaX, float deltaY)
 
 	_yaw += deltaX * sensitivity;
 
-	rotation.x = _pitch;
-	rotation.y = _yaw;
+	rotation.x = _pitch * 50;
+	rotation.y = _yaw * 50;
 	rotation.z = 0.0;
 
 	_obj->GetTransform()->SetLocalRotation(rotation);

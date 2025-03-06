@@ -17,7 +17,6 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 	FILE* pInFile = NULL;
 	::fopen_s(&pInFile, path, "rb");
 	::rewind(pInFile);
-
 	char pstrToken[64] = { '\0' };
 
 	shared_ptr<Transform> parentTransform = make_shared<Transform>();
@@ -46,6 +45,8 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 			break;
 		}
 	}
+	::fclose(pInFile);
+
 }
 
 void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, FILE* pInFile)

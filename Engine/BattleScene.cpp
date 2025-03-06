@@ -129,7 +129,7 @@ void BattleScene::LoadScene()
 
 #pragma region Plane
 	{
-		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		/*shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->SetLayerIndex(LayerNameToIndex(L"Battle"));
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(10000.f, 1.f, 10000.f));
@@ -151,44 +151,44 @@ void BattleScene::LoadScene()
 			meshRenderer->SetMaterial(material);
 		}
 		obj->AddComponent(meshRenderer);
-		AddGameObject(obj);
+		AddGameObject(obj);*/
 	}
 
 
 #pragma endregion
 
 #pragma region UI_Test
-	for (int32 i = 0; i < 6; i++)
-	{
-		shared_ptr<GameObject> obj = make_shared<GameObject>();
-		obj->SetLayerIndex(LayerNameToIndex(L"UI")); // UI
-		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-			meshRenderer->SetMesh(mesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	//for (int32 i = 0; i < 6; i++)
+	//{
+	//	shared_ptr<GameObject> obj = make_shared<GameObject>();
+	//	obj->SetLayerIndex(LayerNameToIndex(L"UI")); // UI
+	//	obj->AddComponent(make_shared<Transform>());
+	//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+	//	obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));
+	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	//	{
+	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+	//		meshRenderer->SetMesh(mesh);
+	//	}
+	//	{
+	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 
-			shared_ptr<Texture> texture;
-			if (i < 3)
-				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
-			else if (i < 5)
-				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
-			else
-				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
+	//		shared_ptr<Texture> texture;
+	//		if (i < 3)
+	//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
+	//		else if (i < 5)
+	//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
+	//		else
+	//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
 
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			meshRenderer->SetMaterial(material);
-		}
-		obj->AddComponent(meshRenderer);
-		AddGameObject(obj);
-	}
+	//		shared_ptr<Material> material = make_shared<Material>();
+	//		material->SetShader(shader);
+	//		material->SetTexture(0, texture);
+	//		meshRenderer->SetMaterial(material);
+	//	}
+	//	obj->AddComponent(meshRenderer);
+	//	AddGameObject(obj);
+	//}
 #pragma endregion
 
 #pragma region Aiming Point
@@ -234,19 +234,19 @@ void BattleScene::LoadScene()
 
 #pragma region ParticleSystem
 	{
-		shared_ptr<GameObject> particle = make_shared<GameObject>();
+		/*shared_ptr<GameObject> particle = make_shared<GameObject>();
 		particle->AddComponent(make_shared<Transform>());
 		particle->AddComponent(make_shared<ParticleSystem>());
 		particle->SetCheckFrustum(false);
 		particle->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
-		AddGameObject(particle);
+		AddGameObject(particle);*/
 	}
 #pragma endregion
 
 #pragma region Model
 	
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\VehDemo.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Demo.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -260,14 +260,43 @@ void BattleScene::LoadScene()
 			//gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			//gameObject->AddComponent(make_shared<TestAnimation>());
 			AddGameObject(gameObject);
-		}
-		/*gameObjects[1]->GetTransform()->SetLocalPosition(Vec3(500.f, 0.f, 0.f));
-		gameObjects[1]->GetTransform()->SetLocalScale(Vec3(500.f, 10.f, 10.f));*/
 
-		//gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.0f));
-		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		}
+		/*gameObjects[0]->GetTransform()->SetLocalScale(Vec3(0.f, 0.f, 0.f));
+		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));*/
 	}
 
+	//{
+	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\BldDemo.bin"); // MeshData* meshData
+
+	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetName(L"SA_Character_FemaleHero");
+	//		gameObject->SetCheckFrustum(false);
+	//		//gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+	//		//gameObject->AddComponent(make_shared<TestAnimation>());
+	//		AddGameObject(gameObject);
+	//	}
+	//	gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+	//}
+
+	//{
+	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
+
+	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetName(L"SA_Character_FemaleHero");
+	//		gameObject->SetCheckFrustum(false);
+	//		//gameObject->GetTransform()->SetLocalScale(Vec3(5.f, 5.f, 5.f));
+	//		//gameObject->AddComponent(make_shared<TestAnimation>());
+	//		AddGameObject(gameObject);
+	//	}
+	//	gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+	//}
 
 #pragma endregion
 

@@ -15,10 +15,14 @@ Transform::~Transform()
 
 void Transform::FinalUpdate()
 {
+	float radX = _localRotation.x * (3.14159 / 180.0f);
+	float radY = _localRotation.y * (3.14159 / 180.0f);
+	float radZ = _localRotation.z * (3.14159 / 180.0f);
+
 	Matrix matScale = Matrix::CreateScale(_localScale);
-	Matrix matRotation = Matrix::CreateRotationX(_localRotation.x);
-	matRotation *= Matrix::CreateRotationY(_localRotation.y);
-	matRotation *= Matrix::CreateRotationZ(_localRotation.z);
+	Matrix matRotation = Matrix::CreateRotationX(radX);
+	matRotation *= Matrix::CreateRotationY(radY);
+	matRotation *= Matrix::CreateRotationZ(radZ);
 	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
 	_matLocal = matScale * matRotation * matTranslation;
 	_matWorld = _matLocal;
