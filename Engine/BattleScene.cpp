@@ -51,16 +51,16 @@ void BattleScene::LoadScene()
 
 #pragma region UI_Camera
 	{
-		shared_ptr<GameObject> camera = make_shared<GameObject>();
-		camera->SetName(L"Orthographic_Camera");
-		camera->AddComponent(make_shared<Transform>());
-		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, 800*600
-		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		camera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
-		uint8 layerIndex = LayerNameToIndex(L"UI");
-		camera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
-		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ ÂïÀ½
-		AddGameObject(camera);
+		//shared_ptr<GameObject> camera = make_shared<GameObject>();
+		//camera->SetName(L"Orthographic_Camera");
+		//camera->AddComponent(make_shared<Transform>());
+		//camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, 800*600
+		//camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		//camera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+		//uint8 layerIndex = LayerNameToIndex(L"UI");
+		//camera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
+		//camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ ÂïÀ½
+		//AddGameObject(camera);
 	}
 #pragma endregion
 
@@ -253,8 +253,9 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetName(L"SA_Character_FemaleHero");
-			gameObject->SetCheckFrustum(false);
-			gameObject->SetStatic(false);
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+
 			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 			//gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 			//gameObject->AddComponent(make_shared<TestAnimation>());
@@ -263,8 +264,8 @@ void BattleScene::LoadScene()
 		/*gameObjects[1]->GetTransform()->SetLocalPosition(Vec3(500.f, 0.f, 0.f));
 		gameObjects[1]->GetTransform()->SetLocalScale(Vec3(500.f, 10.f, 10.f));*/
 
-		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 200.0f));
-		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 	}
 
 
