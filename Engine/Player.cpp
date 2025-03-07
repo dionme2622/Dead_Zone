@@ -49,7 +49,6 @@ void Player::UpdateRotation(float deltaX, float deltaY)
 	// X축 회전 (Pitch, 위아래)
 	_pitch += deltaY * sensitivity;
 	_pitch = max(-90 * XM_PI / 180, min(90 * XM_PI / 180, _pitch));
-	printf("%f\r", _pitch);
 
 	_yaw += deltaX * sensitivity;
 

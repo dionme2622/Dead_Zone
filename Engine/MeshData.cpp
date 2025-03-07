@@ -45,10 +45,10 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 			//shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
 
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(loader.GetMesh(i).materials[j].albedoTexName, L"..\\Resources\\Texture\\" + loader.GetMesh(i).materials[j].albedoTexName + L".dds");
+			//shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(loader.GetMesh(i).materials[j].albedoTexName, L"..\\Resources\\Texture\\" + loader.GetMesh(i).materials[j].albedoTexName + L".dds");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
-			material->SetTexture(0, texture);
+			//material->SetTexture(0, texture);
 
 			materials.push_back(material);
 		}
