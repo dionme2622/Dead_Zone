@@ -61,11 +61,11 @@ void PlayerScript::UpdatePlayerInput()
 void PlayerScript::UpdatePlayerOnTerrain()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
-	float terrainHeight = 0.0f;  // 수정해야됨
+	float terrainHeight = -130.f;  // 수정해야됨
 
-	if (pos.y <= terrainHeight + 100)
+	if (pos.y <= terrainHeight)
 	{
-		pos.y = terrainHeight + 100;
+		pos.y = terrainHeight;
 		_currentVelocity = 0.0f;
 		_isGrounded = true;
 	}
@@ -75,7 +75,7 @@ void PlayerScript::UpdatePlayerOnTerrain()
 		pos.y += _currentVelocity * DELTA_TIME;
 		_isGrounded = false;
 	}
-
+	printf("%f\n", pos.y);
 	GetTransform()->SetLocalPosition(pos);
 }
 
