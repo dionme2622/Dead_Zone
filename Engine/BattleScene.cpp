@@ -254,7 +254,7 @@ void BattleScene::LoadScene()
 		{
 			gameObject->SetName(L"SA_Character_FemaleHero");
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
+			gameObject->SetStatic(false);
 
 			//gameObject->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 			//gameObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
