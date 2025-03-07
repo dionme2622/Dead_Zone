@@ -25,10 +25,8 @@ public:
 
 	shared_ptr<GameObject> GetGameObject() { return _obj; }
 
-	float GetSpeed() { return _speed; }
-
 public:
-	virtual void LateUpdate() override;
+	virtual void FinalUpdate() override;
 
 private:
 	shared_ptr<GameObject>		_obj;
@@ -56,5 +54,12 @@ private:
 	float _pitch = 0.0f; // 위/아래 각도
 	float _yaw = 0.0f; // 좌우 각도
 	Vec3 rotation; // 카메라 회전
+
+
+
+
+
+
+
 };
 

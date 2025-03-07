@@ -2,6 +2,8 @@
 #include "CommandQueue.h"
 #include "SwapChain.h"
 #include "Engine.h"
+#include "Resources.h"
+#include "Texture.h"
 
 // ************************
 // GraphicsCommandQueue
@@ -11,7 +13,6 @@ GraphicsCommandQueue::~GraphicsCommandQueue()
 {
 	::CloseHandle(_fenceEvent);
 }
-
 void GraphicsCommandQueue::Init(ComPtr<ID3D12Device> device, shared_ptr<SwapChain> swapChain)
 {
 	_swapChain = swapChain;
@@ -39,7 +40,6 @@ void GraphicsCommandQueue::WaitSync()
 {
 	// Advance the fence value to mark commands up to this fence point.
 	_fenceValue++;
-
 	// Add an instruction to the command queue to set a new fence point.  Because we 
 	// are on the GPU timeline, the new fence point won't be set until the GPU finishes
 	// processing all the commands prior to this Signal().
@@ -56,6 +56,7 @@ void GraphicsCommandQueue::WaitSync()
 	}
 }
 
+
 void GraphicsCommandQueue::RenderBegin()
 {
 	_cmdAlloc->Reset();
@@ -63,8 +64,11 @@ void GraphicsCommandQueue::RenderBegin()
 
 	int8 backIndex = _swapChain->GetBackBufferIndex();
 
+	shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"SwapChain");
+	_screenTexture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->GetRTTexture(backIndex);
+	
 	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->GetRTTexture(backIndex)->GetTex2D().Get(),
+		_screenTexture->GetTex2D().Get(),
 		D3D12_RESOURCE_STATE_PRESENT, // 화면 출력
 		D3D12_RESOURCE_STATE_RENDER_TARGET); // 외주 결과물
 
