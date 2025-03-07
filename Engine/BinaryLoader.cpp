@@ -67,7 +67,10 @@ void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, F
 		{
 			nFrame = ::ReadIntegerFromFile(pInFile);
 			nTextures = ::ReadIntegerFromFile(pInFile);
-			::ReadStringFromFile(pInFile, meshInfo.frameName);
+			::ReadStringFromFile(pInFile, pstrToken);
+
+			string name(pstrToken);
+			meshInfo.frameName = s2ws(name);
 		}
 		else if (!strcmp(pstrToken, "<Transform>:"))
 		{

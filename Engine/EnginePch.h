@@ -45,6 +45,8 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "DirectXTex\\DirectXTex.lib")
 #endif
 
+#define PI 3.14159
+
 // °¢Á¾ typedef
 using int8 = __int8;
 using int16 = __int16;

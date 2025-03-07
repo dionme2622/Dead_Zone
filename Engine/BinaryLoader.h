@@ -54,7 +54,7 @@ struct BoneWeight
 
 struct BinaryMeshInfo
 {
-	char								frameName[64];
+	wstring								frameName;
 	vector<Vertex>						vertices;
 	vector<vector<uint32>>				indices;
 	vector<MaterialInfo>				materials;

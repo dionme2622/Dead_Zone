@@ -15,9 +15,9 @@ Transform::~Transform()
 
 void Transform::FinalUpdate()
 {
-	float radX = _localRotation.x * (3.14159 / 180.0f);
-	float radY = _localRotation.y * (3.14159 / 180.0f);
-	float radZ = _localRotation.z * (3.14159 / 180.0f);
+	float radX = _localRotation.x * (PI / 180.0f);
+	float radY = _localRotation.y * (PI / 180.0f);
+	float radZ = _localRotation.z * (PI / 180.0f);
 
 	Matrix matScale = Matrix::CreateScale(_localScale);
 	Matrix matRotation = Matrix::CreateRotationX(radX);
