@@ -97,8 +97,6 @@ void GraphicsCommandQueue::RenderEnd()
 	_cmdList->ResourceBarrier(1, &barrier);
 	_cmdList->Close();
 
-	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->OMSetRenderTargets();
-
 	// 커맨드 리스트 수행
 	ID3D12CommandList* cmdListArr[] = { _cmdList.Get() };
 	_cmdQueue->ExecuteCommandLists(_countof(cmdListArr), cmdListArr);
