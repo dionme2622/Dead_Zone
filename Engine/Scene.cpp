@@ -97,16 +97,7 @@ void Scene::RenderShadow()
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->WaitTargetToResource();
 }
 
-void Scene::RenderHeightmap()
-{
-	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::HEIGHTMAP)->OMSetRenderTargets();
 
-	shared_ptr<Camera> mainCamera = _cameras[0];
-	mainCamera->SortGameObject();
-	mainCamera->Render_Deferred();
-
-	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::HEIGHTMAP)->WaitTargetToResource();
-}
 
 void Scene::RenderDeferred()
 {
