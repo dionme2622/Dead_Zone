@@ -10,41 +10,31 @@ void KeyInput::Init(HWND hwnd)
 
 void KeyInput::Update()
 {
-	HWND hwnd = ::GetActiveWindow();
-	if (_hwnd != hwnd)
-	{
-		for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
-			_states[key] = KEY_STATE::NONE;
+	printf("%d\n", KEY_TYPE_COUNT);
+    HWND hwnd = ::GetActiveWindow();
+    if (_hwnd != hwnd)
+    {
+        for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
+            _states[key] = KEY_STATE::NONE;
+        return;
+    }
 
-		return;
-	}
+    for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
+    {
+        KEY_STATE& state = _states[key];
 
-	BYTE asciiKeys[KEY_TYPE_COUNT] = {};
-	if (::GetKeyboardState(asciiKeys) == false)
-		return;
+        // 키가 현재 눌렸는지 확인
+        bool keyPressed = (::GetAsyncKeyState(key) & 0x8000) != 0;
 
-	for (uint32 key = 0; key < KEY_TYPE_COUNT; key++)
-	{
-		// 키가 눌려 있으면 true
-		if (asciiKeys[key] & 0x80)
-		{
-			KEY_STATE& state = _states[key];
-
-			// 이전 프레임에 키를 누른 상태라면 PRESS
-			if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
-				state = KEY_STATE::PRESS;
-			else
-				state = KEY_STATE::DOWN;
-		}
-		else
-		{
-			KEY_STATE& state = _states[key];
-
-			// 이전 프레임에 키를 누른 상태라면 UP
-			if (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN)
-				state = KEY_STATE::UP;
-			else
-				state = KEY_STATE::NONE;
-		}
-	}
+        if (keyPressed)
+        {
+            // 이전 프레임에 눌려 있었다면 PRESS 유지, 아니면 DOWN
+            state = (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN) ? KEY_STATE::PRESS : KEY_STATE::DOWN;
+        }
+        else
+        {
+            // 이전 프레임에서 눌렸었다면 UP, 아니면 NONE
+            state = (state == KEY_STATE::PRESS || state == KEY_STATE::DOWN) ? KEY_STATE::UP : KEY_STATE::NONE;
+        }
+    }
 }

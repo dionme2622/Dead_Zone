@@ -8,7 +8,6 @@
 #include "Camera.h"
 #include "Light.h"
 #include "Player.h"
-#include "TestCameraScript.h"
 #include "Engine.h"
 #include "Resources.h"
 
@@ -27,7 +26,6 @@ void LobbyScene::LoadScene()
 		camera->SetName(L"Main_Camera");
 		camera->AddComponent(make_shared<Transform>());
 		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=45도
-		camera->AddComponent(make_shared<TestCameraScript>());
 		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음

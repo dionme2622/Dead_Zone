@@ -10,7 +10,6 @@
 #include "Camera.h"
 #include "Light.h"
 
-#include "TestCameraScript.h"
 #include "Resources.h"
 #include "KeyInput.h"
 #include "Player.h"
@@ -26,10 +25,10 @@ void SceneManager::Update()
 	_activeScene->FinalUpdate();
 
 
-	if (INPUT->GetButtonDown(KEY_TYPE::LEFTCLICK))
+	/*if (INPUT->GetButtonDown(KEY_TYPE::LEFTCLICK))
 	{
 		LoadScene(SCENETYPE((ACTIVESCENE + 1)));
-	}
+	}*/
 }
 
 // TEMP
