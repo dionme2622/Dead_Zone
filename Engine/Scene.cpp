@@ -76,6 +76,8 @@ void Scene::ClearRTV()
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->ClearRenderTargetView();
 	// Lighting Group 초기화
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->ClearRenderTargetView();
+	// Heightmap Group 초기화
+	//GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::HEIGHTMAP)->ClearRenderTargetView();
 	//// Blur Group 초기화
 	//GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::BLUR)->ClearRenderTargetView();
 }
@@ -93,6 +95,17 @@ void Scene::RenderShadow()
 	}
 
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->WaitTargetToResource();
+}
+
+void Scene::RenderHeightmap()
+{
+	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::HEIGHTMAP)->OMSetRenderTargets();
+
+	shared_ptr<Camera> mainCamera = _cameras[0];
+	mainCamera->SortGameObject();
+	mainCamera->Render_Deferred();
+
+	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::HEIGHTMAP)->WaitTargetToResource();
 }
 
 void Scene::RenderDeferred()

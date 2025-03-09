@@ -75,7 +75,6 @@ void PlayerScript::UpdatePlayerOnTerrain()
 		pos.y += _currentVelocity * DELTA_TIME;
 		_isGrounded = false;
 	}
-	printf("%f\n", pos.y);
 	GetTransform()->SetLocalPosition(pos);
 }
 
