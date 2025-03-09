@@ -135,12 +135,6 @@
     <ClInclude Include="KeyInput.h">
       <Filter>Manager\Input</Filter>
     </ClInclude>
-    <ClInclude Include="TestCameraScript.h">
-      <Filter>Object\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerCameraScript.h">
-      <Filter>Object\Script</Filter>
-    </ClInclude>
     <ClInclude Include="PlayerScript.h">
       <Filter>Object\Script</Filter>
     </ClInclude>
@@ -266,12 +260,6 @@
     <ClCompile Include="KeyInput.cpp">
       <Filter>Manager\Input</Filter>
     </ClCompile>
-    <ClCompile Include="TestCameraScript.cpp">
-      <Filter>Object\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="PlayerCameraScript.cpp">
-      <Filter>Object\Script</Filter>
-    </ClCompile>
     <ClCompile Include="PlayerScript.cpp">
       <Filter>Object\Script</Filter>
     </ClCompile>
@@ -336,5 +324,6 @@
     <FxCompile Include="..\Resources\Shader\math.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="..\Resources\Shader\swapchain.fx" />
   </ItemGroup>
 </Project>

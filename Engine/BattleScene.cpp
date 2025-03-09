@@ -9,8 +9,6 @@
 #include "Light.h"
 #include "Player.h"
 #include "PlayerScript.h"
-#include "PlayerCameraScript.h"
-#include "TestCameraScript.h"
 #include "Engine.h"
 #include "Resources.h"
 #include "MeshData.h"
