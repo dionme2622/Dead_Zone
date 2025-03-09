@@ -13,18 +13,13 @@
 #include "Resources.h"
 #include "MeshData.h"
 #include "TestAnimation.h"
-#include "MouseInput.h"
 #include "ParticleSystem.h"
 
 BattleScene::BattleScene()
 {
-	GET_SINGLE(MouseInput)->Init(_hwnd);
 }
 
-void BattleScene::Init()
-{
-	GET_SINGLE(MouseInput)->Init(_hwnd);
-}
+
 
 void BattleScene::LoadScene()
 {
@@ -272,10 +267,5 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	if (_player->GetGameObject())
-	{
-		GET_SINGLE(MouseInput)->Update(*_player);
-	}
-
 	Scene::Update();
 }
