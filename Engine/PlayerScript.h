@@ -11,6 +11,12 @@ public:
 
 	void UpdatePlayerInput();
 
+	void UpdateRotation(float deltaX, float deltaY);
+
+	void UpdateKeyInput();
+
+	void UpdateMouseInput();
+
 
 	// 이동 관련
 public:
@@ -23,5 +29,17 @@ private:
 	float _gravity;         // 중력 가속도
 	bool _isGrounded;       // 땅에 닿아있는지 여부
 
+
+private:
+	float sensitivity = 0.001f;
+
+	float _pitch = 0.0f; // 위/아래 각도
+	float _yaw = 0.0f; // 좌우 각도
+	Vec3 rotation; // 카메라 회전
+
+
+
+	HWND _hwnd;
+	bool _mouseMove;
 };
 

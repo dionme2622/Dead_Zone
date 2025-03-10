@@ -10,7 +10,6 @@ void KeyInput::Init(HWND hwnd)
 
 void KeyInput::Update()
 {
-	printf("%d\n", KEY_TYPE_COUNT);
     HWND hwnd = ::GetActiveWindow();
     if (_hwnd != hwnd)
     {
