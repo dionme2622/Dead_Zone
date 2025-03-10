@@ -627,7 +627,7 @@ void BinaryLoader::CreateTextures()
 	{
 		for (size_t j = 0; j < _meshes[i].materials.size(); j++)
 		{
-			// DiffuseTexture
+			// Texture
 			{
 				wstring filename = _meshes[i].materials[j].albedoTexName;
 				wstring fullPath = L"..\\Resources\\Texture\\" + filename + L".dds";

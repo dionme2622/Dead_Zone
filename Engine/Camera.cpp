@@ -48,16 +48,14 @@ void Camera::SortGameObject()
 	_vecForward.clear();
 	_vecDeferred.clear();
 	_vecParticle.clear();
-	int a = 0, b = 0, c = 0;
+
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
-			++a;
 			continue;
 		}
 
 		if (IsCulled(gameObject->GetLayerIndex())) {
-			++b;
 			continue;
 		}
 		if (gameObject->GetCheckFrustum())
@@ -66,7 +64,6 @@ void Camera::SortGameObject()
 				gameObject->GetTransform()->GetWorldPosition(),
 				gameObject->GetTransform()->GetBoundingSphereRadius()) == false)
 			{
-				++c;
 				continue;
 			}
 		}
@@ -89,7 +86,6 @@ void Camera::SortGameObject()
 			_vecParticle.push_back(gameObject);
 		}
 	}
-	printf("%d, %d, %d\n", a, b, c);
 }
 
 void Camera::SortShadowObject()

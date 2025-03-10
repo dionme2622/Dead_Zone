@@ -626,7 +626,7 @@ void Resources::CreateDefaultMaterial()
 
 	// TEST
 	// GameObject
-	{
+	/*{
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
 		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern", L"..\\Resources\\Texture\\Metal_Pattern_basecolor.png");
 		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern_Normal", L"..\\Resources\\Texture\\Metal_Pattern_normal.png");
@@ -635,5 +635,5 @@ void Resources::CreateDefaultMaterial()
 		material->SetTexture(0, texture);
 		material->SetTexture(1, texture2);
 		Add<Material>(L"GameObject", material);
-	}
+	}*/
 }
