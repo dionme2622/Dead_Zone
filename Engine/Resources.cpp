@@ -266,14 +266,14 @@ shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
 	return meshData;
 }
 
-void Resources::LoadSceneFromBinary(const wstring& path)
-{
-	wstring name;
-	for (; ;)		// °´Ã¼ ¼ö ¸¸Å­
-	{
-		LoadModelFromBinary(L"..\\Resources\\Model\\" + name + L".bin");
-	}
-}
+//void Resources::LoadSceneFromBinary(const wstring& path)
+//{
+//	wstring name;
+//	for (; ;)		// °´Ã¼ ¼ö ¸¸Å­
+//	{
+//		LoadModelFromBinary(L"..\\Resources\\Model\\" + name + L".bin");
+//	}
+//}
 
 shared_ptr<Texture> Resources::CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height,
 	const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
@@ -612,5 +612,19 @@ void Resources::CreateDefaultMaterial()
 		material->SetShader(shader);
 
 		Add<Material>(L"ComputeAnimation", material);
+	}
+
+
+	// TEST
+	// GameObject
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern", L"..\\Resources\\Texture\\Metal_Pattern_basecolor.png");
+		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern_Normal", L"..\\Resources\\Texture\\Metal_Pattern_normal.png");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, texture);
+		material->SetTexture(1, texture2);
+		Add<Material>(L"GameObject", material);
 	}
 }

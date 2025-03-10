@@ -178,6 +178,8 @@
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="InstancingBuffer.h" />
+    <ClInclude Include="InstancingManager.h" />
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LobbyScene.h" />
@@ -220,6 +222,8 @@
     <ClCompile Include="EnginePch.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="InstancingBuffer.cpp" />
+    <ClCompile Include="InstancingManager.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LobbyScene.cpp" />

@@ -28,33 +28,30 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 	{
 		MeshRenderInfo info = {};
 
-		
-
 		if (!loader.GetMesh(i).vertices.empty())
 		{
 			shared_ptr<Mesh> mesh = Mesh::CreateFromBinary(&loader.GetMesh(i), loader);
+			mesh->SetName(loader.GetMesh(i).meshName);
 			GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
-			info.mesh = mesh;
+
+			info.mesh = GET_SINGLE(Resources)->Get<Mesh>(mesh->GetName());
 		}
 		shared_ptr<Transform> transform = loader.GetMesh(i).transform;
 		// Material 찾아서 연동
 		vector<shared_ptr<Material>> materials;
 		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
 		{
-			// TODO : 임시로 해둔 것
-			//shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).materials[j].name);
+			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).meshName);
 
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(loader.GetMesh(i).materials[j].albedoTexName, L"..\\Resources\\Texture\\" + loader.GetMesh(i).materials[j].albedoTexName + L".dds");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-
+			//material->SetInt(0, 1);
 			materials.push_back(material);
 		}
-		info.name = loader.GetMesh(i).frameName;
+		info.objName = loader.GetMesh(i).objName;
 		info.materials = materials;
 		info.transform = transform;
+		// TODO : AABB 바운딩 박스 데이터 넘겨야 함
+
+		////////////////////////////////////////
 		meshData->_meshRenders.push_back(info);
 	}
 
@@ -69,15 +66,20 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 	for (MeshRenderInfo& info : _meshRenders)
 	{
 		shared_ptr<GameObject> gameObject = make_shared<GameObject>();
-		gameObject->SetName(info.name);
+		gameObject->SetName(info.objName);									// Object 이름 설정
 		gameObject->AddComponent(info.transform);
 		if (info.mesh != nullptr)
 		{
+			//shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->Get<Mesh>(mesh->GetName(), info;
 			gameObject->AddComponent(make_shared<MeshRenderer>());
 			gameObject->GetMeshRenderer()->SetMesh(info.mesh);
 			for (uint32 i = 0; i < info.materials.size(); i++)
 				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
 
+
+			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
+
+			///////////////////////////////////////////
 
 			if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
 			{

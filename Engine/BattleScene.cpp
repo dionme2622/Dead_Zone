@@ -97,29 +97,24 @@ void BattleScene::LoadScene()
 
 #pragma region Object
 	{
-		/*shared_ptr<GameObject> obj = make_shared<GameObject>();
-		obj->SetLayerIndex(LayerNameToIndex(L"Battle"));
-		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 50.f, 100.f));
-		obj->SetStatic(true);
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		/*for (int32 i = 0; i < 50; i++)
 		{
-			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadCubeMesh();
-			meshRenderer->SetMesh(sphereMesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern", L"..\\Resources\\Texture\\Metal_Pattern_basecolor.png");
-			shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern_Normal", L"..\\Resources\\Texture\\Metal_Pattern_normal.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			material->SetTexture(1, texture2);
-			meshRenderer->SetMaterial(material);
-		}
-		obj->AddComponent(meshRenderer);
-		AddGameObject(obj);*/
+			shared_ptr<GameObject> obj = make_shared<GameObject>();
+			obj->AddComponent(make_shared<Transform>());
+			obj->GetTransform()->SetLocalScale(Vec3(25.f, 25.f, 25.f));
+			obj->GetTransform()->SetLocalPosition(Vec3(i * 20.f, 0.f, 50.0f));
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+				meshRenderer->SetMesh(sphereMesh);
+			}
+			{
+				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+				meshRenderer->SetMaterial(material);
+			}
+			obj->AddComponent(meshRenderer);
+			AddGameObject(obj);
+		}*/
 	}
 
 
@@ -131,7 +126,7 @@ void BattleScene::LoadScene()
 		obj->SetLayerIndex(LayerNameToIndex(L"Battle"));
 		obj->AddComponent(make_shared<Transform>());
 		obj->GetTransform()->SetLocalScale(Vec3(10000.f, 1.f, 10000.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0.f, -50.f, 0.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(0.f, -150.f, 0.f));
 		obj->SetStatic(true);
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -244,7 +239,7 @@ void BattleScene::LoadScene()
 #pragma region Model
 	
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo1.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Demo.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -253,7 +248,7 @@ void BattleScene::LoadScene()
 			//gameObject->SetName(L"SA_Character_FemaleHero");
 			gameObject->SetCheckFrustum(true);
 			gameObject->SetStatic(true);
-			gameObject->AddComponent(make_shared<TestAnimation>());
+			//gameObject->AddComponent(make_shared<TestAnimation>());
 			AddGameObject(gameObject);
 		}
 

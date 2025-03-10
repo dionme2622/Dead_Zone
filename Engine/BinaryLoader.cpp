@@ -3,6 +3,7 @@
 #include "Mesh.h"
 #include "Material.h"
 #include "Transform.h"
+#include "Resources.h"
 
 BinaryLoader::BinaryLoader()
 {
@@ -47,6 +48,8 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 	}
 	::fclose(pInFile);
 
+	CreateTextures();
+	CreateMaterials();
 }
 
 void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, FILE* pInFile)
@@ -70,7 +73,7 @@ void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, F
 			::ReadStringFromFile(pInFile, pstrToken);
 
 			string name(pstrToken);
-			meshInfo.frameName = s2ws(name);
+			meshInfo.objName = s2ws(name);
 		}
 		else if (!strcmp(pstrToken, "<Transform>:"))
 		{
@@ -140,10 +143,12 @@ void BinaryLoader::LoadMeshFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 	int32 vertexCount = 0;
 	UINT nReads = (UINT)::fread(&vertexCount, sizeof(int), 1, pInFile);
 
-	char name[64] = {};
-
 	meshes.vertices.resize(vertexCount);
-	::ReadStringFromFile(pInFile, name);			// Mesh의 이름 저장
+	::ReadStringFromFile(pInFile, pstrToken);			// Mesh의 이름 저장
+	string name(pstrToken);
+	meshes.meshName = s2ws(pstrToken);
+
+	meshes.hasMesh = true;
 	// 임시
 	XMFLOAT3 temp = {};
 	for (; ; )
@@ -151,8 +156,8 @@ void BinaryLoader::LoadMeshFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 		::ReadStringFromFile(pInFile, pstrToken);
 		if (!strcmp(pstrToken, "<Bounds>:"))
 		{
-			nReads = (UINT)::fread(&temp, sizeof(XMFLOAT3), 1, pInFile);
-			nReads = (UINT)::fread(&temp, sizeof(XMFLOAT3), 1, pInFile);
+			nReads = (UINT)::fread(&meshes.AABBCenter, sizeof(XMFLOAT3), 1, pInFile);
+			nReads = (UINT)::fread(&meshes.AABBExtents, sizeof(XMFLOAT3), 1, pInFile);
 		}
 		else if (!strcmp(pstrToken, "<Positions>:"))
 		{
@@ -612,6 +617,50 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 		else if (!strcmp(pstrToken, "</AnimationSets>"))
 		{
 			break;
+		}
+	}
+}
+
+void BinaryLoader::CreateTextures()
+{
+	for (size_t i = 0; i < _meshes.size(); i++)
+	{
+		for (size_t j = 0; j < _meshes[i].materials.size(); j++)
+		{
+			// DiffuseTexture
+			{
+				wstring filename = _meshes[i].materials[j].albedoTexName;
+				wstring fullPath = L"..\\Resources\\Texture\\" + filename + L".dds";
+				if (filename.empty() == false)
+					GET_SINGLE(Resources)->Load<Texture>(filename, fullPath);
+			}
+		}
+	}
+}
+
+void BinaryLoader::CreateMaterials()
+{
+	for (size_t i = 0; i < _meshes.size(); i++)
+	{
+		if (_meshes[i].hasMesh)
+		{
+			for (size_t j = 0; j < _meshes[i].materials.size(); j++)
+			{
+				shared_ptr<Material> material = make_shared<Material>();
+				wstring key = _meshes[i].meshName;
+				material->SetName(key);
+				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
+
+				{
+					wstring albeodoTexName = _meshes[i].materials[j].albedoTexName;
+					wstring key = albeodoTexName;
+					shared_ptr<Texture> texture = GET_SINGLE(Resources)->Get<Texture>(key);
+					if (texture)
+						material->SetTexture(0, texture);
+				}
+
+				GET_SINGLE(Resources)->Add<Material>(material->GetName(), material);
+			}
 		}
 	}
 }

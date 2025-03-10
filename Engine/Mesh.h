@@ -22,8 +22,7 @@ struct KeyFrameInfo
 {
 	wstring boneName;
 	double	time;
-	//int32	frame;
-	//Matrix  matTransform;
+
 	Vec4	scale;
 	Vec4	rotation;
 	Vec4	translate;
@@ -45,7 +44,7 @@ public:
 
 	void Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexbuffer);
 	void Render(uint32 instanceCount = 1, uint32 idx = 0);
-	//void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
+	void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
 	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class BinaryLoader& loader);
 
 
