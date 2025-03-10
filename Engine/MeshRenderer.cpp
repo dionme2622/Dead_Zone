@@ -5,6 +5,7 @@
 #include "Transform.h"
 #include "Resources.h"
 #include "Animator.h"
+#include "InstancingBuffer.h"
 
 MeshRenderer::MeshRenderer() : Component(COMPONENT_TYPE::MESH_RENDERER)
 {
@@ -29,6 +30,7 @@ void MeshRenderer::Render()
 	for (uint32 i = 0; i < _materials.size(); i++)
 	{
 		shared_ptr<Material>& material = _materials[i];
+		material->SetInt(0, 0);
 
 		if (material == nullptr || material->GetShader() == nullptr)
 			continue;
@@ -46,27 +48,28 @@ void MeshRenderer::Render()
 	}
 }
 
-//void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)			// Instancing Version
-//{
-//	for (uint32 i = 0; i < _materials.size(); i++)
-//	{
-//		shared_ptr<Material>& material = _materials[i];
-//
-//		if (material == nullptr || material->GetShader() == nullptr)
-//			continue;
-//
-//		buffer->PushData();
-//
-//		if (GetAnimator())
-//		{
-//			GetAnimator()->PushData();
-//			material->SetInt(1, 1);
-//		}
-//
-//		material->PushGraphicsData();
-//		_mesh->Render(buffer, i);
-//	}
-//}
+void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)			// Instancing Version
+{
+	for (uint32 i = 0; i < _materials.size(); i++)
+	{
+		shared_ptr<Material>& material = _materials[i];
+		material->SetInt(0, 1);
+
+		if (material == nullptr || material->GetShader() == nullptr)
+			continue;
+
+		buffer->PushData();
+
+		if (GetAnimator())
+		{
+			GetAnimator()->PushData();
+			material->SetInt(1, 1);
+		}
+
+		material->PushGraphicsData();
+		_mesh->Render(buffer, i);
+	}
+}
 
 void MeshRenderer::RenderShadow()
 {
@@ -75,12 +78,12 @@ void MeshRenderer::RenderShadow()
 	_mesh->Render();
 }
 
-//uint64 MeshRenderer::GetInstanceID()
-//{
-//	if (_mesh == nullptr || _materials.empty())
-//		return 0;
-//
-//	//uint64 id = (_mesh->GetID() << 32) | _material->GetID();
-//	InstanceID instanceID{ _mesh->GetID(), _materials[0]->GetID() };
-//	return instanceID.id;
-//}
+uint64 MeshRenderer::GetInstanceID()
+{
+	if (_mesh == nullptr || _materials.empty())
+		return 0;
+
+	//uint64 id = (_mesh->GetID() << 32) | _material->GetID();
+	InstanceID instanceID{ _mesh->GetID(), _materials[0]->GetID() };
+	return instanceID.id;
+}

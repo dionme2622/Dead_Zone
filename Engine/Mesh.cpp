@@ -4,6 +4,7 @@
 #include "Material.h"
 #include "BinaryLoader.h"
 #include "StructuredBuffer.h"
+#include "InstancingBuffer.h"
 
 Mesh::Mesh() : Object(OBJECT_TYPE::MESH)
 {
@@ -30,6 +31,17 @@ void Mesh::Render(uint32 instanceCount, uint32 idx)
 	GEngine->GetGraphicsDescHeap()->CommitTable();
 
 	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, instanceCount, 0, 0, 0);
+}
+
+void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
+{
+	D3D12_VERTEX_BUFFER_VIEW bufferViews[] = { _vertexBufferView, buffer->GetBufferView() };
+	GRAPHICS_CMD_LIST->IASetVertexBuffers(0, 2, bufferViews);
+	GRAPHICS_CMD_LIST->IASetIndexBuffer(&_vecIndexInfo[idx].bufferView);
+
+	GEngine->GetGraphicsDescHeap()->CommitTable();
+
+	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, buffer->GetCount(), 0, 0, 0);
 }
 
 shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLoader& loader)
@@ -60,17 +72,6 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 	return mesh;
 }
 
-
-//void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
-//{
-//	D3D12_VERTEX_BUFFER_VIEW bufferViews[] = { _vertexBufferView, buffer->GetBufferView() };
-//	GRAPHICS_CMD_LIST->IASetVertexBuffers(0, 2, bufferViews);
-//	GRAPHICS_CMD_LIST->IASetIndexBuffer(&_vecIndexInfo[idx].bufferView);
-//
-//	GEngine->GetGraphicsDescHeap()->CommitTable();
-//
-//	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, buffer->GetCount(), 0, 0, 0);
-//}
 
 void Mesh::CreateVertexBuffer(const vector<Vertex>& buffer)
 {

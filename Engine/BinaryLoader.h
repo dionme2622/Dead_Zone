@@ -54,13 +54,17 @@ struct BoneWeight
 
 struct BinaryMeshInfo
 {
-	wstring								frameName;
+	wstring								objName;
+	wstring								meshName;
 	vector<Vertex>						vertices;
 	vector<vector<uint32>>				indices;
+	Vec3								AABBCenter;
+	Vec3								AABBExtents;
 	vector<MaterialInfo>				materials;
 	shared_ptr<Transform>				transform;
 	vector<BoneWeight>					boneWeights; // »À °¡ÁßÄ¡
-	bool								hasAnimation;
+	bool								hasMesh = false;
+	bool								hasAnimation = false;
 };
 
 struct BinaryBoneInfo
@@ -97,6 +101,9 @@ public:
 	void LoadMaterialFromFile(BinaryMeshInfo&, FILE*);
 	void LoadSkinInfoFromFile(BinaryMeshInfo&, FILE*);
 	void LoadAnimationFromFile(FILE*);
+
+	void CreateTextures();
+	void CreateMaterials();
 
 public:
 	int32 GetMeshCount() { return static_cast<int32>(_meshes.size()); }
