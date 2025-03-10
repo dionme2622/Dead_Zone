@@ -368,8 +368,17 @@ void Resources::CreateDefaultShader()
 			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
 		};
 
+		ShaderArg arg =
+		{
+			"VS_UI",
+			"",
+			"",
+			"",
+			"PS_UI"
+		};
+
 		shared_ptr<Shader> shader = make_shared<Shader>();
-		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info);
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info, arg);
 		Add<Shader>(L"UI", shader);
 	}
 

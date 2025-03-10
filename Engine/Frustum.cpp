@@ -42,7 +42,6 @@ bool Frustum::ContainsSphere(const Vec3& pos, float radius)
         if (distance > radius + margin)
             return false;
     }
-
     return true;
 }
 

@@ -15,5 +15,7 @@ public:
 private:
 	shared_ptr<Player>			_player;
 	shared_ptr<GameObject>		_playerCamera;
+
+	HWND _hwnd;
 };
 

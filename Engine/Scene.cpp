@@ -76,8 +76,6 @@ void Scene::ClearRTV()
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->ClearRenderTargetView();
 	// Lighting Group 초기화
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->ClearRenderTargetView();
-	// Heightmap Group 초기화
-	//GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::HEIGHTMAP)->ClearRenderTargetView();
 	//// Blur Group 초기화
 	//GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::BLUR)->ClearRenderTargetView();
 }
@@ -138,6 +136,7 @@ void Scene::RenderFinal()
 	GET_SINGLE(Resources)->Get<Mesh>(L"Rectangle")->Render();
 }
 
+
 void Scene::RenderForward()
 {
 	shared_ptr<Camera> mainCamera = _cameras[0];
@@ -145,8 +144,9 @@ void Scene::RenderForward()
 
 	for (auto& camera : _cameras)
 	{
-		if (camera == mainCamera)
+		if (camera == mainCamera) 
 			continue;
+
 
 		camera->SortGameObject();
 		camera->Render_Forward();

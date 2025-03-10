@@ -24,6 +24,7 @@ public:
 	void Render_Shadow();
 
 	void SetProjectionType(PROJECTION_TYPE type) { _type = type; }
+	PROJECTION_TYPE GetProjectionType() { return _type; }
 
 	void SetCullingMaskLayerOnOff(uint8 layer, bool on)
 	{

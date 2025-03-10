@@ -4,6 +4,7 @@
 #define _HAS_STD_BYTE 0
 
 // °¢Á¾ include
+#include "iostream"
 #include <windows.h>
 #include <tchar.h>
 #include <memory>

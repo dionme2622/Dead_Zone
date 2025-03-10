@@ -4,7 +4,7 @@
 class PlayerScript : public MonoBehaviour
 {
 public:
-	PlayerScript();
+	PlayerScript(HWND hwnd);
 	virtual ~PlayerScript();
 
 	virtual void LateUpdate() override;
