@@ -5,6 +5,10 @@
 #include "MeshRenderer.h"
 #include "Transform.h"
 #include "Camera.h"
+#include "Material.h"
+#include "Resources.h"
+
+bool _WIRE_FRAME_MODE = false;
 
 void InstancingManager::Render(vector<shared_ptr<GameObject>>& gameObjects)
 {
@@ -15,8 +19,6 @@ void InstancingManager::Render(vector<shared_ptr<GameObject>>& gameObjects)
 		const uint64 instanceId = gameObject->GetMeshRenderer()->GetInstanceID();
 		cache[instanceId].push_back(gameObject);
 	}
-
-	
 
 	for (auto& pair : cache)
 	{
