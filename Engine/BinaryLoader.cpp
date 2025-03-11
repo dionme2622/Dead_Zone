@@ -688,7 +688,7 @@ void BinaryLoader::LoadMaterial(Material* surfaceMaterial)
 	material.normalTexName;
 	material.specularTexName;
 
-	_meshes.back().materials.push_back(material);
+	_meshes.back().materials.emplace_back(material);
 }
 
 

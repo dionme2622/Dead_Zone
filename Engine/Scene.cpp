@@ -147,7 +147,6 @@ void Scene::RenderForward()
 		if (camera == mainCamera) 
 			continue;
 
-
 		camera->SortGameObject();
 		camera->Render_Forward();
 	}

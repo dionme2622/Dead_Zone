@@ -336,6 +336,5 @@
     <FxCompile Include="..\Resources\Shader\math.fx">
       <Filter>Shader</Filter>
     </FxCompile>
-    <FxCompile Include="..\Resources\Shader\swapchain.fx" />
   </ItemGroup>
 </Project>

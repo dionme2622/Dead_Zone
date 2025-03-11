@@ -12,7 +12,7 @@ PlayerScript::PlayerScript(HWND hwnd)
 {
 	_hwnd = hwnd;
 
-	_speed = 10.0f;
+	_speed = 100.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
@@ -27,7 +27,7 @@ void PlayerScript::LateUpdate()
 {
 	UpdatePlayerInput();
 
-	UpdatePlayerOnTerrain();
+	//UpdatePlayerOnTerrain();
 }
 
 

@@ -111,7 +111,6 @@ void LobbyScene::LoadScene()
 			meshRenderer->SetMaterial(material);
 		}
 		obj->AddComponent(meshRenderer);
-		//scene->AddGameObject(obj);
 		AddGameObject(obj);
 	}
 #pragma endregion
@@ -127,8 +126,6 @@ void LobbyScene::LoadScene()
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
 		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
-
-		//scene->AddGameObject(light);
 		AddGameObject(light);
 	}
 #pragma endregion

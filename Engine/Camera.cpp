@@ -49,6 +49,8 @@ void Camera::SortGameObject()
 	_vecDeferred.clear();
 	_vecParticle.clear();
 
+	int a = 0;
+
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
@@ -58,12 +60,14 @@ void Camera::SortGameObject()
 		if (IsCulled(gameObject->GetLayerIndex())) {
 			continue;
 		}
+
 		if (gameObject->GetCheckFrustum())
 		{
 			if (_frustum.ContainsSphere(
 				gameObject->GetTransform()->GetWorldPosition(),
 				gameObject->GetTransform()->GetBoundingSphereRadius()) == false)
 			{
+				++a;
 				continue;
 			}
 		}
@@ -74,18 +78,20 @@ void Camera::SortGameObject()
 			switch (shaderType)
 			{
 			case SHADER_TYPE::DEFERRED:
-				_vecDeferred.push_back(gameObject);
+				_vecDeferred.emplace_back(gameObject);
 				break;
 			case SHADER_TYPE::FORWARD:
-				_vecForward.push_back(gameObject);
+				_vecForward.emplace_back(gameObject);
 				break;
 			}
 		}
 		else
 		{
-			_vecParticle.push_back(gameObject);
+			_vecParticle.emplace_back(gameObject);
 		}
 	}
+	//printf("%d\n", a);
+
 }
 
 void Camera::SortShadowObject()
@@ -116,7 +122,7 @@ void Camera::SortShadowObject()
 			}
 		}
 
-		_vecShadow.push_back(gameObject);
+		_vecShadow.emplace_back(gameObject);
 	}
 }
 
