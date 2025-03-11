@@ -14,6 +14,7 @@
 #include "MeshData.h"
 #include "TestAnimation.h"
 #include "ParticleSystem.h"
+#include "KeyInput.h"
 
 BattleScene::BattleScene()
 {
@@ -45,21 +46,21 @@ void BattleScene::LoadScene()
 
 #pragma region UI_Camera
 	{
-		//shared_ptr<GameObject> camera = make_shared<GameObject>();
-		//camera->SetName(L"Orthographic_Camera");
-		//camera->AddComponent(make_shared<Transform>());
-		//camera->AddComponent(make_shared<Camera>());
-		//camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		//camera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
-		//uint8 layerIndex = LayerNameToIndex(L"UI");
-		//camera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
-		//camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
-		//AddGameObject(camera);
+		_uiCamera = make_shared<GameObject>();
+		_uiCamera->SetName(L"Orthographic_Camera");
+		_uiCamera->AddComponent(make_shared<Transform>());
+		_uiCamera->AddComponent(make_shared<Camera>());
+		_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
+		_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
+		AddGameObject(_uiCamera);
 	}
 #pragma endregion
 
 #pragma region SkyBox
-	/*{
+	{
 		shared_ptr<GameObject> skybox = make_shared<GameObject>();
 		skybox->SetLayerIndex(LayerNameToIndex(L"Battle"));
 		skybox->AddComponent(make_shared<Transform>());
@@ -80,7 +81,7 @@ void BattleScene::LoadScene()
 		}
 		skybox->AddComponent(meshRenderer);
 		AddGameObject(skybox);
-	}*/
+	}
 #pragma endregion
 
 #pragma region Player
@@ -239,5 +240,9 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
+	if (INPUT->GetButtonDown(KEY_TYPE::RETURN))
+		RemoveGameObject(_uiCamera);
+
+
 	Scene::Update();
 }
