@@ -47,7 +47,7 @@ using namespace Microsoft::WRL;
 
 #define PI 3.14159
 #define _INSTANCING
-
+extern bool _WIRE_FRAME_MODE;
 
 // °¢Á¾ typedef
 using int8 = __int8;

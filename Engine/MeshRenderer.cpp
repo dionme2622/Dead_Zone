@@ -6,6 +6,7 @@
 #include "Resources.h"
 #include "Animator.h"
 #include "InstancingBuffer.h"
+#include "Shader.h"
 
 MeshRenderer::MeshRenderer() : Component(COMPONENT_TYPE::MESH_RENDERER)
 {
@@ -35,6 +36,18 @@ void MeshRenderer::Render()
 		if (material == nullptr || material->GetShader() == nullptr)
 			continue;
 
+		switch (material->GetShader()->GetShaderType())
+		{
+		case SHADER_TYPE::DEFERRED:
+			if (!_WIRE_FRAME_MODE)
+				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
+			else
+				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred_Wire"));
+			break;
+		default:
+			break;
+		}
+
 		GetTransform()->PushData();
 
 		if (GetAnimator())
@@ -57,6 +70,18 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)			// Instancing 
 
 		if (material == nullptr || material->GetShader() == nullptr)
 			continue;
+
+		switch (material->GetShader()->GetShaderType())
+		{
+		case SHADER_TYPE::DEFERRED:
+			if (!_WIRE_FRAME_MODE)
+				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
+			else
+				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred_Wire"));
+			break;
+		default:
+			break;
+		}
 
 		buffer->PushData();
 
