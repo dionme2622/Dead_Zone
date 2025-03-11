@@ -14,6 +14,14 @@ void Game::Init(const WindowInfo& info)
 
 void Game::Update()
 {
+	/* ------------------------------ Å° ÀÔ·Â Debug -----------------------------------------*/
 	if (INPUT->GetButtonDown(KEY_TYPE::ESC)) exit(0);
+	else if (INPUT->GetButtonDown(KEY_TYPE::B))
+	{
+		if (_WIRE_FRAME_MODE) _WIRE_FRAME_MODE = false;
+		else _WIRE_FRAME_MODE = true;
+	}
+	/* --------------------------------------------------------------------------------------*/
+
 	GEngine->Update();
 }
