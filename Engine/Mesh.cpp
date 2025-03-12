@@ -176,6 +176,7 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 				kfInfo.scale = scale;
 				kfInfo.rotation = rotation;
 				kfInfo.translate = translation;
+				
 			}
 		}	
 
@@ -213,6 +214,8 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 			AnimClipInfo& animClip = _animClips[i];
 
 			// 애니메이션 프레임 정보
+			//vector<Matrix> frameParams;
+
 			vector<AnimFrameParams> frameParams;
 			frameParams.resize(animClip.frameCount * _bones.size());
 
@@ -236,6 +239,8 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 			// StructuredBuffer 세팅
 			_frameBuffer.push_back(make_shared<StructuredBuffer>());
 			_frameBuffer.back()->Init(sizeof(AnimFrameParams), static_cast<uint32>(frameParams.size()), frameParams.data());
+			//_frameBuffer.back()->Init(sizeof(Matrix), static_cast<uint32>(frameParams.size()), frameParams.data());
+
 		}
 	}
 #pragma endregion

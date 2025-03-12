@@ -13,6 +13,8 @@ struct AnimFrameParams
 };
 
 StructuredBuffer<AnimFrameParams> g_bone_frame : register(t8);
+//StructuredBuffer<matrix> g_bone_frame : register(t8);
+
 StructuredBuffer<matrix> g_offset : register(t9);
 RWStructuredBuffer<matrix> g_final : register(u0);
 
@@ -47,7 +49,11 @@ void CS_Main(int3 threadIdx : SV_DispatchThreadID)
 
     matrix matBone = MatrixAffineTransformation(scale, quaternionZero, rotation, translation);
 
+    //g_final[threadIdx.x] = mul(g_offset[threadIdx.x], g_bone_frame[threadIdx.x]);
+    
+    
     g_final[threadIdx.x] = mul(g_offset[threadIdx.x], matBone);
+    
 }
 
 #endif

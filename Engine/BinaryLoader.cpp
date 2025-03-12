@@ -451,7 +451,6 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 		if (!strcmp(pstrToken, "<BonesPerVertex>:"))
 		{
 			int nBonesPerVertex = ::ReadIntegerFromFile(pInFile);
-			meshes.boneWeights.resize(nBonesPerVertex);				// 가중치 개수 만큼 vector Resize
 		}
 		else if (!strcmp(pstrToken, "<Bounds>:"))
 		{
@@ -482,7 +481,8 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 				XMFLOAT4X4* m_pxmf4x4BindPoseBoneOffsets = new XMFLOAT4X4[nSkinningBones];
 				for (int i = 0; i < nSkinningBones; ++i) {
 					nReads = (UINT)::fread(&m_pxmf4x4BindPoseBoneOffsets[i], sizeof(XMFLOAT4X4), 1, pInFile);
-					_bones[i]->matOffset = XMLoadFloat4x4(&m_pxmf4x4BindPoseBoneOffsets[i]);
+
+					XMStoreFloat4x4(&_bones[i]->matOffset, XMMatrixTranspose(XMLoadFloat4x4(&m_pxmf4x4BindPoseBoneOffsets[i])));
 				}
 			delete[] m_pxmf4x4BindPoseBoneOffsets;
 			}
@@ -566,9 +566,8 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 			int animIndex = ::ReadIntegerFromFile(pInFile);
 			shared_ptr<BinaryAnimClipInfo> animClip = make_shared<BinaryAnimClipInfo>();
 
-			char name[32] = {};
-			::ReadStringFromFile(pInFile, name); //Animation Set Name
-			string animName(name);
+			::ReadStringFromFile(pInFile, pstrToken); //Animation Set Name
+			string animName(pstrToken);
 
 			float fLength = ::ReadFloatFromFile(pInFile);
 			int nFramesPerSecond = ::ReadIntegerFromFile(pInFile);
@@ -596,6 +595,7 @@ void BinaryLoader::LoadAnimationFromFile(FILE* pInFile)
 					{
 						keyFrameInfo[j].time = fKeyTime;
 						nReads = (UINT)::fread(&matrix[j], sizeof(XMFLOAT4X4), 1, pInFile);
+
 						keyFrameInfo[j].matTransform = XMLoadFloat4x4(&matrix[j]);
 						// 뼈 인덱스와 애니메이션 프레임 인덱스를 맞춰야한다. 이름으로 비교하면서
 						for (int b = 0; b < _bones.size(); ++b)

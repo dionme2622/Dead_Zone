@@ -23,6 +23,8 @@ struct KeyFrameInfo
 	wstring boneName;
 	double	time;
 
+	Matrix	matTransform; // test
+
 	Vec4	scale;
 	Vec4	rotation;
 	Vec4	translate;

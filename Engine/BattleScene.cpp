@@ -240,7 +240,6 @@ void BattleScene::LoadScene()
 
 			for (auto& gameObject : gameObjects)
 			{
-				//gameObject->SetName(L"SA_Character_FemaleHero");
 				gameObject->SetCheckFrustum(true);
 				gameObject->SetStatic(true);
 				//gameObject->AddComponent(make_shared<TestAnimation>());
@@ -248,8 +247,9 @@ void BattleScene::LoadScene()
 			}
 
 
-			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, -300.0f, 0.f));
+			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, -150.0f, 0.f));
 			gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+
 
 		}
 

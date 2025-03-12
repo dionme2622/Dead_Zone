@@ -21,37 +21,6 @@ struct MaterialInfo
 	wstring			specularTexName;
 };
 
-struct BoneWeight
-{
-	using Pair = pair<int32, double>;
-	vector<Pair> boneWeights;
-
-	void AddWeights(uint32 index, double weight)
-	{
-		if (weight <= 0.f)
-			return;
-
-		auto findIt = std::find_if(boneWeights.begin(), boneWeights.end(),
-			[=](const Pair& p) { return p.second < weight; });
-
-		if (findIt != boneWeights.end())
-			boneWeights.insert(findIt, Pair(index, weight));
-		else
-			boneWeights.push_back(Pair(index, weight));
-
-		// 가중치는 최대 4개
-		if (boneWeights.size() > 4)
-			boneWeights.pop_back();
-	}
-
-	void Normalize()
-	{
-		double sum = 0.f;
-		std::for_each(boneWeights.begin(), boneWeights.end(), [&](Pair& p) { sum += p.second; });
-		std::for_each(boneWeights.begin(), boneWeights.end(), [=](Pair& p) { p.second = p.second / sum; });
-	}
-};
-
 struct BinaryMeshInfo
 {
 	wstring								objName;
@@ -62,7 +31,6 @@ struct BinaryMeshInfo
 	Vec3								AABBExtents;
 	vector<MaterialInfo>				materials;
 	shared_ptr<Transform>				transform;
-	vector<BoneWeight>					boneWeights; // 뼈 가중치
 	bool								hasMesh = false;
 	bool								hasAnimation = false;
 };
