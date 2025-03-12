@@ -146,7 +146,7 @@ void Camera::Render_Deferred()
 	//}
 
 
-#ifdef _INSTANCING
+#ifdef _INSTANCING_MODE
 	GET_SINGLE(InstancingManager)->Render(_vecDeferred);
 
 #else
@@ -167,7 +167,7 @@ void Camera::Render_Forward()
 	/*S_MatView = _matView;
 	S_MatProjection = _matProjection;*/
 
-#ifdef _INSTANCING
+#ifdef _INSTANCING_MODE
 	GET_SINGLE(InstancingManager)->Render(_vecForward);
 
 #else

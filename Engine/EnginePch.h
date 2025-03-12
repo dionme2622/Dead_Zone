@@ -47,7 +47,7 @@ using namespace Microsoft::WRL;
 #endif
 
 #define PI 3.14159
-#define _INSTANCING
+#define _INSTANCING_MODE
 extern bool _WIRE_FRAME_MODE;
 
 // °¢Á¾ typedef
