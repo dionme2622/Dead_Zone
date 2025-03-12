@@ -144,7 +144,7 @@ void Scene::RenderForward()
 
 	for (auto& camera : _cameras)
 	{
-		if (camera == mainCamera) 
+		if (camera == mainCamera)
 			continue;
 
 		camera->SortGameObject();

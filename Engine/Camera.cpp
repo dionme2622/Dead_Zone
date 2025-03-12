@@ -26,6 +26,7 @@ Camera::~Camera()
 
 void Camera::FinalUpdate()
 {
+
 	_matView = GetTransform()->GetLocalToWorldMatrix().Invert();
 
 	
@@ -48,11 +49,21 @@ void Camera::SortGameObject()
 	_vecForward.clear();
 	_vecDeferred.clear();
 	_vecParticle.clear();
-
 	int a = 0;
+
+	if (GetProjectionType() == PROJECTION_TYPE::ORTHOGRAPHIC)
+	{
+		a = 0;
+	}
+	else if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE)
+	{
+		a = 0;
+	}
+	int b = 0;
 
 	for (auto& gameObject : gameObjects)
 	{
+		
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
 			continue;
 		}
@@ -71,6 +82,8 @@ void Camera::SortGameObject()
 				continue;
 			}
 		}
+		++b;
+		//printf("%d 번째 레이어인덱스 %d\n", b, gameObject->GetLayerIndex());
 
 		if (gameObject->GetMeshRenderer())
 		{
@@ -90,7 +103,6 @@ void Camera::SortGameObject()
 			_vecParticle.emplace_back(gameObject);
 		}
 	}
-	//printf("%d\n", a);
 
 }
 
@@ -128,8 +140,11 @@ void Camera::SortShadowObject()
 
 void Camera::Render_Deferred()
 {
-	S_MatView = _matView;
-	S_MatProjection = _matProjection;
+	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
+		S_MatView = _matView;
+		S_MatProjection = _matProjection;
+	//}
+
 
 #ifdef _INSTANCING
 	GET_SINGLE(InstancingManager)->Render(_vecDeferred);
@@ -138,15 +153,19 @@ void Camera::Render_Deferred()
 	for (auto& gameObject : _vecDeferred)
 	{
 		gameObject->GetMeshRenderer()->Render();
-}
+	}	
 #endif
 
 }
 
 void Camera::Render_Forward()
 {
-	S_MatView = _matView;
-	S_MatProjection = _matProjection;
+	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
+		S_MatView = _matView;
+		S_MatProjection = _matProjection;
+	//}
+	/*S_MatView = _matView;
+	S_MatProjection = _matProjection;*/
 
 #ifdef _INSTANCING
 	GET_SINGLE(InstancingManager)->Render(_vecForward);
@@ -167,8 +186,11 @@ void Camera::Render_Forward()
 
 void Camera::Render_Shadow()
 {
-	S_MatView = _matView;
-	S_MatProjection = _matProjection;
+
+	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
+		S_MatView = _matView;
+		S_MatProjection = _matProjection;
+	//}
 
 	for (auto& gameObject : _vecShadow)
 	{

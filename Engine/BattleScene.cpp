@@ -15,6 +15,9 @@
 #include "TestAnimation.h"
 #include "ParticleSystem.h"
 
+// TEST
+#include "KeyInput.h"
+
 BattleScene::BattleScene()
 {
 }
@@ -45,21 +48,21 @@ void BattleScene::LoadScene()
 
 #pragma region UI_Camera
 	{
-		//shared_ptr<GameObject> camera = make_shared<GameObject>();
-		//camera->SetName(L"Orthographic_Camera");
-		//camera->AddComponent(make_shared<Transform>());
-		//camera->AddComponent(make_shared<Camera>());
-		//camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		//camera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+		//_uiCamera = make_shared<GameObject>();
+		//_uiCamera->SetName(L"Orthographic_Camera");
+		//_uiCamera->AddComponent(make_shared<Transform>());
+		//_uiCamera->AddComponent(make_shared<Camera>());
+		//_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		//_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
 		//uint8 layerIndex = LayerNameToIndex(L"UI");
-		//camera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
-		//camera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
-		//AddGameObject(camera);
+		//_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
+		//_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
+		//AddGameObject(_uiCamera);
 	}
 #pragma endregion
 
 #pragma region SkyBox
-	/*{
+	{
 		shared_ptr<GameObject> skybox = make_shared<GameObject>();
 		skybox->SetLayerIndex(LayerNameToIndex(L"Battle"));
 		skybox->AddComponent(make_shared<Transform>());
@@ -80,7 +83,7 @@ void BattleScene::LoadScene()
 		}
 		skybox->AddComponent(meshRenderer);
 		AddGameObject(skybox);
-	}*/
+	}
 #pragma endregion
 
 #pragma region Player
@@ -186,9 +189,9 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 500, 500));
+		light->GetTransform()->SetLocalPosition(Vec3(0, 500, 0));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, -1, -1.f));
+		light->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
@@ -210,24 +213,22 @@ void BattleScene::LoadScene()
 
 #pragma region Model
 	{
-		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Scene.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo1.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-	for (auto& gameObject : gameObjects)
-	{
-		gameObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
-		//gameObject->SetName(L"SA_Character_FemaleHero");
-		gameObject->SetCheckFrustum(true);
-		gameObject->SetStatic(false);
-		gameObject->AddComponent(make_shared<TestAnimation>());
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
+			//gameObject->SetName(L"SA_Character_FemaleHero");
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(false);
+			gameObject->AddComponent(make_shared<TestAnimation>());
 
-		AddGameObject(gameObject);
-	}
-
-
-			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, -300.0f, 0.f));
-			gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			AddGameObject(gameObject);
+		}
+		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, -400.0f, 0.f));
+		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 	}
 
@@ -240,5 +241,10 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
+	if (INPUT->GetButtonDown(KEY_TYPE::RETURN))
+		RemoveGameObject(_uiCamera);
+	else if(INPUT->GetButtonDown(KEY_TYPE::TAB))
+		AddGameObject(_uiCamera);
+
 	Scene::Update();
 }
