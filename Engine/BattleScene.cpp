@@ -48,16 +48,16 @@ void BattleScene::LoadScene()
 
 #pragma region UI_Camera
 	{
-		//_uiCamera = make_shared<GameObject>();
-		//_uiCamera->SetName(L"Orthographic_Camera");
-		//_uiCamera->AddComponent(make_shared<Transform>());
-		//_uiCamera->AddComponent(make_shared<Camera>());
-		//_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		//_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
-		//uint8 layerIndex = LayerNameToIndex(L"UI");
-		//_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
-		//_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
-		//AddGameObject(_uiCamera);
+		_uiCamera = make_shared<GameObject>();
+		_uiCamera->SetName(L"Orthographic_Camera");
+		_uiCamera->AddComponent(make_shared<Transform>());
+		_uiCamera->AddComponent(make_shared<Camera>());
+		_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
+		_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
+		AddGameObject(_uiCamera);
 	}
 #pragma endregion
 
@@ -225,9 +225,11 @@ void BattleScene::LoadScene()
 			gameObject->SetStatic(false);
 			gameObject->AddComponent(make_shared<TestAnimation>());
 
+			//printf("À§Ä¡ : %f\n", gameObject->GetTransform()->GetLocalPosition().x);
 			AddGameObject(gameObject);
+			//TestObject(gameObject);
 		}
-		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, -400.0f, 0.f));
+		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 000.0f, 0.f));
 		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 	}
@@ -243,8 +245,38 @@ void BattleScene::Update()
 {
 	if (INPUT->GetButtonDown(KEY_TYPE::RETURN))
 		RemoveGameObject(_uiCamera);
-	else if(INPUT->GetButtonDown(KEY_TYPE::TAB))
+
+	if(INPUT->GetButtonDown(KEY_TYPE::TAB))
 		AddGameObject(_uiCamera);
 
 	Scene::Update();
+}
+
+void BattleScene::TestObject(shared_ptr<GameObject> obj)
+{
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetLayerIndex(LayerNameToIndex(L"Battle"));
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(11.f, 1.f, 1.f));
+		obj->GetTransform()->SetLocalPosition(obj->GetTransform()->GetLocalPosition());
+		obj->SetStatic(true);
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+			meshRenderer->SetMesh(sphereMesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern", L"..\\Resources\\Texture\\SA_DeadBody_01.dds");
+			//shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern_Normal", L"..\\Resources\\Texture\\Metal_Pattern_normal.png");
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			//material->SetTexture(1, texture2);
+			meshRenderer->SetMaterial(material);
+		}
+		obj->AddComponent(meshRenderer);
+		AddGameObject(obj);
+	}
 }

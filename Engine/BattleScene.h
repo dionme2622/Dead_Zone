@@ -18,5 +18,10 @@ private:
 	shared_ptr<GameObject>		_uiCamera;
 
 	HWND _hwnd;
+
+
+	//TEST
+public:
+	void TestObject(shared_ptr<GameObject> obj);
 };
 
