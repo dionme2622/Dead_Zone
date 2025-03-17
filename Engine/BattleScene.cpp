@@ -234,7 +234,7 @@ void BattleScene::LoadScene()
 #pragma region Model
 
 		{
-			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo1.bin"); // MeshData* meshData
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
 
 			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
@@ -248,9 +248,7 @@ void BattleScene::LoadScene()
 
 
 			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, -150.0f, 0.f));
-			gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-
-
+			gameObjects[0]->GetTransform()->SetLocalScale(Vec3(20.f, 20.f, 20.f));
 		}
 
 

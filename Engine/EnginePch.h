@@ -176,6 +176,7 @@ struct TransformParams
 
 struct AnimFrameParams
 {
+	//wstring boneName;
 	Vec4	scale;
 	Vec4	rotation; // Quaternion
 	Vec4	translation;

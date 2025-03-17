@@ -68,11 +68,11 @@ public:
 	void LoadMeshFromFile(BinaryMeshInfo&, FILE*);
 	void LoadMaterialFromFile(BinaryMeshInfo&, FILE*);
 	void LoadSkinInfoFromFile(BinaryMeshInfo&, FILE*);
-	void LoadAnimationFromFile(FILE*);
+	void LoadAnimationFromFile(vector<BinaryMeshInfo>&, FILE*);
 
 	void CreateTextures();
 	void CreateMaterials();
-
+	void GetToRootTransform(shared_ptr<BinaryAnimClipInfo>&, vector<BinaryMeshInfo> meshes);
 public:
 	int32 GetMeshCount() { return static_cast<int32>(_meshes.size()); }
 	const BinaryMeshInfo& GetMesh(int32 idx) { return _meshes[idx]; }

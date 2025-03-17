@@ -97,7 +97,7 @@ void Skinning(inout float3 pos, inout float3 normal, inout float3 tangent,
 
         int boneIdx = indices[i];
         matrix matBone = g_mat_bone[boneIdx];
-
+        
         info.pos += (mul(float4(pos, 1.f), matBone) * weight[i]).xyz;
         info.normal += (mul(float4(normal, 0.f), matBone) * weight[i]).xyz;
         info.tangent += (mul(float4(tangent, 0.f), matBone) * weight[i]).xyz;

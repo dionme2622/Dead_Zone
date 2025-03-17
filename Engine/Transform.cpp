@@ -32,6 +32,21 @@ void Transform::FinalUpdate()
 	{
 		_matWorld *= parent->GetLocalToWorldMatrix();
 	}
+
+	// _mat
+}
+
+Matrix Transform::GetToRootTransform()
+{
+	_matWorld = _matLocal;
+
+	shared_ptr<Transform> parent = GetParent().lock();
+	if (parent != nullptr)
+	{
+		_matWorld *= parent->GetLocalToWorldMatrix();
+	}
+
+	return _matWorld;
 }
 
 void Transform::PushData()
