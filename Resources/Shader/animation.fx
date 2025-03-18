@@ -24,7 +24,7 @@ RWStructuredBuffer<matrix> g_final : register(u0);
 [numthreads(256, 1, 1)]
 void CS_Main(int3 threadIdx : SV_DispatchThreadID)
 {
-    if (g_int_3 <= threadIdx.x)     // 0 ~ bone의 개수 까지만 계산한다
+    if (g_int_0 <= threadIdx.x)     // 0 ~ bone의 개수 까지만 계산한다
         return;
 
     int boneCount = g_int_0;

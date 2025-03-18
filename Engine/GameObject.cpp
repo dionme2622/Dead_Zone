@@ -6,8 +6,8 @@
 #include "Light.h"
 #include "MonoBehaviour.h"
 #include "ParticleSystem.h"
-
 #include "Animator.h"
+
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
 

@@ -7,7 +7,7 @@
 #include "MeshRenderer.h"
 #include "BinaryLoader.h"
 #include "Animator.h"
-
+#include "TestAnimation.h"
 
 MeshData::MeshData() : Object(OBJECT_TYPE::MESH_DATA)
 {
@@ -87,6 +87,7 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 				animator->SetBones(info.mesh->GetBones());
 				animator->SetAnimClip(info.mesh->GetAnimClip());
 				gameObject->AddComponent(animator);
+				gameObject->AddComponent(make_shared<TestAnimation>());
 			}
 		}
 		v.push_back(gameObject);
