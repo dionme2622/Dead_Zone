@@ -8,6 +8,7 @@
 #include "BinaryLoader.h"
 #include "Animator.h"
 #include "TestAnimation.h"
+#include "BoxCollider.h"
 
 MeshData::MeshData() : Object(OBJECT_TYPE::MESH_DATA)
 {
@@ -28,6 +29,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 	{
 		MeshRenderInfo info = {};
 
+		// Mesh
 		if (!loader.GetMesh(i).vertices.empty())
 		{
 			shared_ptr<Mesh> mesh = Mesh::CreateFromBinary(&loader.GetMesh(i), loader);
@@ -36,19 +38,30 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 
 			info.mesh = GET_SINGLE(Resources)->Get<Mesh>(mesh->GetName());
 		}
+
+		// Transform
 		shared_ptr<Transform> transform = loader.GetMesh(i).transform;
-		// Material 찾아서 연동
+
+		// Material
 		vector<shared_ptr<Material>> materials;
 		for (size_t j = 0; j < loader.GetMesh(i).materials.size(); j++)
 		{
 			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).meshName);
 
-			//material->SetInt(0, 1);
 			materials.push_back(material);
 		}
+
+		// Collider 
+		Vec3 center = loader.GetMesh(i).AABBCenter;
+		Vec3 extents = loader.GetMesh(i).AABBExtents;
+		shared_ptr<BoxCollider> boxCollider = make_shared<BoxCollider>(center, extents);
+
+
 		info.objName = loader.GetMesh(i).objName;
 		info.materials = materials;
 		info.transform = transform;
+		info.boxCollider = boxCollider;
+
 		// TODO : AABB 바운딩 박스 데이터 넘겨야 함
 
 		////////////////////////////////////////
@@ -78,7 +91,8 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 
 
 			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
-
+			gameObject->AddComponent(info.boxCollider);
+			
 			///////////////////////////////////////////
 
 			if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?

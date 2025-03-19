@@ -246,7 +246,7 @@ void BattleScene::LoadScene()
 			}
 
 
-			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
+			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
 			gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		}
 
