@@ -2,7 +2,8 @@
 #include "BoxCollider.h"
 #include "GameObject.h"
 #include "Transform.h"
-
+#include "Resources.h"
+#include "Mesh.h"
 
 BoxCollider::BoxCollider() : BaseCollider(ColliderType::Box)
 {
@@ -39,13 +40,30 @@ bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)
 	return _boundingBox.Intersects(rayOrigin, rayDir, OUT distance);
 }
 
-void BoxCollider::GetBoxCorners(const Vec3 center, const Vec3 extents)
+vector<Vertex> BoxCollider::GetBoxVertex(const Vec3 center, const Vec3 extents, wstring meshName)
 {
 	Vec3 min = { center.x - extents.x, center.y - extents.y, center.z - extents.z };
 	Vec3 max = { center.x + extents.x, center.y + extents.y, center.z + extents.z };
 
 	// TODO
-	vector<Vertex> v;
+	vector<Vertex> vec(8);
+	vector<uint32> idx(8);
 
+	vec[0].pos = { min.x, min.y, min.z };
+	vec[1].pos = { max.x, min.y, min.z };
+	vec[2].pos = { min.x, max.y, min.z };
+	vec[3].pos = { max.x, max.y, min.z };
+	vec[4].pos = { min.x, min.y, max.z };
+	vec[5].pos = { max.x, min.y, max.z };
+	vec[6].pos = { min.x, max.y, max.z };
+	vec[7].pos = { max.x, max.y, max.z };
+
+	shared_ptr<Mesh> mesh = make_shared<Mesh>();
+	mesh->Init(vec, idx);
+
+	GET_SINGLE(Resources)->Add<Mesh>(meshName, mesh);
+	
+
+	return vec;
 }
 	

@@ -14,7 +14,7 @@ public:
 
 
 public:
-	void GetBoxCorners(const Vec3 center, const Vec3 extents);
+	vector<Vertex> GetBoxVertex(const Vec3 center, const Vec3 extents, wstring meshName);
 
 
 	void SetCenter(Vec3 center) { _center = center; };

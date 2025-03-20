@@ -33,7 +33,6 @@ void Transform::FinalUpdate()
 		_matWorld *= parent->GetLocalToWorldMatrix();
 	}
 
-	// _mat
 }
 
 Matrix Transform::GetToRootTransform()
