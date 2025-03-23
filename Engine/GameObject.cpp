@@ -6,8 +6,9 @@
 #include "Light.h"
 #include "MonoBehaviour.h"
 #include "ParticleSystem.h"
-
 #include "Animator.h"
+#include "BaseCollider.h"
+
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
 
@@ -118,6 +119,12 @@ shared_ptr<Light> GameObject::GetLight()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::LIGHT);
 	return static_pointer_cast<Light>(component);
+}
+
+shared_ptr<BaseCollider> GameObject::GetCollider()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::COLLIDER);
+	return static_pointer_cast<BaseCollider>(component);
 }
 
 shared_ptr<ParticleSystem> GameObject::GetParticleSystem()

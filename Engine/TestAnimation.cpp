@@ -23,4 +23,13 @@ void TestAnimation::Update()
 		int32 index = (currentIndex - 1 + count) % count;
 		GetAnimator()->Play(index);
 	}
+
+	/*if (INPUT->GetButton(KEY_TYPE::W))
+	{
+		int32 count = GetAnimator()->GetAnimCount();
+		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+
+		int32 index = (currentIndex - 1 + count) % count;
+		GetAnimator()->Play(2);
+	}*/
 }

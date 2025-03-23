@@ -128,5 +128,31 @@ float4 PS_UI(VS_TEX_OUT input) : SV_Target
     return color;
 }
 
+struct VS_COLLIDER_IN
+{
+    float3 pos : POSITION;
+};
+
+struct VS_COLLIDER_OUT
+{
+    float4 pos : SV_POSITION;
+};
+
+VS_COLLIDER_OUT VS_Collider(VS_COLLIDER_IN input)
+{
+    VS_COLLIDER_OUT output = (VS_COLLIDER_OUT) 0;
+
+    output.pos = mul(float4(input.pos, 1.f), g_matWVP);
+
+    return output;
+}
+
+float4 PS_Collider(VS_COLLIDER_OUT input) : SV_Target
+{
+    float4 color = float4(1.f, 0.f, 0.f, 1.f);
+
+    return color;
+}
+
 
 #endif

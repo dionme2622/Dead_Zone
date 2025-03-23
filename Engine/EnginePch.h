@@ -47,6 +47,7 @@ using namespace Microsoft::WRL;
 #endif
 
 #define PI 3.14159
+#define _DEBUG_COLLIDER
 #define _INSTANCING_MODE
 extern bool _WIRE_FRAME_MODE;
 
@@ -177,6 +178,7 @@ struct TransformParams
 
 struct AnimFrameParams
 {
+	//wstring boneName;
 	Vec4	scale;
 	Vec4	rotation; // Quaternion
 	Vec4	translation;

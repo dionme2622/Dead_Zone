@@ -14,6 +14,7 @@
 #include "MeshData.h"
 #include "TestAnimation.h"
 #include "ParticleSystem.h"
+#include "BoxCollider.h"
 
 // TEST
 #include "KeyInput.h"
@@ -219,25 +220,35 @@ void BattleScene::LoadScene()
 
 		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
-			//gameObject->SetName(L"SA_Character_FemaleHero");
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(false);
-			gameObject->AddComponent(make_shared<TestAnimation>());
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetCheckFrustum(true);
+				gameObject->SetStatic(true);
+				AddGameObject(gameObject);
+			}
 
-			//printf("위치 : %f\n", gameObject->GetTransform()->GetLocalPosition().x);
-			AddGameObject(gameObject);
-			TestObjectPosition(gameObject);
+			shared_ptr<GameObject> rootObject = gameObjects[0];
+
+			rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+			rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		}
 
+		{
+			shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
 
-		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-		gameObjects[0]->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	}
+			vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-	
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetCheckFrustum(true);
+				gameObject->SetStatic(true);
+				AddGameObject(gameObject);
+			}
+			shared_ptr<GameObject> rootObject = gameObjects[0];
+
+			rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, -150.0f, 0.f));
+			rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		}
 
 
 #pragma endregion
@@ -255,29 +266,4 @@ void BattleScene::Update()
 		AddGameObject(_uiCamera);
 
 	Scene::Update();
-}
-
-void BattleScene::TestObjectPosition(shared_ptr<GameObject> sourceObj)
-{
-	shared_ptr<GameObject> testObj = make_shared<GameObject>();
-	testObj->SetLayerIndex(LayerNameToIndex(L"Battle"));
-	testObj->AddComponent(make_shared<Transform>());
-	testObj->GetTransform()->SetLocalScale(Vec3(1, 1, 1));
-	testObj->GetTransform()->SetLocalPosition(sourceObj->GetTransform()->GetLocalPosition()); // 소스 오브젝트의 위치 사용
-	testObj->SetStatic(true);
-	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	{
-		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadCubeMesh();
-		meshRenderer->SetMesh(sphereMesh);
-	}
-	{
-		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern", L"..\\Resources\\Texture\\SA_DeadBody_01.dds");
-		shared_ptr<Material> material = make_shared<Material>();
-		material->SetShader(shader);
-		material->SetTexture(0, texture);
-		meshRenderer->SetMaterial(material);
-	}
-	testObj->AddComponent(meshRenderer);
-	AddGameObject(testObj);
 }

@@ -525,6 +525,29 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"ComputeParticle", shader);
 	}
 
+	// Collider
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::FORWARD,
+			RASTERIZER_TYPE::WIREFRAME
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Collider",
+			"",
+			"",
+			"",
+			"PS_Collider"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info, arg);
+		Add<Shader>(L"Collider", shader);
+	}
+
+
 	//// SwapChain
 	//{
 	//	ShaderInfo info =

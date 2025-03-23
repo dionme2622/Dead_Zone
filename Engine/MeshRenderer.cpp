@@ -44,6 +44,7 @@ void MeshRenderer::Render()
 			else
 				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred_Wire"));
 			break;
+		// TODO : 다른 셰이더 타입
 		default:
 			break;
 		}
@@ -79,6 +80,7 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)			// Instancing 
 			else
 				material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred_Wire"));
 			break;
+		// TODO : 다른 셰이더 타입
 		default:
 			break;
 		}

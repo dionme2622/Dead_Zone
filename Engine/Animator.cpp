@@ -25,6 +25,36 @@ void Animator::FinalUpdate()
 	if (_updateTime >= animClip.duration)
 		_updateTime = 0.f;
 
+	_frameCount = animClip.frameCount;
+	_bonesCount = _bones->size();
+
+	/* ----------------------------------- */
+	//_frameCount = animClip.frameCount;
+	//_bonesCount = _bones->size();
+
+	//for (int f = 0; f < _frameCount - 1; ++f)
+	//{
+	//	if ((animClip.keyFrames[f][0].time <= _updateTime) && (_updateTime < animClip.keyFrames[f + 1][0].time))
+	//	{
+	//		_frameRatio = (_updateTime - animClip.keyFrames[f][0].time) / (animClip.keyFrames[f + 1][0].time - animClip.keyFrames[f][0].time);
+	//		// Ratio에 따른 보간
+	//		for (int b = 0; b < _bonesCount; ++b)
+	//		{
+	//			Vec4 S = XMVectorLerp(animClip.keyFrames[f][b].scale, animClip.keyFrames[f + 1][b].scale, _frameRatio);
+	//			Vec4 R = XMQuaternionSlerp(animClip.keyFrames[f][b].rotation, animClip.keyFrames[f + 1][b].rotation, _frameRatio);
+	//			Vec4 T = XMVectorLerp(animClip.keyFrames[f][b].translate, animClip.keyFrames[f + 1][b].translate, _frameRatio);
+
+	//			XMStoreFloat4x4(&_boneMatrix, XMMatrixAffineTransformation(S, XMVectorZero(), R, T));
+	//		}
+
+	//	}
+	//}
+	///*for(int b = 0; b < _bonesCount; ++b)
+	//	if (_updateTime >= animClip.keyFrames[_frameCount - 1][0].time) 
+	//		_boneMatrix = animClip.keyFrames[_frameCount - 1][b];*/
+
+	/* ----------------------------------- */
+
 	const int32 ratio = static_cast<int32>(animClip.frameCount / animClip.duration);
 	_frame = static_cast<int32>(_updateTime * ratio);
 	_frame = min(_frame, animClip.frameCount - 1);
@@ -39,9 +69,10 @@ void Animator::SetAnimClip(const vector<AnimClipInfo>* animClips)
 
 void Animator::PushData()
 {
-	uint32 boneCount = static_cast<uint32>(_bones->size());
-	if (_boneFinalMatrix->GetElementCount() < boneCount)
-		_boneFinalMatrix->Init(sizeof(Matrix), boneCount);
+	//uint32 boneCount = static_cast<uint32>(_bones->size());
+	if (_boneFinalMatrix->GetElementCount() < _bonesCount)
+		_boneFinalMatrix->Init(sizeof(Matrix), _bonesCount);
+
 
 	// Compute Shader
 	shared_ptr<Mesh> mesh = GetGameObject()->GetMeshRenderer()->GetMesh();
@@ -50,14 +81,15 @@ void Animator::PushData()
 
 	_boneFinalMatrix->PushComputeUAVData(UAV_REGISTER::u0);
 
-	_computeMaterial->SetInt(0, boneCount);
+	_computeMaterial->SetInt(0, _bonesCount);
 	_computeMaterial->SetInt(1, _frame);
 	_computeMaterial->SetInt(2, _nextFrame);
+	_computeMaterial->SetInt(3, _frameCount);
 	_computeMaterial->SetFloat(0, _frameRatio);
 
-	uint32 groupCount = (boneCount / 256) + 1;
+	uint32 groupCount = (_frameCount / 256) + 1;
 	_computeMaterial->Dispatch(groupCount, 1, 1);
-
+	
 	// Graphics Shader
 	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
 }
@@ -68,3 +100,4 @@ void Animator::Play(uint32 idx)
 	_clipIndex = idx;
 	_updateTime = 0.f;
 }
+
