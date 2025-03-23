@@ -460,6 +460,7 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 		{
 			nReads = (UINT)::fread(&temp, sizeof(XMFLOAT3), 1, pInFile);
 			nReads = (UINT)::fread(&temp, sizeof(XMFLOAT3), 1, pInFile);
+
 		}
 		else if (!strcmp(pstrToken, "<BoneNames>:"))
 		{

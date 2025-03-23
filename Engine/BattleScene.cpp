@@ -14,6 +14,8 @@
 #include "MeshData.h"
 #include "TestAnimation.h"
 #include "ParticleSystem.h"
+#include "BoxCollider.h"
+
 
 BattleScene::BattleScene()
 {
@@ -92,28 +94,69 @@ void BattleScene::LoadScene()
 
 #pragma region Object
 	{
-		/*for (int32 i = 0; i < 50; i++)
+		for (int32 i = 0; i < 1; i++)
 		{
 			shared_ptr<GameObject> obj = make_shared<GameObject>();
 			obj->AddComponent(make_shared<Transform>());
 			obj->GetTransform()->SetLocalScale(Vec3(25.f, 25.f, 25.f));
-			obj->GetTransform()->SetLocalPosition(Vec3(i * 20.f, 0.f, 50.0f));
+			obj->GetTransform()->SetLocalPosition(Vec3(300.f, 0.f, 0.0f));
+			obj->AddComponent(make_shared<BoxCollider>());
 			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 			{
 				shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
 				meshRenderer->SetMesh(sphereMesh);
 			}
 			{
-				shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"GameObject");
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+				shared_ptr<Material> material = make_shared<Material>();
+				material->SetShader(shader);
 				meshRenderer->SetMaterial(material);
 			}
 			obj->AddComponent(meshRenderer);
 			AddGameObject(obj);
-		}*/
+
+			// 여기서 Collider 컴포넌트의 정점 데이터를 가져와서 새로운 메쉬를 생성한다.
+			if (obj->GetCollider() != nullptr)	// Collider Component가 존재한다면
+			{
+				shared_ptr<Mesh> mesh = obj->GetCollider()->GetColliderMesh();
+				GET_SINGLE(Resources)->Add<Mesh>(obj->GetMeshRenderer()->GetMesh()->GetName() + L"collider", mesh);
+			}
+			
+
+
+			shared_ptr<GameObject> obj2 = make_shared<GameObject>();
+			obj2->AddComponent(make_shared<Transform>());
+			obj2->AddComponent(make_shared<BoxCollider>());
+			shared_ptr<MeshRenderer> meshRenderer2 = make_shared<MeshRenderer>();
+			{
+				shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->Get<Mesh>(L"playercollider");
+				meshRenderer2->SetMesh(sphereMesh);
+			}
+			{
+				shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Collider");
+				shared_ptr<Material> material = make_shared<Material>();
+				material->SetShader(shader);
+				meshRenderer2->SetMaterial(material);
+			}
+			obj2->AddComponent(meshRenderer2);
+			obj2->GetTransform()->SetParent(obj->GetTransform());
+			AddGameObject(obj2);
+		}
+		// Bounding Box를 그리기 위한 객체를 하나 더 만들고 부모 설정을 해야한다. 어떻게 만들어야 하는가??
+		// Bounding Box의 정점 데이터를 기반으로 메쉬를 만들고 자식으로 설정한다.
+		// 객체의 Local Position은 부모의 World Position 으로 한다.
+		// SetMesh와 SetMaterial을 해주면 끝
+
+		
+	}
+#pragma endregion
+
+#pragma region BoundingBox
+	{
+		
+
 	}
 
-
-#pragma endregion
 
 #pragma region Plane
 	{
@@ -245,9 +288,10 @@ void BattleScene::LoadScene()
 				AddGameObject(gameObject);
 			}
 
+			shared_ptr<GameObject> rootObject = gameObjects[0];
 
-			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-			gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+			rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		}
 
 		{
@@ -257,14 +301,14 @@ void BattleScene::LoadScene()
 
 			for (auto& gameObject : gameObjects)
 			{
-				gameObject->SetCheckFrustum(false);
+				gameObject->SetCheckFrustum(true);
 				gameObject->SetStatic(true);
 				AddGameObject(gameObject);
 			}
+			shared_ptr<GameObject> rootObject = gameObjects[0];
 
-
-			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(0.0, -150.0f, 0.f));
-			gameObjects[0]->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+			rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, -150.0f, 0.f));
+			rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 		}
 
 

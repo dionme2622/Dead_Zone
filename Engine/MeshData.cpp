@@ -91,10 +91,37 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 
 
 			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
-			gameObject->AddComponent(info.boxCollider);
-			
-			///////////////////////////////////////////
+			if (info.boxCollider != nullptr)
+			{
+				shared_ptr<BoxCollider> collider = info.boxCollider;
+				gameObject->AddComponent(collider);
 
+#ifdef _DEBUG_COLLIDER
+				shared_ptr<Mesh> mesh = gameObject->GetCollider()->GetColliderMesh();
+				GET_SINGLE(Resources)->Add<Mesh>(gameObject->GetMeshRenderer()->GetMesh()->GetName() + L"collider", mesh);
+
+				shared_ptr<GameObject> boundingBox = make_shared<GameObject>();
+				boundingBox->AddComponent(make_shared<Transform>());
+				boundingBox->AddComponent(make_shared<MeshRenderer>());
+				{
+					shared_ptr<Mesh> colliderMesh = GET_SINGLE(Resources)->Get<Mesh>(info.mesh->GetName() + L"collider");
+					boundingBox->GetMeshRenderer()->SetMesh(colliderMesh);
+				}
+				{
+					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Collider");
+					shared_ptr<Material> material = make_shared<Material>();
+					material->SetShader(shader);
+					boundingBox->GetMeshRenderer()->SetMaterial(material);
+				}
+				boundingBox->GetTransform()->SetParent(gameObject->GetTransform());
+				v.push_back(boundingBox);
+				if (collider->DebugDraw())				// Collider를 그리는가?
+				{
+					
+				}
+			}
+#endif
+			///////////////////////////////////////////
 			if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
 			{
 				shared_ptr<Animator> animator = make_shared<Animator>();

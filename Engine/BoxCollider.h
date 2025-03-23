@@ -12,9 +12,8 @@ public:
 	virtual void FinalUpdate() override;
 	virtual bool Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance) override;
 
-
 public:
-	vector<Vertex> GetBoxVertex(const Vec3 center, const Vec3 extents, wstring meshName);
+	virtual shared_ptr<Mesh> GetColliderMesh() override;
 
 
 	void SetCenter(Vec3 center) { _center = center; };
@@ -26,7 +25,7 @@ private:
 	Vec3				_center		= { 0.f, 0.f, 0.f };
 	Vec3				_extents	= { 1.f, 1.f, 1.f };
 
-	BoundingBox			_boundingBox;
+	BoundingOrientedBox			_boundingBox;
 	
 };
 

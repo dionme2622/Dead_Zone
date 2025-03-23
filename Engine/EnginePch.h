@@ -47,6 +47,7 @@ using namespace Microsoft::WRL;
 
 #define PI 3.14159
 #define _INSTANCING
+#define _DEBUG_COLLIDER
 extern bool _WIRE_FRAME_MODE;
 
 // °¢Á¾ typedef
