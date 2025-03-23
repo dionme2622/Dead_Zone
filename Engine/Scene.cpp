@@ -76,8 +76,6 @@ void Scene::ClearRTV()
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->ClearRenderTargetView();
 	// Lighting Group 초기화
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->ClearRenderTargetView();
-	//// Blur Group 초기화
-	//GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::BLUR)->ClearRenderTargetView();
 }
 
 void Scene::RenderShadow()
@@ -86,8 +84,8 @@ void Scene::RenderShadow()
 
 	for (auto& light : _lights)
 	{
-		/*if (light->GetLightType() != LIGHT_TYPE::DIRECTIONAL_LIGHT)
-			continue;*/
+		if (light->GetLightType() != LIGHT_TYPE::DIRECTIONAL_LIGHT)
+			continue;
 
 		light->RenderShadow();
 	}
@@ -140,6 +138,7 @@ void Scene::RenderFinal()
 void Scene::RenderForward()
 {
 	shared_ptr<Camera> mainCamera = _cameras[0];
+
 	mainCamera->Render_Forward();
 
 	for (auto& camera : _cameras)

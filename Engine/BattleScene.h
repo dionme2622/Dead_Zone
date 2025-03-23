@@ -22,6 +22,6 @@ private:
 
 	//TEST
 public:
-	void TestObject(shared_ptr<GameObject> obj);
+	void TestObjectPosition(shared_ptr<GameObject> sourceObj);
 };
 

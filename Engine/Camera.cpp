@@ -28,46 +28,44 @@ void Camera::FinalUpdate()
 {
 
 	_matView = GetTransform()->GetLocalToWorldMatrix().Invert();
+	if (_type == PROJECTION_TYPE::PERSPECTIVE) {
 
-	
+	}
 
-	if (_type == PROJECTION_TYPE::PERSPECTIVE)
+	if (_type != PROJECTION_TYPE::PERSPECTIVE) {
+		//printf("%f", GetTransform()->GetLocalToWorldMatrix().Forward().X)
+	}
+
+
+	if (_type == PROJECTION_TYPE::PERSPECTIVE) 
 		_matProjection = ::XMMatrixPerspectiveFovLH(_fov, _width / _height, _near, _far);
 	else
 		_matProjection = ::XMMatrixOrthographicLH(_width * _scale, _height * _scale, _near, _far);
 
-
-
 	_frustum.FinalUpdate();
+
 }
 
 void Camera::SortGameObject()
 {
+	S_MatView = _matView;
+	S_MatProjection = _matProjection;
+
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	const vector<shared_ptr<GameObject>>& gameObjects = scene->GetGameObjects();
 
 	_vecForward.clear();
 	_vecDeferred.clear();
 	_vecParticle.clear();
-	int a = 0;
 
-	if (GetProjectionType() == PROJECTION_TYPE::ORTHOGRAPHIC)
-	{
-		a = 0;
-	}
-	else if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE)
-	{
-		a = 0;
-	}
-	int b = 0;
-
+	int a = 0, b = 0, c = 0;
 	for (auto& gameObject : gameObjects)
 	{
 		
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
 			continue;
 		}
-
+		
 		if (IsCulled(gameObject->GetLayerIndex())) {
 			continue;
 		}
@@ -78,12 +76,9 @@ void Camera::SortGameObject()
 				gameObject->GetTransform()->GetWorldPosition(),
 				gameObject->GetTransform()->GetBoundingSphereRadius()) == false)
 			{
-				++a;
 				continue;
 			}
 		}
-		++b;
-		//printf("%d 번째 레이어인덱스 %d\n", b, gameObject->GetLayerIndex());
 
 		if (gameObject->GetMeshRenderer())
 		{
@@ -160,6 +155,15 @@ void Camera::Render_Deferred()
 
 void Camera::Render_Forward()
 {
+	S_MatView = _matView;
+	if (_type == PROJECTION_TYPE::PERSPECTIVE) {
+		printf("%f\n", GetTransform()->GetLocalRotation().x);
+	}
+	else {
+		Vec3 pos = GetTransform()->GetLocalRotation();
+		//S_MatView = ::XMMatrixTranslation(-pos.x, -pos.y, -pos.z); // 회전 없이 위치만 반영
+	}
+	S_MatProjection = _matProjection;
 	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
 		S_MatView = _matView;
 		S_MatProjection = _matProjection;
@@ -196,6 +200,4 @@ void Camera::Render_Shadow()
 	{
 		gameObject->GetMeshRenderer()->RenderShadow();
 	}
-
-	
 }
