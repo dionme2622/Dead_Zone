@@ -31,16 +31,7 @@ Camera::~Camera()
 
 void Camera::FinalUpdate()
 {
-
 	_matView = GetTransform()->GetLocalToWorldMatrix().Invert();
-	if (_type == PROJECTION_TYPE::PERSPECTIVE) {
-
-	}
-
-	if (_type != PROJECTION_TYPE::PERSPECTIVE) {
-		//printf("%f", GetTransform()->GetLocalToWorldMatrix().Forward().X)
-	}
-
 
 	if (_type == PROJECTION_TYPE::PERSPECTIVE) 
 		_matProjection = ::XMMatrixPerspectiveFovLH(_fov, _width / _height, _near, _far);
@@ -97,7 +88,7 @@ void Camera::SortGameObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 100) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 50) == false)
 				{
 					continue;
 				}
