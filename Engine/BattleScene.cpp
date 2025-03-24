@@ -88,10 +88,10 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Player
-	//_player = make_shared<Player>();
-	//_player->GetGameObject()->SetLayerIndex(LayerNameToIndex(L"Battle"));
-	//_player->GetGameObject()->AddComponent(make_shared<PlayerScript>(_hwnd));
-	//AddGameObject(_player->GetGameObject());
+	_player = make_shared<Player>();
+	_player->GetGameObject()->SetLayerIndex(LayerNameToIndex(L"Battle"));
+	_player->GetGameObject()->AddComponent(make_shared<PlayerScript>(_hwnd));
+	AddGameObject(_player->GetGameObject());
 	//_playerCamera->GetTransform()->SetParent(_player->GetGameObject()->GetTransform());
 #pragma endregion
 
@@ -239,23 +239,21 @@ void BattleScene::LoadScene()
 
 #pragma region Map
 	{
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo1.bin"); // MeshData* meshData
+		shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Scene.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
 
-	//	shared_ptr<GameObject> rootObject = gameObjects[0];
+		shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	//	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-	//	rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	//}
+		rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	}
 #pragma endregion
 }
@@ -264,11 +262,5 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	if (INPUT->GetButtonDown(KEY_TYPE::RETURN))
-		RemoveGameObject(_uiCamera);
-
-	if(INPUT->GetButtonDown(KEY_TYPE::TAB))
-		AddGameObject(_uiCamera);
-
 	Scene::Update();
 }
