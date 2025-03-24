@@ -50,13 +50,13 @@ void BattleScene::LoadScene()
 
 #pragma region UI_Camera
 	{
-		shared_ptr<GameObject> camera = make_shared<GameObject>();
-		camera->SetName(L"Orthographic_Camera");
-		camera->AddComponent(make_shared<Transform>());
-		camera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, 800*600
-		camera->GetCamera()->SetName(L"UI_Camera");
-		camera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		camera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+		_uiCamera = make_shared<GameObject>();
+		_uiCamera->SetName(L"Orthographic_Camera");
+		_uiCamera->AddComponent(make_shared<Transform>());
+		_uiCamera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, 800*600
+		_uiCamera->GetCamera()->SetName(L"UI_Camera");
+		_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
 		_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
@@ -90,10 +90,10 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Player
-	_player = make_shared<Player>();
+	/*_player = make_shared<Player>();
 	_player->GetGameObject()->SetLayerIndex(LayerNameToIndex(L"Battle"));
 	_player->GetGameObject()->AddComponent(make_shared<PlayerScript>(_hwnd));
-	AddGameObject(_player->GetGameObject());
+	AddGameObject(_player->GetGameObject());*/
 	//_playerCamera->GetTransform()->SetParent(_player->GetGameObject()->GetTransform());
 #pragma endregion
 

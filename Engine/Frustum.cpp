@@ -30,9 +30,6 @@ void Frustum::FinalUpdate()
 
 bool Frustum::ContainsSphere(const Vec3& pos, float radius)
 {
-    float cameraDistance = (pos - Vec3(Camera::S_MatView._11, Camera::S_MatView._12, Camera::S_MatView._13) ).Length();
-    float margin = max(50.0f, cameraDistance * 0.4f);  // 최소 50 유지, 거리 5% 가산
-
     for (const Vec4& plane : _planes)
     {
         // n = (a, b, c)

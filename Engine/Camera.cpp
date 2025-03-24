@@ -83,8 +83,6 @@ void Camera::SortGameObject()
 		{
 			shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
 			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);
-			/*if (boxCollider)
-				cout << boxCollider->GetBoundingBox().Center.x << endl;*/
 
 			if (boxCollider) {
 				
@@ -92,7 +90,6 @@ void Camera::SortGameObject()
 				float scaledExtentX = boxCollider->_extents.x * scale.x;
 				float scaledExtentY = boxCollider->_extents.y * scale.y;
 				float scaledExtentZ = boxCollider->_extents.z * scale.z;
-				//cout << scaledExtentX << endl;
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
@@ -101,13 +98,12 @@ void Camera::SortGameObject()
 					continue;
 				}
 			}
-			++a;
-			/*if (_frustum.ContainsSphere(
+			if (_frustum.ContainsSphere(
 				gameObject->GetTransform()->GetWorldPosition(),
 				gameObject->GetTransform()->GetBoundingSphereRadius()) == false)
 			{
 				continue;
-			}*/
+			}
 		}
 
 		if (gameObject->GetMeshRenderer())
