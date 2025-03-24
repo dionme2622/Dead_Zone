@@ -31,24 +31,14 @@ Camera::~Camera()
 
 void Camera::FinalUpdate()
 {
-
 	_matView = GetTransform()->GetLocalToWorldMatrix().Invert();
-	if (_type == PROJECTION_TYPE::PERSPECTIVE) {
 
-	}
-
-	if (_type != PROJECTION_TYPE::PERSPECTIVE) {
-		//printf("%f", GetTransform()->GetLocalToWorldMatrix().Forward().X)
-	}
-
-
-	if (_type == PROJECTION_TYPE::PERSPECTIVE) 
+	if (_type == PROJECTION_TYPE::PERSPECTIVE)
 		_matProjection = ::XMMatrixPerspectiveFovLH(_fov, _width / _height, _near, _far);
 	else
 		_matProjection = ::XMMatrixOrthographicLH(_width * _scale, _height * _scale, _near, _far);
 
 	_frustum.FinalUpdate();
-
 }
 
 void Camera::SortGameObject()
@@ -68,13 +58,14 @@ void Camera::SortGameObject()
 	_vecDeferred.clear();
 	_vecParticle.clear();
 
+	int a = 0;
 	for (auto& gameObject : gameObjects)
 	{
-		
+
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
 			continue;
 		}
-		
+
 		if (IsCulled(gameObject->GetLayerIndex())) {
 			continue;
 		}
@@ -85,7 +76,7 @@ void Camera::SortGameObject()
 			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);
 
 			if (boxCollider) {
-				
+
 				Vec3 scale = gameObject->GetTransform()->GetLocalScale();
 				float scaledExtentX = boxCollider->_extents.x * scale.x;
 				float scaledExtentY = boxCollider->_extents.y * scale.y;
@@ -97,12 +88,6 @@ void Camera::SortGameObject()
 				{
 					continue;
 				}
-			}
-			if (_frustum.ContainsSphere(
-				gameObject->GetTransform()->GetWorldPosition(),
-				gameObject->GetTransform()->GetBoundingSphereRadius()) == false)
-			{
-				continue;
 			}
 		}
 
@@ -177,7 +162,7 @@ void Camera::Render_Deferred()
 	for (auto& gameObject : _vecDeferred)
 	{
 		gameObject->GetMeshRenderer()->Render();
-	}	
+	}
 #endif
 
 }
@@ -214,8 +199,8 @@ void Camera::Render_Shadow()
 {
 
 	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
-		S_MatView = _matView;
-		S_MatProjection = _matProjection;
+	S_MatView = _matView;
+	S_MatProjection = _matProjection;
 	//}
 
 	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
