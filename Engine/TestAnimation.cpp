@@ -24,12 +24,13 @@ void TestAnimation::Update()
 		GetAnimator()->Play(index);
 	}
 
-	/*if (INPUT->GetButton(KEY_TYPE::W))
-	{
-		int32 count = GetAnimator()->GetAnimCount();
-		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
+	Vec3 pos = GetTransform()->GetLocalPosition();
 
-		int32 index = (currentIndex - 1 + count) % count;
-		GetAnimator()->Play(2);
-	}*/
+
+	if (INPUT->GetButton(KEY_TYPE::KEY_4))
+		pos += GetTransform()->GetLook() * 1.f * DELTA_TIME;
+
+
+	GetTransform()->SetLocalPosition(pos);
+
 }

@@ -46,7 +46,6 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "DirectXTex\\DirectXTex.lib")
 #endif
 
-#define PI 3.14159
 #define _DEBUG_COLLIDER
 #define _INSTANCING_MODE
 extern bool _WIRE_FRAME_MODE;

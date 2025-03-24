@@ -83,7 +83,6 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 		gameObject->AddComponent(info.transform);
 		if (info.mesh != nullptr)
 		{
-			//shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->Get<Mesh>(mesh->GetName(), info;
 			gameObject->AddComponent(make_shared<MeshRenderer>());
 			gameObject->GetMeshRenderer()->SetMesh(info.mesh);
 			for (uint32 i = 0; i < info.materials.size(); i++)

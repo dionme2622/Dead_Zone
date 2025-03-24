@@ -29,7 +29,7 @@ private:
 	const vector<AnimClipInfo>*		_animClips;
 
 	float							_updateTime = 0.f;
-	int32							_clipIndex = 4;
+	int32							_clipIndex = 0;
 	int32							_frame = 0;
 	int32							_frameCount = 0;
 	int32							_nextFrame = 0;
