@@ -88,77 +88,13 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Player
-	//_player = make_shared<Player>();
-	//_player->GetGameObject()->SetLayerIndex(LayerNameToIndex(L"Battle"));
-	//_player->GetGameObject()->AddComponent(make_shared<PlayerScript>(_hwnd));
-	//AddGameObject(_player->GetGameObject());
-	//_playerCamera->GetTransform()->SetParent(_player->GetGameObject()->GetTransform());
+	/*_player = make_shared<Player>();
+	_player->GetGameObject()->SetLayerIndex(LayerNameToIndex(L"Battle"));
+	_player->GetGameObject()->AddComponent(make_shared<PlayerScript>(_hwnd));
+	AddGameObject(_player->GetGameObject());
+	_playerCamera->GetTransform()->SetParent(_player->GetGameObject()->GetTransform());*/
 #pragma endregion
 
-
-#pragma region Plane
-	//{
-	//	shared_ptr<GameObject> obj = make_shared<GameObject>();
-	//	obj->SetLayerIndex(LayerNameToIndex(L"Battle"));
-	//	obj->AddComponent(make_shared<Transform>());
-	//	obj->GetTransform()->SetLocalScale(Vec3(10000.f, 1.f, 10000.f));
-	//	obj->GetTransform()->SetLocalPosition(Vec3(0.f, -150.f, 0.f));
-	//	obj->SetStatic(true);
-	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	//	{
-	//		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadCubeMesh();
-	//		meshRenderer->SetMesh(sphereMesh);
-	//	}
-	//	{
-	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-	//		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern", L"..\\Resources\\Texture\\SA_DeadBody_01.dds");
-	//		//shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Metal_Pattern_Normal", L"..\\Resources\\Texture\\Metal_Pattern_normal.png");
-	//		shared_ptr<Material> material = make_shared<Material>();
-	//		material->SetShader(shader);
-	//		material->SetTexture(0, texture);
-	//		//material->SetTexture(1, texture2);
-	//		meshRenderer->SetMaterial(material);
-	//	}
-	//	obj->AddComponent(meshRenderer);
-	//	AddGameObject(obj);
-	//}
-
-
-#pragma endregion
-
-#pragma region UI_Test
-		//for (int32 i = 0; i < 6; i++)
-		//{
-		//	shared_ptr<GameObject> obj = make_shared<GameObject>();
-		//	obj->SetLayerIndex(LayerNameToIndex(L"UI")); // UI
-		//	obj->AddComponent(make_shared<Transform>());
-		//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		//	obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));
-		//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		//	{
-		//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-		//		meshRenderer->SetMesh(mesh);
-		//	}
-		//	{
-		//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
-
-		//		shared_ptr<Texture> texture;
-		//		if (i < 3)
-		//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
-		//		else if (i < 5)
-		//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
-		//		else
-		//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
-
-		//		shared_ptr<Material> material = make_shared<Material>();
-		//		material->SetShader(shader);
-		//		material->SetTexture(0, texture);
-		//		meshRenderer->SetMaterial(material);
-		//	}
-		//	obj->AddComponent(meshRenderer);
-		//	AddGameObject(obj);
-		//}
-#pragma endregion
 
 #pragma region Aiming Point
 
@@ -239,23 +175,21 @@ void BattleScene::LoadScene()
 
 #pragma region Map
 	{
-	//{
-	//	shared_ptr<MeshData> meshData = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo1.bin"); // MeshData* meshData
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Scene.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = meshData->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
 
-	//	shared_ptr<GameObject> rootObject = gameObjects[0];
+		shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	//	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-	//	rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	//}
+		rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	}
 #pragma endregion
 }
