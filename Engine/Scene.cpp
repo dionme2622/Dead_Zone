@@ -113,6 +113,9 @@ void Scene::RenderLights()
 	Camera::S_MatView = mainCamera->GetViewMatrix();
 	Camera::S_MatProjection = mainCamera->GetProjectionMatrix();
 
+	Camera::S_MainMatView = mainCamera->GetViewMatrix();
+	Camera::S_MainMatProjection = mainCamera->GetProjectionMatrix();
+
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->OMSetRenderTargets();
 
 	// 광원을 그린다.

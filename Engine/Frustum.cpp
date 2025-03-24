@@ -4,8 +4,8 @@
 
 void Frustum::FinalUpdate()
 {
-    Matrix matViewInv = Camera::S_MatView.Invert();
-    Matrix matProjectionInv = Camera::S_MatProjection.Invert();
+    Matrix matViewInv = Camera::S_MainMatView.Invert();
+    Matrix matProjectionInv = Camera::S_MainMatProjection.Invert();
     Matrix matInv = matProjectionInv * matViewInv;
 
     vector<Vec3> worldPos =
