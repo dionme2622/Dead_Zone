@@ -28,33 +28,6 @@ void Animator::FinalUpdate()
 	_frameCount = animClip.frameCount;
 	_bonesCount = _bones->size();
 
-	/* ----------------------------------- */
-	//_frameCount = animClip.frameCount;
-	//_bonesCount = _bones->size();
-
-	//for (int f = 0; f < _frameCount - 1; ++f)
-	//{
-	//	if ((animClip.keyFrames[f][0].time <= _updateTime) && (_updateTime < animClip.keyFrames[f + 1][0].time))
-	//	{
-	//		_frameRatio = (_updateTime - animClip.keyFrames[f][0].time) / (animClip.keyFrames[f + 1][0].time - animClip.keyFrames[f][0].time);
-	//		// Ratio에 따른 보간
-	//		for (int b = 0; b < _bonesCount; ++b)
-	//		{
-	//			Vec4 S = XMVectorLerp(animClip.keyFrames[f][b].scale, animClip.keyFrames[f + 1][b].scale, _frameRatio);
-	//			Vec4 R = XMQuaternionSlerp(animClip.keyFrames[f][b].rotation, animClip.keyFrames[f + 1][b].rotation, _frameRatio);
-	//			Vec4 T = XMVectorLerp(animClip.keyFrames[f][b].translate, animClip.keyFrames[f + 1][b].translate, _frameRatio);
-
-	//			XMStoreFloat4x4(&_boneMatrix, XMMatrixAffineTransformation(S, XMVectorZero(), R, T));
-	//		}
-
-	//	}
-	//}
-	///*for(int b = 0; b < _bonesCount; ++b)
-	//	if (_updateTime >= animClip.keyFrames[_frameCount - 1][0].time) 
-	//		_boneMatrix = animClip.keyFrames[_frameCount - 1][b];*/
-
-	/* ----------------------------------- */
-
 	const int32 ratio = static_cast<int32>(animClip.frameCount / animClip.duration);
 	_frame = static_cast<int32>(_updateTime * ratio);
 	_frame = min(_frame, animClip.frameCount - 1);

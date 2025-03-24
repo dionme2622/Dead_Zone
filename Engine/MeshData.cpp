@@ -83,14 +83,11 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 		gameObject->AddComponent(info.transform);
 		if (info.mesh != nullptr)
 		{
-			//shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->Get<Mesh>(mesh->GetName(), info;
 			gameObject->AddComponent(make_shared<MeshRenderer>());
 			gameObject->GetMeshRenderer()->SetMesh(info.mesh);
 			for (uint32 i = 0; i < info.materials.size(); i++)
 				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
 
-
-			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
 			if (info.boxCollider != nullptr)
 			{
 				shared_ptr<BoxCollider> collider = info.boxCollider;
@@ -115,10 +112,10 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 				}
 				boundingBox->GetTransform()->SetParent(gameObject->GetTransform());
 				v.push_back(boundingBox);
-				if (collider->DebugDraw())				// Collider를 그리는가?
-				{
-					
-				}
+				//if (collider->DebugDraw())				// Collider를 그리는가?
+				//{
+				//	
+				//}
 			}
 #endif
 			///////////////////////////////////////////
