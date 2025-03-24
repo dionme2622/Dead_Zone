@@ -113,11 +113,11 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 					boundingBox->GetMeshRenderer()->SetMaterial(material);
 				}
 				boundingBox->GetTransform()->SetParent(gameObject->GetTransform());
-				v.push_back(boundingBox);
-				if (collider->DebugDraw())				// Collider를 그리는가?
-				{
-					
-				}
+				//v.push_back(boundingBox);
+				//if (collider->DebugDraw())				// Collider를 그리는가?
+				//{
+				//	
+				//}
 			}
 #endif
 			///////////////////////////////////////////
