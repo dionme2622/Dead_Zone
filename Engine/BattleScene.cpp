@@ -198,11 +198,5 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	if (INPUT->GetButtonDown(KEY_TYPE::RETURN))
-		RemoveGameObject(_uiCamera);
-
-	if(INPUT->GetButtonDown(KEY_TYPE::TAB))
-		AddGameObject(_uiCamera);
-
 	Scene::Update();
 }

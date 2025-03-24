@@ -16,6 +16,9 @@
 Matrix Camera::S_MatView;
 Matrix Camera::S_MatProjection;
 
+Matrix Camera::S_MainMatView;
+Matrix Camera::S_MainMatProjection;
+
 Camera::Camera() : Component(COMPONENT_TYPE::CAMERA)
 {
 	_width = static_cast<float>(GEngine->GetWindow().width);
@@ -52,6 +55,11 @@ void Camera::SortGameObject()
 {
 	S_MatView = _matView;
 	S_MatProjection = _matProjection;
+
+	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
+		S_MainMatView = _matView;
+		S_MainMatProjection = _matProjection;
+	}
 
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	const vector<shared_ptr<GameObject>>& gameObjects = scene->GetGameObjects();
@@ -158,10 +166,14 @@ void Camera::SortShadowObject()
 
 void Camera::Render_Deferred()
 {
-	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
-		S_MatView = _matView;
-		S_MatProjection = _matProjection;
-	//}
+	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
+		S_MainMatView = _matView;
+		S_MainMatProjection = _matProjection;
+	}
+
+	S_MatView = _matView;
+	S_MatProjection = _matProjection;
+
 
 
 #ifdef _INSTANCING_MODE
@@ -179,20 +191,7 @@ void Camera::Render_Deferred()
 void Camera::Render_Forward()
 {
 	S_MatView = _matView;
-	if (_type == PROJECTION_TYPE::PERSPECTIVE) {
-		//printf("%f\n", GetTransform()->GetLocalRotation().x);
-	}
-	else {
-		Vec3 pos = GetTransform()->GetLocalRotation();
-		//S_MatView = ::XMMatrixTranslation(-pos.x, -pos.y, -pos.z); // 회전 없이 위치만 반영
-	}
 	S_MatProjection = _matProjection;
-	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
-		S_MatView = _matView;
-		S_MatProjection = _matProjection;
-	//}
-	/*S_MatView = _matView;
-	S_MatProjection = _matProjection;*/
 
 #ifdef _INSTANCING_MODE
 	GET_SINGLE(InstancingManager)->Render(_vecForward);
@@ -224,6 +223,11 @@ void Camera::Render_Shadow()
 		S_MatView = _matView;
 		S_MatProjection = _matProjection;
 	//}
+
+	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
+		S_MainMatView = _matView;
+		S_MainMatProjection = _matProjection;
+	}
 
 	for (auto& gameObject : _vecShadow)
 	{
