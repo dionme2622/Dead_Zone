@@ -11,6 +11,7 @@
 #include "ParticleSystem.h"
 #include "InstancingManager.h"
 #include "BaseCollider.h"
+#include "BoxCollider.h"
 
 Matrix Camera::S_MatView;
 Matrix Camera::S_MatProjection;
@@ -59,7 +60,7 @@ void Camera::SortGameObject()
 	_vecDeferred.clear();
 	_vecParticle.clear();
 
-	int a = 0, b = 0, c = 0;
+	int a = 0;
 	for (auto& gameObject : gameObjects)
 	{
 		
@@ -73,12 +74,33 @@ void Camera::SortGameObject()
 
 		if (gameObject->GetCheckFrustum())
 		{
-			if (_frustum.ContainsSphere(
+			shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
+			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);
+			/*if (boxCollider)
+				cout << boxCollider->GetBoundingBox().Center.x << endl;*/
+
+			if (boxCollider) {
+				
+				Vec3 scale = gameObject->GetTransform()->GetLocalScale();
+				float scaledExtentX = boxCollider->_extents.x * scale.x;
+				float scaledExtentY = boxCollider->_extents.y * scale.y;
+				float scaledExtentZ = boxCollider->_extents.z * scale.z;
+				//cout << scaledExtentX << endl;
+
+				if (_frustum.ContainsSphere(
+					gameObject->GetTransform()->GetWorldPosition(),
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 80) == false)
+				{
+					continue;
+				}
+			}
+			++a;
+			/*if (_frustum.ContainsSphere(
 				gameObject->GetTransform()->GetWorldPosition(),
 				gameObject->GetTransform()->GetBoundingSphereRadius()) == false)
 			{
 				continue;
-			}
+			}*/
 		}
 
 		if (gameObject->GetMeshRenderer())
@@ -99,7 +121,7 @@ void Camera::SortGameObject()
 			_vecParticle.emplace_back(gameObject);
 		}
 	}
-
+	cout << a << endl;
 }
 
 void Camera::SortShadowObject()
@@ -158,7 +180,7 @@ void Camera::Render_Forward()
 {
 	S_MatView = _matView;
 	if (_type == PROJECTION_TYPE::PERSPECTIVE) {
-		printf("%f\n", GetTransform()->GetLocalRotation().x);
+		//printf("%f\n", GetTransform()->GetLocalRotation().x);
 	}
 	else {
 		Vec3 pos = GetTransform()->GetLocalRotation();

@@ -14,14 +14,14 @@ public:
 
 public:
 	virtual shared_ptr<Mesh> GetColliderMesh() override;
-
+	BoundingOrientedBox GetBoundingBox() { return _boundingBox; }
 
 	void SetCenter(Vec3 center) { _center = center; };
 	void SetExtents(Vec3 extents) { _extents = extents; };
 
 	
 
-private:
+public:
 	Vec3				_center		= { 0.f, 0.f, 0.f };
 	Vec3				_extents	= { 1.f, 1.f, 1.f };
 
