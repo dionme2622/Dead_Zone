@@ -49,16 +49,16 @@ void BattleScene::LoadScene()
 
 #pragma region UI_Camera
 	{
-		//_uiCamera = make_shared<GameObject>();
-		//_uiCamera->SetName(L"Orthographic_Camera");
-		//_uiCamera->AddComponent(make_shared<Transform>());
-		//_uiCamera->AddComponent(make_shared<Camera>());
-		//_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		//_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
-		//uint8 layerIndex = LayerNameToIndex(L"UI");
-		//_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
-		//_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
-		//AddGameObject(_uiCamera);
+		_uiCamera = make_shared<GameObject>();
+		_uiCamera->SetName(L"Orthographic_Camera");
+		_uiCamera->AddComponent(make_shared<Transform>());
+		_uiCamera->AddComponent(make_shared<Camera>());
+		_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
+		_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
+		AddGameObject(_uiCamera);
 	}
 #pragma endregion
 

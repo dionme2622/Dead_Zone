@@ -89,7 +89,7 @@ void Camera::SortGameObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 80) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 100) == false)
 				{
 					continue;
 				}
