@@ -27,45 +27,42 @@ void Camera::FinalUpdate()
 {
 	_matView = GetTransform()->GetLocalToWorldMatrix().Invert();
 
-	
-
 	if (_type == PROJECTION_TYPE::PERSPECTIVE)
 		_matProjection = ::XMMatrixPerspectiveFovLH(_fov, _width / _height, _near, _far);
 	else
 		_matProjection = ::XMMatrixOrthographicLH(_width * _scale, _height * _scale, _near, _far);
-
-
 
 	_frustum.FinalUpdate();
 }
 
 void Camera::SortGameObject()
 {
+	//S_MatView = _matView;
+	//S_MatProjection = _matProjection;
+
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	const vector<shared_ptr<GameObject>>& gameObjects = scene->GetGameObjects();
 
 	_vecForward.clear();
 	_vecDeferred.clear();
 	_vecParticle.clear();
-	int a = 0, b = 0, c = 0;
+
 	for (auto& gameObject : gameObjects)
 	{
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
-			++a;
 			continue;
 		}
 
 		if (IsCulled(gameObject->GetLayerIndex())) {
-			++b;
 			continue;
 		}
+
 		if (gameObject->GetCheckFrustum())
 		{
 			if (_frustum.ContainsSphere(
 				gameObject->GetTransform()->GetWorldPosition(),
 				gameObject->GetTransform()->GetBoundingSphereRadius()) == false)
 			{
-				++c;
 				continue;
 			}
 		}
@@ -88,7 +85,6 @@ void Camera::SortGameObject()
 			_vecParticle.push_back(gameObject);
 		}
 	}
-	printf("%d, %d, %d\n", a, b, c);
 }
 
 void Camera::SortShadowObject()

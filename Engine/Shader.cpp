@@ -94,6 +94,7 @@ void Shader::CreateGraphicsShader(const wstring& path, ShaderInfo info, ShaderAr
 	case SHADER_TYPE::SHADOW:
 		_graphicsPipelineDesc.NumRenderTargets = 1;
 		_graphicsPipelineDesc.RTVFormats[0] = DXGI_FORMAT_R32_FLOAT;
+		_graphicsPipelineDesc.RasterizerState.DepthBias = 1.f;
 		break;
 	}
 

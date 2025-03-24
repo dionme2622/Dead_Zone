@@ -52,37 +52,55 @@ PS_OUT PS_DirLight(VS_OUT input)
 
     LightColor color = CalculateLightColor(g_int_0, viewNormal, viewPos);
 
-    // 그림자
+    // ====== 그림자 처리 코드 시작 ======
     if (length(color.diffuse) != 0)
     {
         matrix shadowCameraVP = g_mat_0;
 
+        // 월드 좌표 변환
         float4 worldPos = mul(float4(viewPos.xyz, 1.f), g_matViewInv);
         float4 shadowClipPos = mul(worldPos, shadowCameraVP);
         float depth = shadowClipPos.z / shadowClipPos.w;
 
-        // x [-1 ~ 1] -> u [0 ~ 1]
-        // y [1 ~ -1] -> v [0 ~ 1]
-        float2 uv = shadowClipPos.xy / shadowClipPos.w;
-        uv.y = -uv.y;
-        uv = uv * 0.5 + 0.5;
+        // Shadow Map 좌표 변환 수정
+        float2 uv = shadowClipPos.xy / shadowClipPos.w * 0.5 + 0.5;
+        uv.y = 1.0 - uv.y; // DirectX에서는 Y축 뒤집기 필요
 
+        // Shadow Map 범위 확인
         if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
         {
-            float shadowDepth = g_tex_2.Sample(g_sam_0, uv).x;
-            if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
+            // **PCF 필터링 적용 (4개 샘플 평균)**
+            float shadowDepth = 0;
+            const float2 offsets[4] =
+            {
+                float2(-0.5, -0.5), float2(0.5, -0.5),
+                                        float2(-0.5, 0.5), float2(0.5, 0.5)
+            };
+
+            for (int i = 0; i < 4; ++i)
+            {
+                shadowDepth += g_tex_2.Sample(g_sam_0, uv + offsets[i] * 0.002).x;
+            }
+            shadowDepth /= 4.0; // 평균값 계산
+
+            // **Depth Bias 적용 (Normal 방향 고려)**
+            float bias = max(0.1 * (1.0 - dot(viewNormal, float3(0, 1, 0))), 0.1);
+
+            if (shadowDepth > 0 && depth > shadowDepth + bias)
             {
                 color.diffuse *= 0.5f;
                 color.specular = (float4) 0.f;
             }
         }
     }
+    // ====== 그림자 처리 코드 끝 ======
 
     output.diffuse = color.diffuse + color.ambient;
     output.specular = color.specular;
 
     return output;
 }
+
 
 // [Point Light]
 // g_int_0 : Light index
@@ -139,7 +157,7 @@ PS_OUT PS_PointLight(VS_OUT input)
         if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
         {
             float shadowDepth = g_tex_2.Sample(g_sam_0, uv).x;
-            if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
+            if (shadowDepth > 0)
             {
                 color.diffuse *= 0.5f;
                 color.specular = (float4) 0.f;

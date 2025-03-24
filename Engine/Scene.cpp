@@ -76,8 +76,6 @@ void Scene::ClearRTV()
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->ClearRenderTargetView();
 	// Lighting Group 초기화
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->ClearRenderTargetView();
-	//// Blur Group 초기화
-	//GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::BLUR)->ClearRenderTargetView();
 }
 
 void Scene::RenderShadow()
@@ -86,8 +84,8 @@ void Scene::RenderShadow()
 
 	for (auto& light : _lights)
 	{
-		/*if (light->GetLightType() != LIGHT_TYPE::DIRECTIONAL_LIGHT)
-			continue;*/
+		if (light->GetLightType() != LIGHT_TYPE::DIRECTIONAL_LIGHT)
+			continue;
 
 		light->RenderShadow();
 	}
@@ -99,10 +97,12 @@ void Scene::RenderShadow()
 
 void Scene::RenderDeferred()
 {
+
 	// Deferred OMSet
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->OMSetRenderTargets();
 
 	shared_ptr<Camera> mainCamera = _cameras[0];
+
 	mainCamera->SortGameObject();
 	mainCamera->Render_Deferred();
 
@@ -114,6 +114,8 @@ void Scene::RenderLights()
 	shared_ptr<Camera> mainCamera = _cameras[0];
 	Camera::S_MatView = mainCamera->GetViewMatrix();
 	Camera::S_MatProjection = mainCamera->GetProjectionMatrix();
+
+	cout << Camera::S_MatView.Backward().x << endl;
 
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->OMSetRenderTargets();
 

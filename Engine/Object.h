@@ -28,7 +28,7 @@ public:
 	OBJECT_TYPE GetType() { return _objectType; }
 
 	void SetName(const wstring& name) { _name = name; }
-	const wstring& GetName() { return _name; }
+	const wstring GetName() { return _name; }
 
 	// TODO : Instantiate
 
