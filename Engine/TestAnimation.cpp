@@ -23,4 +23,14 @@ void TestAnimation::Update()
 		int32 index = (currentIndex - 1 + count) % count;
 		GetAnimator()->Play(index);
 	}
+
+	Vec3 pos = GetTransform()->GetLocalPosition();
+
+
+	if (INPUT->GetButton(KEY_TYPE::KEY_4))
+		pos += GetTransform()->GetLook() * 1.f * DELTA_TIME;
+
+
+	GetTransform()->SetLocalPosition(pos);
+
 }

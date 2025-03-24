@@ -32,7 +32,7 @@ public:
 	shared_ptr<class MeshData> LoadModelFromBinary(const wstring& path);
 	void LoadSceneFromBinary(const wstring& path);
 
-	shared_ptr<Texture> CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height,
+	shared_ptr<Texture> CreateTexture(const wstring& name, DXGI_FORMAT format, uint64 width, uint64 height,
 		const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
 		D3D12_RESOURCE_FLAGS resFlags = D3D12_RESOURCE_FLAG_NONE, Vec4 clearColor = Vec4());
 

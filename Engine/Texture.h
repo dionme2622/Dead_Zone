@@ -10,7 +10,7 @@ public:
 	virtual void Load(const wstring& path) override;
 
 public:
-	void Create(DXGI_FORMAT format, uint32 width, uint32 height,
+	void Create(DXGI_FORMAT format, uint64 width, uint64 height,
 		const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
 		D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor = Vec4());
 

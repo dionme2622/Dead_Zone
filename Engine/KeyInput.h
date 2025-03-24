@@ -17,6 +17,8 @@ enum class KEY_TYPE
 	Z = 'Z',
 	C = 'C',
 
+	B = 'B',
+
 	KEY_1 = '1',
 	KEY_2 = '2',
 	KEY_3 = '3',
@@ -32,6 +34,7 @@ enum class KEY_TYPE
 	// TEST
 	SHIFT = VK_LSHIFT,
 	RETURN = VK_RETURN,
+	TAB = VK_TAB,
 	LEFTCLICK = RI_MOUSE_BUTTON_1_DOWN
 };
 

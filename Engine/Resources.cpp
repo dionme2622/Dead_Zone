@@ -266,16 +266,16 @@ shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
 	return meshData;
 }
 
-void Resources::LoadSceneFromBinary(const wstring& path)
-{
-	wstring name;
-	for (; ;)		// °´Ã¼ ¼ö ¸¸Å­
-	{
-		LoadModelFromBinary(L"..\\Resources\\Model\\" + name + L".bin");
-	}
-}
+//void Resources::LoadSceneFromBinary(const wstring& path)
+//{
+//	wstring name;
+//	for (; ;)		// °´Ã¼ ¼ö ¸¸Å­
+//	{
+//		LoadModelFromBinary(L"..\\Resources\\Model\\" + name + L".bin");
+//	}
+//}
 
-shared_ptr<Texture> Resources::CreateTexture(const wstring& name, DXGI_FORMAT format, uint32 width, uint32 height,
+shared_ptr<Texture> Resources::CreateTexture(const wstring& name, DXGI_FORMAT format, uint64 width, uint64 height,
 	const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
 	D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor)
 {
@@ -322,6 +322,19 @@ void Resources::CreateDefaultShader()
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\deferred.fx", info);
 		Add<Shader>(L"Deferred", shader);
+	}
+
+	// Deferred (Deferred)
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::DEFERRED,
+			RASTERIZER_TYPE::WIREFRAME
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\deferred.fx", info);
+		Add<Shader>(L"Deferred_Wire", shader);
 	}
 
 	// Forward (Forward)
@@ -512,6 +525,29 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"ComputeParticle", shader);
 	}
 
+	// Collider
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::FORWARD,
+			RASTERIZER_TYPE::WIREFRAME
+		};
+
+		ShaderArg arg =
+		{
+			"VS_Collider",
+			"",
+			"",
+			"",
+			"PS_Collider"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\forward.fx", info, arg);
+		Add<Shader>(L"Collider", shader);
+	}
+
+
 	//// SwapChain
 	//{
 	//	ShaderInfo info =
@@ -622,4 +658,5 @@ void Resources::CreateDefaultMaterial()
 
 		Add<Material>(L"ComputeAnimation", material);
 	}
+
 }

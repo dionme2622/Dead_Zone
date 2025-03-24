@@ -5,13 +5,15 @@ class Mesh;
 class Material;
 class GameObject;
 class Transform;
+class BoxCollider;
 
 struct MeshRenderInfo
 {
-	wstring							name;
+	wstring							objName;
 	shared_ptr<Mesh>				mesh;
 	vector<shared_ptr<Material>>	materials;
 	shared_ptr<Transform>			transform;
+	shared_ptr<BoxCollider>			boxCollider;
 };
 
 class MeshData : public Object

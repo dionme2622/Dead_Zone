@@ -37,8 +37,6 @@ private:
 	HANDLE								_fenceEvent = INVALID_HANDLE_VALUE;
 	
 	shared_ptr<SwapChain>		_swapChain;
-
-	shared_ptr<Texture>			_screenTexture;		// 화면에 출력되는 최종 렌더타겟 텍스처
 };
 
 // ************************

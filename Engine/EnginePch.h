@@ -46,7 +46,9 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "DirectXTex\\DirectXTex.lib")
 #endif
 
-#define PI 3.14159
+#define _DEBUG_COLLIDER
+#define _INSTANCING_MODE
+extern bool _WIRE_FRAME_MODE;
 
 // °¢Á¾ typedef
 using int8 = __int8;
@@ -175,6 +177,7 @@ struct TransformParams
 
 struct AnimFrameParams
 {
+	//wstring boneName;
 	Vec4	scale;
 	Vec4	rotation; // Quaternion
 	Vec4	translation;

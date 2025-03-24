@@ -30,7 +30,6 @@ public:
 	{
 		if (on) _cullingMask |= (1 << layer);
 		else _cullingMask &= ~(1 << layer);
-			
 	}
 
 	void SetCullingMaskAll() { SetCullingMask(UINT32_MAX); }
@@ -73,5 +72,8 @@ public:
 	// TEMP
 	static Matrix S_MatView;
 	static Matrix S_MatProjection;
+
+	static Matrix S_MainMatView;
+	static Matrix S_MainMatProjection;
 };
 

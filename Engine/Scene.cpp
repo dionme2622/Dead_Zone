@@ -115,7 +115,8 @@ void Scene::RenderLights()
 	Camera::S_MatView = mainCamera->GetViewMatrix();
 	Camera::S_MatProjection = mainCamera->GetProjectionMatrix();
 
-	cout << Camera::S_MatView.Backward().x << endl;
+	Camera::S_MainMatView = mainCamera->GetViewMatrix();
+	Camera::S_MainMatProjection = mainCamera->GetProjectionMatrix();
 
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->OMSetRenderTargets();
 
@@ -142,13 +143,13 @@ void Scene::RenderFinal()
 void Scene::RenderForward()
 {
 	shared_ptr<Camera> mainCamera = _cameras[0];
+
 	mainCamera->Render_Forward();
 
 	for (auto& camera : _cameras)
 	{
-		if (camera == mainCamera) 
+		if (camera == mainCamera)
 			continue;
-
 
 		camera->SortGameObject();
 		camera->Render_Forward();

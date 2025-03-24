@@ -105,15 +105,14 @@ void LobbyScene::LoadScene()
 	//		else
 	//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
 
-	//		shared_ptr<Material> material = make_shared<Material>();
-	//		material->SetShader(shader);
-	//		material->SetTexture(0, texture);
-	//		meshRenderer->SetMaterial(material);
-	//	}
-	//	obj->AddComponent(meshRenderer);
-	//	//scene->AddGameObject(obj);
-	//	AddGameObject(obj);
-	//}
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		obj->AddComponent(meshRenderer);
+		AddGameObject(obj);
+	}
 #pragma endregion
 
 #pragma region Directional Light
@@ -127,8 +126,6 @@ void LobbyScene::LoadScene()
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
 		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
-
-		//scene->AddGameObject(light);
 		AddGameObject(light);
 	}
 #pragma endregion

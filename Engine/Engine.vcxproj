@@ -166,8 +166,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
+    <ClInclude Include="BaseCollider.h" />
     <ClInclude Include="BattleScene.h" />
     <ClInclude Include="BinaryLoader.h" />
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="Component.h" />
@@ -178,6 +180,8 @@
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="InstancingBuffer.h" />
+    <ClInclude Include="InstancingManager.h" />
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LobbyScene.h" />
@@ -209,8 +213,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
+    <ClCompile Include="BaseCollider.cpp" />
     <ClCompile Include="BattleScene.cpp" />
     <ClCompile Include="BinaryLoader.cpp" />
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -220,6 +226,8 @@
     <ClCompile Include="EnginePch.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="InstancingBuffer.cpp" />
+    <ClCompile Include="InstancingManager.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LobbyScene.cpp" />
@@ -268,7 +276,6 @@
     <FxCompile Include="..\Resources\Shader\particle.fx" />
     <FxCompile Include="..\Resources\Shader\shadow.fx" />
     <FxCompile Include="..\Resources\Shader\skybox.fx" />
-    <FxCompile Include="..\Resources\Shader\swapchain.fx" />
     <FxCompile Include="..\Resources\Shader\utils.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

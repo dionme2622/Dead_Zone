@@ -81,7 +81,7 @@ void Texture::Load(const wstring& path)
 	DEVICE->CreateShaderResourceView(_tex2D.Get(), &srvDesc, _srvHeapBegin);
 }
 
-void Texture::Create(DXGI_FORMAT format, uint32 width, uint32 height,
+void Texture::Create(DXGI_FORMAT format, uint64 width, uint64 height,
 	const D3D12_HEAP_PROPERTIES& heapProperty, D3D12_HEAP_FLAGS heapFlags,
 	D3D12_RESOURCE_FLAGS resFlags, Vec4 clearColor)
 {

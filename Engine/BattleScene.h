@@ -15,7 +15,13 @@ public:
 private:
 	shared_ptr<Player>			_player;
 	shared_ptr<GameObject>		_playerCamera;
+	shared_ptr<GameObject>		_uiCamera;
 
 	HWND _hwnd;
+
+
+	//TEST
+public:
+	void TestObjectPosition(shared_ptr<GameObject> sourceObj);
 };
 

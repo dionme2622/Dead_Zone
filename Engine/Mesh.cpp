@@ -4,6 +4,7 @@
 #include "Material.h"
 #include "BinaryLoader.h"
 #include "StructuredBuffer.h"
+#include "InstancingBuffer.h"
 
 Mesh::Mesh() : Object(OBJECT_TYPE::MESH)
 {
@@ -30,6 +31,17 @@ void Mesh::Render(uint32 instanceCount, uint32 idx)
 	GEngine->GetGraphicsDescHeap()->CommitTable();
 
 	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, instanceCount, 0, 0, 0);
+}
+
+void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
+{
+	D3D12_VERTEX_BUFFER_VIEW bufferViews[] = { _vertexBufferView, buffer->GetBufferView() };
+	GRAPHICS_CMD_LIST->IASetVertexBuffers(0, 2, bufferViews);
+	GRAPHICS_CMD_LIST->IASetIndexBuffer(&_vecIndexInfo[idx].bufferView);
+
+	GEngine->GetGraphicsDescHeap()->CommitTable();
+
+	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, buffer->GetCount(), 0, 0, 0);
 }
 
 shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLoader& loader)
@@ -60,17 +72,6 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 	return mesh;
 }
 
-
-//void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
-//{
-//	D3D12_VERTEX_BUFFER_VIEW bufferViews[] = { _vertexBufferView, buffer->GetBufferView() };
-//	GRAPHICS_CMD_LIST->IASetVertexBuffers(0, 2, bufferViews);
-//	GRAPHICS_CMD_LIST->IASetIndexBuffer(&_vecIndexInfo[idx].bufferView);
-//
-//	GEngine->GetGraphicsDescHeap()->CommitTable();
-//
-//	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, buffer->GetCount(), 0, 0, 0);
-//}
 
 void Mesh::CreateVertexBuffer(const vector<Vertex>& buffer)
 {
@@ -175,6 +176,7 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 				kfInfo.scale = scale;
 				kfInfo.rotation = rotation;
 				kfInfo.translate = translation;
+				
 			}
 		}	
 
@@ -212,6 +214,8 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 			AnimClipInfo& animClip = _animClips[i];
 
 			// 애니메이션 프레임 정보
+			//vector<Matrix> frameParams;
+
 			vector<AnimFrameParams> frameParams;
 			frameParams.resize(animClip.frameCount * _bones.size());
 
@@ -220,11 +224,13 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 			{												// n번째 프레임에서 m번 뼈의 행렬들
 				for (int32 b = 0; b < boneCount; b++)
 				{
-					int32 idx = static_cast<int32>(keyFrameCount * b + f);
+					int32 idx = static_cast<int32>(keyFrameCount * b + f);	// 0 / 71 / 142
 
 					//frameParams[idx] = animClip.keyFrames[f][b].matTransform;
 					frameParams[idx] = AnimFrameParams
 					{
+						// Debug
+						//animClip.keyFrames[f][b].boneName,
 						animClip.keyFrames[f][b].scale,
 						animClip.keyFrames[f][b].rotation, // Quaternion
 						animClip.keyFrames[f][b].translate
@@ -235,6 +241,7 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 			// StructuredBuffer 세팅
 			_frameBuffer.push_back(make_shared<StructuredBuffer>());
 			_frameBuffer.back()->Init(sizeof(AnimFrameParams), static_cast<uint32>(frameParams.size()), frameParams.data());
+
 		}
 	}
 #pragma endregion

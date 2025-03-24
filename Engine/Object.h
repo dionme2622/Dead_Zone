@@ -31,6 +31,7 @@ public:
 	const wstring GetName() { return _name; }
 
 	// TODO : Instantiate
+	uint32 GetID() { return _id; }
 
 protected:
 	friend class Resources;
@@ -40,5 +41,8 @@ protected:
 protected:
 	OBJECT_TYPE _objectType = OBJECT_TYPE::NONE;
 	wstring _name;
+
+protected:
+	uint32 _id = 0;
 };
 

@@ -64,11 +64,8 @@ void GraphicsCommandQueue::RenderBegin()
 
 	int8 backIndex = _swapChain->GetBackBufferIndex();
 
-	shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"SwapChain");
-	_screenTexture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->GetRTTexture(backIndex);
-	
 	D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		_screenTexture->GetTex2D().Get(),
+		GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SWAP_CHAIN)->GetRTTexture(backIndex)->GetTex2D().Get(),
 		D3D12_RESOURCE_STATE_PRESENT, // 화면 출력
 		D3D12_RESOURCE_STATE_RENDER_TARGET); // 외주 결과물
 
