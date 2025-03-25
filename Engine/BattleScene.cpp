@@ -39,7 +39,7 @@ void BattleScene::LoadScene()
 		_playerCamera->AddComponent(make_shared<Transform>());
 		_playerCamera->AddComponent(make_shared<Camera>());
 		//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 2.3f, 0.45f));
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 2.3f, 0.6f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
