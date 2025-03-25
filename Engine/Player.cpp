@@ -8,26 +8,11 @@
 
 Player::Player() : Component(COMPONENT_TYPE::PLAYER)
 {
-	_obj = make_shared<GameObject>();
+	/*_obj = make_shared<GameObject>();
 	_obj->AddComponent(make_shared<Transform>());
 	_obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
 	_obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 	_obj->SetStatic(false);
-
-
-	shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin");
-	vector<shared_ptr<GameObject>> gameObjects = FemaleSoldier->Instantiate();
-
-	for (auto& gameObject : gameObjects)
-	{
-		gameObject->SetCheckFrustum(true);
-		gameObject->SetStatic(true);
-		//AddGameObject(gameObject);
-	}
-	shared_ptr<GameObject> rootObject = gameObjects[0];
-
-
-
 
 	_meshRenderer = make_shared<MeshRenderer>();
 
@@ -45,7 +30,7 @@ Player::Player() : Component(COMPONENT_TYPE::PLAYER)
 	_meshRenderer->SetMesh(_characterMesh);
 	_meshRenderer->SetMaterial(_material);
 
-	_obj->AddComponent(_meshRenderer);
+	_obj->AddComponent(_meshRenderer);*/
 
 }
 
