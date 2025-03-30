@@ -39,7 +39,7 @@ void BattleScene::LoadScene()
 		_playerCamera->AddComponent(make_shared<Transform>());
 		_playerCamera->AddComponent(make_shared<Camera>());
 		//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 2.3f, 0.6f));
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 2.3f, 0.9f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
@@ -173,10 +173,26 @@ void BattleScene::LoadScene()
 
 #pragma region Character
 	{
-		shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin"); // MeshData* meshData
-		shared_ptr<MeshData> FemaleHero = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
+		shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier1.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = FemaleSoldier->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects1 = FemaleSoldier->Instantiate();
+
+		for (auto& gameObject : gameObjects1)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
+		shared_ptr<GameObject> rootObject1 = gameObjects1[0];
+
+		rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
+		//rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+	
+
+	
+		shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_AssaultRifle01.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -186,10 +202,9 @@ void BattleScene::LoadScene()
 		}
 		shared_ptr<GameObject> rootObject = gameObjects[0];
 
-		rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, -150.0f, 0.f));
-		rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+		rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
+		rootObject->GetTransform()->SetParent(gameObjects1[14]->GetTransform());
 	}
-
 
 #pragma endregion
 

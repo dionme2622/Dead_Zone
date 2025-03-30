@@ -62,7 +62,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		info.transform = transform;
 		info.boxCollider = boxCollider;
 
-		// TODO : AABB 바운딩 박스 데이터 넘겨야 함
+		
 
 		////////////////////////////////////////
 		meshData->_meshRenders.push_back(info);
