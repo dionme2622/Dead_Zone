@@ -7,16 +7,14 @@
 #include "MouseInput.h"
 #include "Timer.h"
 #include "Engine.h"
+#include "BoxCollider.h"
+#include "SceneManager.h"
 
-PlayerScript::PlayerScript(HWND hwnd)
+PlayerScript::PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform) :
+	_hwnd(hwnd), _speed(100.0f), _jumpVelocity(5.0f), _currentVelocity(0.0f), 
+	_gravity(-9.8f), _isGrounded(true), _pitch(0.0f), _yaw(0.0f), _mouseMove(false), 
+	_cameraTransform(playerTransform)
 {
-	_hwnd = hwnd;
-
-	_speed = 100.0f;
-	_jumpVelocity = 500.0f;
-	_currentVelocity = 0.0f;
-	_gravity = 9.8f;
-	_isGrounded = true;
 }
 
 PlayerScript::~PlayerScript()
@@ -28,8 +26,15 @@ void PlayerScript::LateUpdate()
 	UpdatePlayerInput();
 
 	//UpdatePlayerOnTerrain();
-}
 
+
+	// 카메라 위치 업데이트
+	Vec3 cameraPosition = GetTransform()->GetLocalPosition();
+	_cameraTransform->SetLocalPosition(cameraPosition);
+
+	Vec3 cameraRotate = GetTransform()->GetLocalRotation();
+	_cameraTransform->SetLocalRotation(cameraRotate);
+}
 
 
 void PlayerScript::UpdatePlayerInput()
@@ -42,21 +47,24 @@ void PlayerScript::UpdatePlayerInput()
 void PlayerScript::UpdateKeyInput()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
+	Vec3 scale = GetTransform()->GetLocalScale();
+
+	float adjustedSpeed = _speed / scale.x; // 스케일에 따라 속도를 조정
 
 	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos += GetTransform()->GetLook() * adjustedSpeed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetLook() * adjustedSpeed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetRight() * adjustedSpeed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+		pos += GetTransform()->GetRight() * adjustedSpeed * DELTA_TIME;
 
 	if (INPUT->GetButton(KEY_TYPE::CTRL))
-		pos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
+		pos -= GetTransform()->GetUp() * adjustedSpeed * DELTA_TIME;
 
 	if (_isGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
 	{
@@ -66,6 +74,8 @@ void PlayerScript::UpdateKeyInput()
 	}
 
 	GetTransform()->SetLocalPosition(pos);
+
+
 }
 
 
@@ -97,7 +107,11 @@ void PlayerScript::UpdateMouseInput()
 
 	}
 
+	// 카메라 위치 업데이트
+	
 }
+
+
 
 
 void PlayerScript::UpdateRotation(float deltaX, float deltaY)

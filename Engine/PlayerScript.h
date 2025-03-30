@@ -4,7 +4,7 @@
 class PlayerScript : public MonoBehaviour
 {
 public:
-	PlayerScript(HWND hwnd);
+	PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform);
 	virtual ~PlayerScript();
 
 	virtual void LateUpdate() override;
@@ -41,5 +41,6 @@ private:
 
 	HWND _hwnd;
 	bool _mouseMove;
+	shared_ptr<Transform> _cameraTransform;
 };
 

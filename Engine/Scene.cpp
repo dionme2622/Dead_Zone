@@ -204,7 +204,7 @@ void Scene::AddGameObject(shared_ptr<GameObject> gameObject)
 	{
 		_lights.push_back(gameObject->GetLight());
 	}
-
+	
 	_gameObjects.push_back(gameObject);
 }
 
@@ -222,7 +222,6 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 		if (findIt != _lights.end())
 			_lights.erase(findIt);
 	}
-
 	auto findIt = std::find(_gameObjects.begin(), _gameObjects.end(), gameObject);
 	if (findIt != _gameObjects.end())
 		_gameObjects.erase(findIt);

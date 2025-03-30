@@ -16,8 +16,8 @@ public:
 	void Awake();
 	void Start();
 	virtual void Update();
-	void LateUpdate();
-	void FinalUpdate();
+	virtual void LateUpdate();
+	virtual void FinalUpdate();
 
 	void Render();
 

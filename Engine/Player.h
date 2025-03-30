@@ -15,7 +15,6 @@ class Texture;
 class MeshRenderer;
 class Camera;
 
-
 class Player : public Component
 {
 public:
@@ -23,28 +22,24 @@ public:
 	virtual ~Player();
 
 
-	shared_ptr<GameObject> GetGameObject() { return _obj; }
+	vector<shared_ptr<GameObject>> GetGameObjects() { return _objs; }
 
 public:
 	virtual void FinalUpdate() override;
 
 private:
-	shared_ptr<GameObject>		_obj;
-	shared_ptr<Mesh>			_characterMesh;
-	shared_ptr<Material>		_material;
-	shared_ptr<Shader>			_shader;
-	shared_ptr<Texture>			_texture;
-	shared_ptr<Texture>			_normal;
-	shared_ptr<MeshRenderer>	_meshRenderer;
+	vector<shared_ptr<GameObject>>		_objs;
+	shared_ptr<Mesh>					_characterMesh;
+	shared_ptr<Material>				_material;
+	shared_ptr<Shader>					_shader;
+	shared_ptr<Texture>					_texture;
+	shared_ptr<Texture>					_normal;
+	shared_ptr<MeshRenderer>			_meshRenderer;
 
 	uint8						_textureNum;
 
 	shared_ptr<GameObject>		_camera;
 
-
-	// 입력 관련
-public:
-	void UpdateRotation(float deltaX, float deltaY);
 
 private:
 	float sensitivity = 0.001f;
