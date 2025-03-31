@@ -52,29 +52,29 @@ void LobbyScene::LoadScene()
 
 #pragma region Object
 	{
-		shared_ptr<GameObject> obj = make_shared<GameObject>();
-		obj->AddComponent(make_shared<Transform>());
-		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-		obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
-		obj->SetStatic(false);
-		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-		{
-			shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
-			meshRenderer->SetMesh(sphereMesh);
-		}
-		{
-			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock", L"..\\Resources\\Texture\\Cliff_Rock_basecolor.png");
-			shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock_Normal", L"..\\Resources\\Texture\\Cliff_Rock_normal.png");
-			shared_ptr<Material> material = make_shared<Material>();
-			material->SetShader(shader);
-			material->SetTexture(0, texture);
-			material->SetTexture(1, texture2);
-			meshRenderer->SetMaterial(material);
-		}
-		obj->AddComponent(meshRenderer);
-		//scene->AddGameObject(obj);
-		AddGameObject(obj);
+		//shared_ptr<GameObject> obj = make_shared<GameObject>();
+		//obj->AddComponent(make_shared<Transform>());
+		//obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		//obj->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 150.f));
+		//obj->SetStatic(false);
+		//shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		//{
+		//	shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadSphereMesh();
+		//	meshRenderer->SetMesh(sphereMesh);
+		//}
+		//{
+		//	shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+		//	shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock", L"..\\Resources\\Texture\\Cliff_Rock_basecolor.png");
+		//	shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock_Normal", L"..\\Resources\\Texture\\Cliff_Rock_normal.png");
+		//	shared_ptr<Material> material = make_shared<Material>();
+		//	material->SetShader(shader);
+		//	material->SetTexture(0, texture);
+		//	material->SetTexture(1, texture2);
+		//	meshRenderer->SetMaterial(material);
+		//}
+		//obj->AddComponent(meshRenderer);
+		////scene->AddGameObject(obj);
+		//AddGameObject(obj);
 	}
 
 

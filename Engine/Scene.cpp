@@ -97,10 +97,12 @@ void Scene::RenderShadow()
 
 void Scene::RenderDeferred()
 {
+
 	// Deferred OMSet
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->OMSetRenderTargets();
 
 	shared_ptr<Camera> mainCamera = _cameras[0];
+
 	mainCamera->SortGameObject();
 	mainCamera->Render_Deferred();
 
@@ -202,7 +204,7 @@ void Scene::AddGameObject(shared_ptr<GameObject> gameObject)
 	{
 		_lights.push_back(gameObject->GetLight());
 	}
-
+	
 	_gameObjects.push_back(gameObject);
 }
 
@@ -220,7 +222,6 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 		if (findIt != _lights.end())
 			_lights.erase(findIt);
 	}
-
 	auto findIt = std::find(_gameObjects.begin(), _gameObjects.end(), gameObject);
 	if (findIt != _gameObjects.end())
 		_gameObjects.erase(findIt);

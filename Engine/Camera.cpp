@@ -58,7 +58,6 @@ void Camera::SortGameObject()
 	_vecDeferred.clear();
 	_vecParticle.clear();
 
-	int a = 0;
 	for (auto& gameObject : gameObjects)
 	{
 
@@ -84,7 +83,7 @@ void Camera::SortGameObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 100) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ)) == false)
 				{
 					continue;
 				}
@@ -208,10 +207,8 @@ void Camera::Render_Forward()
 void Camera::Render_Shadow()
 {
 
-	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
 	S_MatView = _matView;
 	S_MatProjection = _matProjection;
-	//}
 
 	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
 		S_MainMatView = _matView;

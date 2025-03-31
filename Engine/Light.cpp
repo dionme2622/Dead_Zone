@@ -13,7 +13,6 @@ Light::Light() : Component(COMPONENT_TYPE::LIGHT)
 	_shadowCamera = make_shared<GameObject>();
 	_shadowCamera->AddComponent(make_shared<Transform>());
 	_shadowCamera->AddComponent(make_shared<Camera>());
-
 }
 
 Light::~Light()
@@ -83,9 +82,10 @@ void Light::SetLightType(LIGHT_TYPE type)
 		_lightMaterial = GET_SINGLE(Resources)->Get<Material>(L"DirLight");
 
 		_shadowCamera->GetCamera()->SetScale(1.f);
+		_shadowCamera->GetCamera()->SetNear(0.01);
 		_shadowCamera->GetCamera()->SetFar(1000.f);
-		_shadowCamera->GetCamera()->SetWidth(4096 * 4);
-		_shadowCamera->GetCamera()->SetHeight(4096 * 4);
+		_shadowCamera->GetCamera()->SetWidth(500);
+		_shadowCamera->GetCamera()->SetHeight(500);
 
 		break;
 	case LIGHT_TYPE::POINT_LIGHT:

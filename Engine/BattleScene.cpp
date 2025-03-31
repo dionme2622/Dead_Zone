@@ -21,6 +21,7 @@
 
 BattleScene::BattleScene()
 {
+	_isFirstFrame = true;
 }
 
 
@@ -37,9 +38,9 @@ void BattleScene::LoadScene()
 		_playerCamera = make_shared<GameObject>();
 		_playerCamera->SetName(L"Main_Camera");
 		_playerCamera->AddComponent(make_shared<Transform>());
-		_playerCamera->AddComponent(make_shared<Camera>());
-		//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 2.3f, 0.9f));
+		_playerCamera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=90도
+		_playerCamera->GetCamera()->SetName(L"Main_Camera");
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
@@ -52,7 +53,8 @@ void BattleScene::LoadScene()
 		_uiCamera = make_shared<GameObject>();
 		_uiCamera->SetName(L"Orthographic_Camera");
 		_uiCamera->AddComponent(make_shared<Transform>());
-		_uiCamera->AddComponent(make_shared<Camera>());
+		_uiCamera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, 800*600
+		_uiCamera->GetCamera()->SetName(L"UI_Camera");
 		_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 		_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
 		uint8 layerIndex = LayerNameToIndex(L"UI");
@@ -88,24 +90,26 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Player
-	/*_player = make_shared<Player>();
-	_player->GetGameObject()->SetLayerIndex(LayerNameToIndex(L"Battle"));
-	_player->GetGameObject()->AddComponent(make_shared<PlayerScript>(_hwnd));
-	AddGameObject(_player->GetGameObject());
-	_playerCamera->GetTransform()->SetParent(_player->GetGameObject()->GetTransform());*/
+	_player = make_shared<Player>();
 
-	shared_ptr<MeshData> FemaleHero = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
-
-	vector<shared_ptr<GameObject>> gameObjects = FemaleHero->Instantiate();
+	vector<shared_ptr<GameObject>> gameObjects = _player->GetGameObjects();
 
 	for (auto& gameObject : gameObjects)
 	{
-		gameObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
-		gameObject->SetCheckFrustum(true);
-		gameObject->SetStatic(true);
+		gameObject->SetCheckFrustum(false);
+		gameObject->SetStatic(false);
 		AddGameObject(gameObject);
+		wcout << gameObject->GetName() << endl;
 	}
 	shared_ptr<GameObject> rootObject = gameObjects[0];
+
+	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
+	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+
+	rootObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
+
+	rootObject->AddComponent(make_shared<PlayerScript>(_hwnd, _playerCamera->GetTransform()));
+#pragma endregion
 
 	//rootObject->AddComponent(make_shared<Player>());
 	rootObject->AddComponent(make_shared<PlayerScript>(_hwnd));
@@ -118,7 +122,6 @@ void BattleScene::LoadScene()
 
 
 #pragma region Aiming Point
-
 	{
 		shared_ptr<GameObject> obj = make_shared<GameObject>();
 		obj->SetLayerIndex(LayerNameToIndex(L"UI")); // UI
@@ -147,14 +150,14 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 500, 0));
+		light->GetTransform()->SetLocalPosition(Vec3(0, 0, 0));
 		light->AddComponent(make_shared<Light>());
 		light->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
 		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
-		uint8 layerIndex = LayerNameToIndex(L"UI");
+		//uint8 layerIndex = LayerNameToIndex(L"UI");
 		//light->GetShadowCamera()->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 		AddGameObject(light);
 	}
@@ -172,42 +175,25 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Character
-	{
-		shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier1.bin"); // MeshData* meshData
+	//{
+	//	shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin"); // MeshData* meshData
+	//	shared_ptr<MeshData> FemaleHero = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects1 = FemaleSoldier->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects = FemaleSoldier->Instantiate();
 
-		for (auto& gameObject : gameObjects1)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
-		shared_ptr<GameObject> rootObject1 = gameObjects1[0];
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(true);
+	//		gameObject->SetStatic(true);
+	//		AddGameObject(gameObject);
+	//	}
+	//	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-		rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
-		//rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	
-
-	
-		shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_AssaultRifle01.bin"); // MeshData* meshData
-
-		vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
-
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
-		shared_ptr<GameObject> rootObject = gameObjects[0];
-
-		rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
-		rootObject->GetTransform()->SetParent(gameObjects1[14]->GetTransform());
-	}
+	//	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, -30.0f, 0.f));
+	//	rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+	//}
 
 #pragma endregion
-
 
 #pragma region Map
 	{
@@ -284,9 +270,89 @@ void BattleScene::LoadScene()
 #pragma endregion
 }
 
-
-
 void BattleScene::Update()
 {
+	if (!_isFirstFrame)
+	{
+		CheckCollisions();
+	}
+	else
+	{
+		_isFirstFrame = false; // 첫 프레임을 넘겼음을 표시
+	}
+
+
+
 	Scene::Update();
 }
+
+void BattleScene::FinalUpdate()
+{
+	Scene::FinalUpdate();
+}
+
+
+
+void BattleScene::CheckCollisions()
+{
+	vector<shared_ptr<GameObject>> playerGameObjects = _player->GetGameObjects();
+	vector<shared_ptr<GameObject>> allGameObjects = GetGameObjects();
+
+	for (auto& gameObject : playerGameObjects)
+	{
+		shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider());
+		if (!playerCollider)
+			continue;
+
+		for (auto& otherObject : allGameObjects)
+		{
+			if (gameObject == otherObject)
+				continue;
+
+			shared_ptr<BoxCollider> otherCollider = dynamic_pointer_cast<BoxCollider>(otherObject->GetCollider());
+			if (!otherCollider)
+				continue;
+
+			BoundingOrientedBox playerBox = playerCollider->GetBoundingBox();
+			BoundingOrientedBox otherBox = otherCollider->GetBoundingBox();
+
+			if (playerBox.Intersects(otherBox))
+			{
+				Vec3 playerPos = gameObject->GetTransform()->GetLocalPosition();
+				Vec3 otherPos = otherObject->GetTransform()->GetLocalPosition();
+
+				// 겹침 계산
+				float overlapX = (playerBox.Extents.x + otherBox.Extents.x * otherObject->GetTransform()->GetLocalScale().x) - abs(playerPos.x - otherPos.x);
+				float overlapY = (playerBox.Extents.y + otherBox.Extents.y * otherObject->GetTransform()->GetLocalScale().y) - abs(playerPos.y - otherPos.y);
+				float overlapZ = (playerBox.Extents.z + otherBox.Extents.z * otherObject->GetTransform()->GetLocalScale().z) - abs(playerPos.z - otherPos.z);
+
+				// 겹침이 음수일 경우 충돌이 없으므로 무시
+				if (overlapX < 0 || overlapY < 0 || overlapZ < 0)
+					continue;
+
+				// 충돌 방향 계산
+				Vec3 direction = playerPos - otherPos;
+				direction.Normalize();
+
+				// 가장 작은 겹침 방향 찾기 (최소 분리 거리)
+				Vec3 overlap = Vec3(overlapX, overlapY, overlapZ);
+				Vec3 adjustment = Vec3(0, 0, 0);
+
+				// X, Y, Z 중 가장 작은 겹침 방향으로만 이동
+				if (overlapX < overlapY && overlapX < overlapZ)
+					adjustment.x = direction.x * overlapX;
+				else if (overlapY < overlapX && overlapY < overlapZ)
+					adjustment.y = direction.y * overlapY;
+				else
+					adjustment.z = direction.z * overlapZ;
+
+				// Y축 이동을 제한하고 싶다면 adjustment.y = 0으로 설정 가능
+				 //adjustment.y = -320.f; // (선택적)
+
+				// 위치 조정
+				_player->GetGameObjects()[0]->GetTransform()->SetLocalPosition(playerPos + adjustment);
+			}
+		}
+	}
+}
+
