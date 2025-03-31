@@ -11,7 +11,7 @@
 #include "SceneManager.h"
 
 PlayerScript::PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform) :
-	_hwnd(hwnd), _speed(100.0f), _jumpVelocity(5.0f), _currentVelocity(0.0f), 
+	_hwnd(hwnd), _speed(100.0f), _jumpVelocity(50.0f), _currentVelocity(0.0f), 
 	_gravity(-9.8f), _isGrounded(true), _pitch(0.0f), _yaw(0.0f), _mouseMove(false), 
 	_cameraTransform(playerTransform)
 {
@@ -29,8 +29,31 @@ void PlayerScript::LateUpdate()
 
 
 	// 카메라 위치 업데이트
-	Vec3 cameraPosition = GetTransform()->GetLocalPosition();
+	/*Vec3 cameraPosition = GetTransform()->GetLocalPosition();
+	_cameraTransform->SetLocalPosition(cameraPosition);*/
+
+	//Vec3 cameraRotate = GetTransform()->GetLocalRotation();
+	//_cameraTransform->SetLocalRotation(cameraRotate);
+
+
+	// 디버그용
+	// 플레이어의 위치와 룩 벡터를 가져옴
+	Vec3 playerPosition = GetTransform()->GetLocalPosition();
+	Vec3 lookVector = GetTransform()->GetLook();
+
+	// 카메라가 플레이어의 뒤쪽에 위치하도록 설정 (예: 플레이어의 뒤쪽 5 단위 거리)
+	Vec3 cameraOffset = lookVector * -5.0f; // 뒤쪽으로 5 단위 거리
+	Vec3 cameraPosition = playerPosition + cameraOffset;
+	//cameraPosition.y += 10;
+	// 카메라 위치 업데이트
 	_cameraTransform->SetLocalPosition(cameraPosition);
+
+	// 카메라가 플레이어를 바라보도록 설정
+	//_cameraTransform->LookAt(playerPosition);
+
+	// 카메라 위치 업데이트
+	/*Vec3 cameraPosition = GetTransform()->GetLocalPosition();
+	_cameraTransform->SetLocalPosition(cameraPosition);*/
 
 	Vec3 cameraRotate = GetTransform()->GetLocalRotation();
 	_cameraTransform->SetLocalRotation(cameraRotate);
@@ -40,7 +63,7 @@ void PlayerScript::LateUpdate()
 void PlayerScript::UpdatePlayerInput()
 {
 	UpdateKeyInput();
-
+	
 	UpdateMouseInput();
 }
 
@@ -116,23 +139,28 @@ void PlayerScript::UpdateMouseInput()
 
 void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 {
-	// X축 회전 (Pitch, 위아래)
-	_pitch += deltaY * sensitivity;
-	_pitch = max(-90 * XM_PI / 180, min(90 * XM_PI / 180, _pitch));
+    // X축 회전 (Pitch, 위아래)
+    _pitch += deltaY * sensitivity;
+    _pitch = max(-90 * XM_PI / 180, min(90 * XM_PI / 180, _pitch));
 
-	_yaw += deltaX * sensitivity;
+    // Y축 회전 (Yaw, 좌우)
+    _yaw += deltaX * sensitivity;
 
-	rotation.x = _pitch * 50;
-	rotation.y = _yaw * 50;
-	rotation.z = 0.0;
+    // 플레이어의 Yaw 회전만 적용
+    rotation.y = _yaw * 50;
+    GetTransform()->SetLocalRotation(rotation);
 
-	GetTransform()->SetLocalRotation(rotation);
+    // 카메라의 Pitch, _yaw 회전만 적용
+    Vec3 cameraRotation = _cameraTransform->GetLocalRotation();
+    cameraRotation.x = _pitch * 50;
+    cameraRotation.y = _yaw * 50;
+    _cameraTransform->SetLocalRotation(cameraRotation);
 }
 
 void PlayerScript::UpdatePlayerOnTerrain()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
-	float terrainHeight = -130.f;  // 수정해야됨
+	float terrainHeight = -330.f;  // 수정해야됨
 
 	if (pos.y <= terrainHeight)
 	{
@@ -142,7 +170,7 @@ void PlayerScript::UpdatePlayerOnTerrain()
 	}
 	else
 	{
-		_currentVelocity -= _gravity * DELTA_TIME * 100;
+		_currentVelocity += _gravity * DELTA_TIME * 10;
 		pos.y += _currentVelocity * DELTA_TIME;
 		_isGrounded = false;
 	}

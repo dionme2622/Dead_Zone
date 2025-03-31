@@ -40,7 +40,6 @@ void BattleScene::LoadScene()
 		_playerCamera->AddComponent(make_shared<Transform>());
 		_playerCamera->AddComponent(make_shared<Camera>()); // Near=1, Far=1000, FOV=90도
 		_playerCamera->GetCamera()->SetName(L"Main_Camera");
-		//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
 		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
@@ -100,6 +99,7 @@ void BattleScene::LoadScene()
 		gameObject->SetCheckFrustum(false);
 		gameObject->SetStatic(false);
 		AddGameObject(gameObject);
+		wcout << gameObject->GetName() << endl;
 	}
 	shared_ptr<GameObject> rootObject = gameObjects[0];
 
@@ -269,8 +269,6 @@ void BattleScene::CheckCollisions()
 	vector<shared_ptr<GameObject>> playerGameObjects = _player->GetGameObjects();
 	vector<shared_ptr<GameObject>> allGameObjects = GetGameObjects();
 
-	printf("playerPosY : %f\n", _player->GetGameObjects()[0]->GetTransform()->GetLocalPosition().y);
-
 	for (auto& gameObject : playerGameObjects)
 	{
 		shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider());
@@ -291,56 +289,41 @@ void BattleScene::CheckCollisions()
 
 			if (playerBox.Intersects(otherBox))
 			{
-				//exit(0);
-				//RemoveGameObject(otherObject);
-
-				// 충돌 처리 로직: 플레이어 오브젝트가 겹치지 않도록 위치 조정
-				Vec3 playerPos = _player->GetGameObjects()[0]->GetTransform()->GetLocalPosition();
+				Vec3 playerPos = gameObject->GetTransform()->GetLocalPosition();
 				Vec3 otherPos = otherObject->GetTransform()->GetLocalPosition();
+
+				// 겹침 계산
+				float overlapX = (playerBox.Extents.x + otherBox.Extents.x * otherObject->GetTransform()->GetLocalScale().x) - abs(playerPos.x - otherPos.x);
+				float overlapY = (playerBox.Extents.y + otherBox.Extents.y * otherObject->GetTransform()->GetLocalScale().y) - abs(playerPos.y - otherPos.y);
+				float overlapZ = (playerBox.Extents.z + otherBox.Extents.z * otherObject->GetTransform()->GetLocalScale().z) - abs(playerPos.z - otherPos.z);
+
+				// 겹침이 음수일 경우 충돌이 없으므로 무시
+				if (overlapX < 0 || overlapY < 0 || overlapZ < 0)
+					continue;
+
+				// 충돌 방향 계산
 				Vec3 direction = playerPos - otherPos;
 				direction.Normalize();
 
-				// 겹침 정도 계산
-				float overlapX = (playerBox.Extents.x + otherBox.Extents.x * gameObject->GetTransform()->GetLocalScale().x) - abs(playerPos.x - otherPos.x);
-				float overlapY = (playerBox.Extents.y + otherBox.Extents.y * gameObject->GetTransform()->GetLocalScale().y) - abs(playerPos.y - otherPos.y);
-				float overlapZ = (playerBox.Extents.z + otherBox.Extents.z * gameObject->GetTransform()->GetLocalScale().z) - abs(playerPos.z - otherPos.z);
-
+				// 가장 작은 겹침 방향 찾기 (최소 분리 거리)
 				Vec3 overlap = Vec3(overlapX, overlapY, overlapZ);
+				Vec3 adjustment = Vec3(0, 0, 0);
 
-				printf("overlapX : %f, overlapZ : %f, overlapZ : %f\n", otherBox.Extents.x, otherBox.Extents.y, otherBox.Extents.z);
-
-				// 가장 작은 겹침 축을 선택하여 플레이어 오브젝트를 밀어냄
-				/*if (overlapX < overlapY && overlapX < overlapZ)
-				{
-					float directionX = (playerPos.x > otherPos.x) ? 1.0f : -1.0f;
-					_player->GetGameObjects()[0]->GetTransform()->SetLocalPosition(playerPos + Vec3(directionX * overlapX, 0, 0));
-				}
+				// X, Y, Z 중 가장 작은 겹침 방향으로만 이동
+				if (overlapX < overlapY && overlapX < overlapZ)
+					adjustment.x = direction.x * overlapX;
 				else if (overlapY < overlapX && overlapY < overlapZ)
-				{
-					float directionY = (playerPos.y > otherPos.y) ? 1.0f : -1.0f;
-					_player->GetGameObjects()[0]->GetTransform()->SetLocalPosition(playerPos + Vec3(0, directionY * overlapY, 0));
-				}
+					adjustment.y = direction.y * overlapY;
 				else
-				{
-					float directionZ = (playerPos.z > otherPos.z) ? 1.0f : -1.0f;
-					_player->GetGameObjects()[0]->GetTransform()->SetLocalPosition(playerPos + Vec3(0, 0, directionZ * overlapZ));
-				}*/
+					adjustment.z = direction.z * overlapZ;
 
-				Vec3 direction_ = Vec3((playerPos.x > otherPos.x) ? 1.0f : -1.0f, 
-										(playerPos.y > otherPos.y) ? 1.0f : -1.0f, 
-										(playerPos.z > otherPos.z) ? 1.0f : -1.0f);
-				_player->GetGameObjects()[0]->GetTransform()->SetLocalPosition(playerPos + Vec3(direction_ * overlap / 100));
+				// Y축 이동을 제한하고 싶다면 adjustment.y = 0으로 설정 가능
+				 //adjustment.y = -320.f; // (선택적)
 
-				//_player->GetGameObjects()[0]->GetTransform()->SetLocalPosition(playerPos + Vec3(0, 0, 0));
-
+				// 위치 조정
+				_player->GetGameObjects()[0]->GetTransform()->SetLocalPosition(playerPos + adjustment);
 			}
 		}
 	}
 }
-
-
-
-
-
-
 
