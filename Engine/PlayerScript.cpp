@@ -11,7 +11,7 @@
 #include "SceneManager.h"
 
 PlayerScript::PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform) :
-	_hwnd(hwnd), _speed(100.0f), _jumpVelocity(50.0f), _currentVelocity(0.0f), 
+	_hwnd(hwnd), _speed(30.0f), _jumpVelocity(50.0f), _currentVelocity(0.0f), 
 	_gravity(-9.8f), _isGrounded(true), _pitch(0.0f), _yaw(0.0f), _mouseMove(false), 
 	_cameraTransform(playerTransform)
 {
@@ -42,7 +42,7 @@ void PlayerScript::LateUpdate()
 	Vec3 lookVector = GetTransform()->GetLook();
 
 	// 카메라가 플레이어의 뒤쪽에 위치하도록 설정 (예: 플레이어의 뒤쪽 5 단위 거리)
-	Vec3 cameraOffset = lookVector * -5.0f; // 뒤쪽으로 5 단위 거리
+	Vec3 cameraOffset = lookVector * -7.0f; // 뒤쪽으로 5 단위 거리
 	Vec3 cameraPosition = playerPosition + cameraOffset;
 	//cameraPosition.y += 10;
 	// 카메라 위치 업데이트
@@ -52,10 +52,12 @@ void PlayerScript::LateUpdate()
 	//_cameraTransform->LookAt(playerPosition);
 
 	// 카메라 위치 업데이트
-	/*Vec3 cameraPosition = GetTransform()->GetLocalPosition();
-	_cameraTransform->SetLocalPosition(cameraPosition);*/
+	//Vec3 cameraPosition = GetTransform()->GetLocalPosition();
 
 	Vec3 cameraRotate = GetTransform()->GetLocalRotation();
+	Vec3 pos = _cameraTransform->GetLocalPosition();
+	pos.y += 3;
+	_cameraTransform->SetLocalPosition(pos);
 	_cameraTransform->SetLocalRotation(cameraRotate);
 }
 
@@ -147,7 +149,9 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
     _yaw += deltaX * sensitivity;
 
     // 플레이어의 Yaw 회전만 적용
+	rotation.x = _pitch * 50;
     rotation.y = _yaw * 50;
+
     GetTransform()->SetLocalRotation(rotation);
 
     // 카메라의 Pitch, _yaw 회전만 적용

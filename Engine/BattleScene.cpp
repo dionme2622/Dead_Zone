@@ -99,27 +99,19 @@ void BattleScene::LoadScene()
 		gameObject->SetCheckFrustum(false);
 		gameObject->SetStatic(false);
 		AddGameObject(gameObject);
-		wcout << gameObject->GetName() << endl;
 	}
 	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
+	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 70.0f, 0.f));
 	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 	rootObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
 
 	rootObject->AddComponent(make_shared<PlayerScript>(_hwnd, _playerCamera->GetTransform()));
-#pragma endregion
 
-	//rootObject->AddComponent(make_shared<Player>());
-	rootObject->AddComponent(make_shared<PlayerScript>(_hwnd));
-	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
-	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
-	_playerCamera->GetTransform()->SetParent(rootObject->GetTransform());
 
 #pragma endregion
-
 
 #pragma region Aiming Point
 	{
@@ -150,15 +142,13 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 0, 0));
+		light->GetTransform()->SetLocalPosition(Vec3(0, 100, 0));
 		light->AddComponent(make_shared<Light>());
 		light->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
 		light->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
-		//uint8 layerIndex = LayerNameToIndex(L"UI");
-		//light->GetShadowCamera()->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 		AddGameObject(light);
 	}
 #pragma endregion
@@ -172,27 +162,6 @@ void BattleScene::LoadScene()
 		particle->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 100.f));
 		AddGameObject(particle);*/
 	}
-#pragma endregion
-
-#pragma region Character
-	//{
-	//	shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin"); // MeshData* meshData
-	//	shared_ptr<MeshData> FemaleHero = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
-
-	//	vector<shared_ptr<GameObject>> gameObjects = FemaleSoldier->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
-	//	shared_ptr<GameObject> rootObject = gameObjects[0];
-
-	//	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, -30.0f, 0.f));
-	//	rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	//}
-
 #pragma endregion
 
 #pragma region Map
@@ -291,68 +260,176 @@ void BattleScene::FinalUpdate()
 	Scene::FinalUpdate();
 }
 
+// 축에 투영하는 헬퍼 함수
+void ProjectBoxOntoAxis(const BoundingOrientedBox& box, const Vec3& axis, float& min_, float& max_)
+{
+	Vec3 corners[8];
+	box.GetCorners(corners);
 
+	min_ = max_ = corners[0].Dot(axis);
+	for (int i = 1; i < 8; i++)
+	{
+		float projection = corners[i].Dot(axis);
+		min_ = min(min_, projection);
+		max_ = max(max_, projection);
+	}
+}
+
+// 겹침 정도 계산 헬퍼 함수
+float GetOverlap(float minA, float maxA, float minB, float maxB)
+{
+	if (minA > maxB || minB > maxA)
+		return 0.0f; // 분리됨
+	return min(maxA, maxB) - max(minA, minB);
+}
 
 void BattleScene::CheckCollisions()
 {
-	vector<shared_ptr<GameObject>> playerGameObjects = _player->GetGameObjects();
+	shared_ptr<GameObject> playerRootObject = _player->GetGameObjects()[0];
 	vector<shared_ptr<GameObject>> allGameObjects = GetGameObjects();
 
-	for (auto& gameObject : playerGameObjects)
+	shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(_player->GetGameObjects()[24]->GetCollider());
+	BoundingOrientedBox playerBox = playerCollider->GetBoundingBox();
+
+	for (auto& otherObject : allGameObjects)
 	{
-		shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider());
-		if (!playerCollider)
+		shared_ptr<BoxCollider> otherCollider = dynamic_pointer_cast<BoxCollider>(otherObject->GetCollider());
+
+		if (!otherCollider || otherCollider == playerCollider)
 			continue;
 
-		for (auto& otherObject : allGameObjects)
+		BoundingOrientedBox otherBox = otherCollider->GetBoundingBox();
+
+		if (playerBox.Intersects(otherBox))
 		{
-			if (gameObject == otherObject)
-				continue;
+			Vec3 playerPos = _player->GetGameObjects()[24]->GetTransform()->GetWorldPosition();
+			Vec3 otherPos = otherObject->GetTransform()->GetWorldPosition();
 
-			shared_ptr<BoxCollider> otherCollider = dynamic_pointer_cast<BoxCollider>(otherObject->GetCollider());
-			if (!otherCollider)
-				continue;
+			// 분리 축(SAT: Separating Axis Theorem)을 사용한 최소 이동 벡터(MTV) 계산
+			Vec3 mtv; // Minimum Translation Vector
+			float minOverlap = 9999.f;
+			Vec3 collisionNormal;
 
-			BoundingOrientedBox playerBox = playerCollider->GetBoundingBox();
-			BoundingOrientedBox otherBox = otherCollider->GetBoundingBox();
+			// 두 박스의 축들을 테스트 (각 박스의 로컬 좌표계 기준 3개의 축 x 6)
+			Vec3 axes[6];
 
-			if (playerBox.Intersects(otherBox))
+			// playerBox의 Orientation (쿼터니언)을 행렬로 변환
+			XMFLOAT4 playerQuat = playerBox.Orientation;
+			XMMATRIX playerRotationMatrix = XMMatrixRotationQuaternion(XMLoadFloat4(&playerQuat));
+			XMFLOAT4X4 playerOrientation;
+			XMStoreFloat4x4(&playerOrientation, playerRotationMatrix);
+
+			// 방향 벡터 추출
+			axes[0] = Vec3(playerOrientation._11, playerOrientation._12, playerOrientation._13); // Right
+			axes[1] = Vec3(playerOrientation._21, playerOrientation._22, playerOrientation._23); // Up
+			axes[2] = Vec3(playerOrientation._31, playerOrientation._32, playerOrientation._33); // Forward
+
+			// otherBox의 Orientation (쿼터니언)을 행렬로 변환
+			XMFLOAT4 otherQuat = otherBox.Orientation;
+			XMMATRIX otherRotationMatrix = XMMatrixRotationQuaternion(XMLoadFloat4(&otherQuat));
+			XMFLOAT4X4 otherOrientation;
+			XMStoreFloat4x4(&otherOrientation, otherRotationMatrix);
+
+			// 방향 벡터 추출
+			axes[3] = Vec3(otherOrientation._11, otherOrientation._12, otherOrientation._13); // Right
+			axes[4] = Vec3(otherOrientation._21, otherOrientation._22, otherOrientation._23); // Up
+			axes[5] = Vec3(otherOrientation._31, otherOrientation._32, otherOrientation._33); // Forward
+			for (int i = 0; i < 6; i++)
 			{
-				Vec3 playerPos = gameObject->GetTransform()->GetLocalPosition();
-				Vec3 otherPos = otherObject->GetTransform()->GetLocalPosition();
-
-				// 겹침 계산
-				float overlapX = (playerBox.Extents.x + otherBox.Extents.x * otherObject->GetTransform()->GetLocalScale().x) - abs(playerPos.x - otherPos.x);
-				float overlapY = (playerBox.Extents.y + otherBox.Extents.y * otherObject->GetTransform()->GetLocalScale().y) - abs(playerPos.y - otherPos.y);
-				float overlapZ = (playerBox.Extents.z + otherBox.Extents.z * otherObject->GetTransform()->GetLocalScale().z) - abs(playerPos.z - otherPos.z);
-
-				// 겹침이 음수일 경우 충돌이 없으므로 무시
-				if (overlapX < 0 || overlapY < 0 || overlapZ < 0)
+				if (axes[i].LengthSquared() < 0.0001f) // 축이 유효한지 확인
 					continue;
 
-				// 충돌 방향 계산
-				Vec3 direction = playerPos - otherPos;
-				direction.Normalize();
+				axes[i].Normalize();
 
-				// 가장 작은 겹침 방향 찾기 (최소 분리 거리)
-				Vec3 overlap = Vec3(overlapX, overlapY, overlapZ);
-				Vec3 adjustment = Vec3(0, 0, 0);
+				// 두 박스를 축에 투영
+				float playerMin, playerMax, otherMin, otherMax;
+				ProjectBoxOntoAxis(playerBox, axes[i], playerMin, playerMax);
+				ProjectBoxOntoAxis(otherBox, axes[i], otherMin, otherMax);
 
-				// X, Y, Z 중 가장 작은 겹침 방향으로만 이동
-				if (overlapX < overlapY && overlapX < overlapZ)
-					adjustment.x = direction.x * overlapX;
-				else if (overlapY < overlapX && overlapY < overlapZ)
-					adjustment.y = direction.y * overlapY;
-				else
-					adjustment.z = direction.z * overlapZ;
+				float overlap = GetOverlap(playerMin, playerMax, otherMin, otherMax);
+				if (overlap <= 0) // 분리된 경우 충돌 없음
+					break;
 
-				// Y축 이동을 제한하고 싶다면 adjustment.y = 0으로 설정 가능
-				 //adjustment.y = -320.f; // (선택적)
+				if (overlap < minOverlap)
+				{
+					minOverlap = overlap;
+					collisionNormal = axes[i];
+					mtv = collisionNormal * overlap;
 
+					// MTV 방향 보정 (플레이어가 다른 객체 방향으로 밀려나도록)
+					Vec3 toOther = otherPos - playerPos;
+					if (toOther.Dot(collisionNormal) > 0)
+						mtv = -mtv;
+				}
+			}
+
+			if (minOverlap <= 9998.f)
+			{
 				// 위치 조정
-				_player->GetGameObjects()[0]->GetTransform()->SetLocalPosition(playerPos + adjustment);
+				playerRootObject->GetTransform()->SetLocalPosition(
+					playerRootObject->GetTransform()->GetLocalPosition() + mtv);
+
+				cout << "Collision resolved with MTV: " << mtv.x << ", " << mtv.y << ", " << mtv.z << endl;
+				// 충돌한 오브젝트 제거 (필요 시 주석 해제)
+				//RemoveGameObject(otherObject);
 			}
 		}
 	}
 }
 
+
+
+
+//void BattleScene::CheckCollisions()
+//{
+//	shared_ptr<GameObject> playerRootObject = _player->GetGameObjects()[0];
+//	vector<shared_ptr<GameObject>> allGameObjects = GetGameObjects();
+//
+//	shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(_player->GetGameObjects()[24]->GetCollider());
+//	BoundingOrientedBox playerBox = playerCollider->GetBoundingBox();
+//
+//	for (auto& otherObject : allGameObjects)
+//	{
+//		shared_ptr<BoxCollider> otherCollider = dynamic_pointer_cast<BoxCollider>(otherObject->GetCollider());
+//
+//		if (!otherCollider || otherCollider == playerCollider)
+//			continue;
+//
+//		BoundingOrientedBox otherBox = otherCollider->GetBoundingBox();
+//
+//		if (playerBox.Intersects(otherBox))
+//		{
+//			Vec3 playerPos = _player->GetGameObjects()[24]->GetTransform()->GetWorldPosition();
+//			Vec3 otherPos = otherObject->GetTransform()->GetWorldPosition();
+//
+//			// 겹침 계산
+//			float overlapX = (playerBox.Extents.x + otherBox.Extents.x) - abs(playerPos.x - otherPos.x);
+//			float overlapY = (playerBox.Extents.y + otherBox.Extents.y) - abs(playerPos.y - otherPos.y);
+//			float overlapZ = (playerBox.Extents.z + otherBox.Extents.z) - abs(playerPos.z - otherPos.z);
+//
+//			// 충돌 방향 계산
+//			Vec3 direction = playerPos - otherPos;
+//			direction.Normalize();
+//
+//			// 가장 작은 겹침 방향 찾기 (최소 분리 거리)
+//			Vec3 overlap = Vec3(overlapX, overlapY, overlapZ);
+//			Vec3 adjustment = Vec3(0, 0, 0);
+//
+//			// X, Y, Z 중 가장 작은 겹침 방향으로만 이동
+//			if (overlapX < overlapY && overlapX < overlapZ)
+//				adjustment.x = direction.x * overlapX;
+//			else if (overlapY < overlapX && overlapY < overlapZ)
+//				adjustment.y = direction.y * overlapY;
+//			else
+//				adjustment.z = direction.z * overlapZ;
+//
+//			cout << otherObject->GetTransform()->GetLocalPosition().x << endl;
+//
+//			// 위치 조정
+//			playerRootObject->GetTransform()->SetLocalPosition(playerRootObject->GetTransform()->GetLocalPosition() + adjustment);
+//			cout << playerPos.y + adjustment.y << endl;
+//			// 충돌한 오브젝트 제거
+//			//RemoveGameObject(otherObject);
+//		}
+//	}
+//}
