@@ -404,22 +404,37 @@ void BattleScene::CheckCollisions()
 
 void BattleScene::CreateZombie()
 {
-	shared_ptr<MeshData> zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
+	shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
 
-	vector<shared_ptr<GameObject>> gameObjects = zombie->Instantiate();
-	_zombies.push_back(gameObjects);
+	vector<shared_ptr<GameObject>> zombies = Zombie->Instantiate();
 
-	for (auto& gameObject : gameObjects)
+	for (auto& gameObject : zombies)
 	{
+		//gameObject->SetName(L"FemaleSoldier");
 		gameObject->SetCheckFrustum(true);
-		gameObject->SetStatic(false);
+		gameObject->SetStatic(true);
 		AddGameObject(gameObject);
 	}
 
-	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	rootObject->GetTransform()->SetLocalPosition(Vec3(rand() % 100, rand() % 100, rand() % 100));
-	rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+	zombies[0]->GetTransform()->SetLocalPosition(Vec3(10.f, 0.f, 0.f));
+
+	//shared_ptr<MeshData> zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
+
+	//vector<shared_ptr<GameObject>> gameObjects = zombie->Instantiate();
+	//_zombies.push_back(gameObjects);
+
+	//for (auto& gameObject : gameObjects)
+	//{
+	//	gameObject->SetCheckFrustum(true);
+	//	gameObject->SetStatic(false);
+	//	AddGameObject(gameObject);
+	//}
+
+	//shared_ptr<GameObject> rootObject = gameObjects[0];
+
+	//rootObject->GetTransform()->SetLocalPosition(Vec3(rand() % 100, rand() % 100, rand() % 100));
+	//rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
 }
 
 //void BattleScene::CheckCollisions()
