@@ -16,8 +16,10 @@ public:
 	virtual shared_ptr<Mesh> GetColliderMesh() override;
 	BoundingOrientedBox GetBoundingBox() { return _boundingBox; }
 
-	void SetCenter(Vec3 center) { _center = center; };
-	void SetExtents(Vec3 extents) { _extents = extents; };
+	Vec3 GetCenter() { return _center; }
+
+	void SetCenter(Vec3 center) { _center = center; }
+	void SetExtents(Vec3 extents) { _extents = extents; }
 
 	
 

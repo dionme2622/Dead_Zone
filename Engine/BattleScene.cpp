@@ -102,7 +102,7 @@ void BattleScene::LoadScene()
 	}
 	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 70.0f, 0.f));
+	rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 100.0f, 0.f));
 	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 
 	rootObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
@@ -142,7 +142,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 100, 0));
+		light->GetTransform()->SetLocalPosition(Vec3(0, 150, 150));
 		light->AddComponent(make_shared<Light>());
 		light->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
@@ -249,9 +249,7 @@ void BattleScene::Update()
 	{
 		_isFirstFrame = false; // 첫 프레임을 넘겼음을 표시
 	}
-
-
-
+	//CreateZombie();
 	Scene::Update();
 }
 
@@ -267,6 +265,7 @@ void ProjectBoxOntoAxis(const BoundingOrientedBox& box, const Vec3& axis, float&
 	box.GetCorners(corners);
 
 	min_ = max_ = corners[0].Dot(axis);
+
 	for (int i = 1; i < 8; i++)
 	{
 		float projection = corners[i].Dot(axis);
@@ -283,6 +282,8 @@ float GetOverlap(float minA, float maxA, float minB, float maxB)
 	return min(maxA, maxB) - max(minA, minB);
 }
 
+
+
 void BattleScene::CheckCollisions()
 {
 	shared_ptr<GameObject> playerRootObject = _player->GetGameObjects()[0];
@@ -290,6 +291,9 @@ void BattleScene::CheckCollisions()
 
 	shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(_player->GetGameObjects()[24]->GetCollider());
 	BoundingOrientedBox playerBox = playerCollider->GetBoundingBox();
+
+	Vec3 totalMTV = Vec3(0, 0, 0); // 모든 MTV를 합산
+	bool hasCollision = false;
 
 	for (auto& otherObject : allGameObjects)
 	{
@@ -302,41 +306,50 @@ void BattleScene::CheckCollisions()
 
 		if (playerBox.Intersects(otherBox))
 		{
-			Vec3 playerPos = _player->GetGameObjects()[24]->GetTransform()->GetWorldPosition();
-			Vec3 otherPos = otherObject->GetTransform()->GetWorldPosition();
+			hasCollision = true;
 
-			// 분리 축(SAT: Separating Axis Theorem)을 사용한 최소 이동 벡터(MTV) 계산
-			Vec3 mtv; // Minimum Translation Vector
-			float minOverlap = 9999.f;
+			Vec3 mtv;
+			float minOverlap = FLT_MAX;
 			Vec3 collisionNormal;
 
-			// 두 박스의 축들을 테스트 (각 박스의 로컬 좌표계 기준 3개의 축 x 6)
-			Vec3 axes[6];
+			// 분리 축 설정 (총 15개: 각 상자 3개 + 외적 9개)
+			Vec3 axes[15];
 
-			// playerBox의 Orientation (쿼터니언)을 행렬로 변환
+			// playerBox의 Orientation
 			XMFLOAT4 playerQuat = playerBox.Orientation;
 			XMMATRIX playerRotationMatrix = XMMatrixRotationQuaternion(XMLoadFloat4(&playerQuat));
 			XMFLOAT4X4 playerOrientation;
 			XMStoreFloat4x4(&playerOrientation, playerRotationMatrix);
 
-			// 방향 벡터 추출
 			axes[0] = Vec3(playerOrientation._11, playerOrientation._12, playerOrientation._13); // Right
 			axes[1] = Vec3(playerOrientation._21, playerOrientation._22, playerOrientation._23); // Up
 			axes[2] = Vec3(playerOrientation._31, playerOrientation._32, playerOrientation._33); // Forward
 
-			// otherBox의 Orientation (쿼터니언)을 행렬로 변환
+			// otherBox의 Orientation
 			XMFLOAT4 otherQuat = otherBox.Orientation;
 			XMMATRIX otherRotationMatrix = XMMatrixRotationQuaternion(XMLoadFloat4(&otherQuat));
 			XMFLOAT4X4 otherOrientation;
 			XMStoreFloat4x4(&otherOrientation, otherRotationMatrix);
 
-			// 방향 벡터 추출
 			axes[3] = Vec3(otherOrientation._11, otherOrientation._12, otherOrientation._13); // Right
 			axes[4] = Vec3(otherOrientation._21, otherOrientation._22, otherOrientation._23); // Up
 			axes[5] = Vec3(otherOrientation._31, otherOrientation._32, otherOrientation._33); // Forward
-			for (int i = 0; i < 6; i++)
+
+			// 외적 축 추가
+			int axisIndex = 6;
+			for (int i = 0; i < 3; i++)
 			{
-				if (axes[i].LengthSquared() < 0.0001f) // 축이 유효한지 확인
+				for (int j = 0; j < 3; j++)
+				{
+					axes[axisIndex] = axes[i].Cross(axes[j + 3]);
+					axisIndex++;
+				}
+			}
+
+			// SAT 적용
+			for (int i = 0; i < 15; i++)
+			{
+				if (axes[i].LengthSquared() < 0.0001f) // 유효하지 않은 축 건너뛰기
 					continue;
 
 				axes[i].Normalize();
@@ -348,7 +361,7 @@ void BattleScene::CheckCollisions()
 
 				float overlap = GetOverlap(playerMin, playerMax, otherMin, otherMax);
 				if (overlap <= 0) // 분리된 경우 충돌 없음
-					break;
+					return;
 
 				if (overlap < minOverlap)
 				{
@@ -356,29 +369,58 @@ void BattleScene::CheckCollisions()
 					collisionNormal = axes[i];
 					mtv = collisionNormal * overlap;
 
-					// MTV 방향 보정 (플레이어가 다른 객체 방향으로 밀려나도록)
-					Vec3 toOther = otherPos - playerPos;
+					// MTV 방향 보정
+					Vec3 toOther;
+					toOther.x = otherBox.Center.x - playerBox.Center.x;
+					toOther.y = otherBox.Center.y - playerBox.Center.y;
+					toOther.z = otherBox.Center.z - playerBox.Center.z;
 					if (toOther.Dot(collisionNormal) > 0)
 						mtv = -mtv;
 				}
 			}
 
-			if (minOverlap <= 9998.f)
-			{
-				// 위치 조정
-				playerRootObject->GetTransform()->SetLocalPosition(
-					playerRootObject->GetTransform()->GetLocalPosition() + mtv);
-
-				cout << "Collision resolved with MTV: " << mtv.x << ", " << mtv.y << ", " << mtv.z << endl;
-				// 충돌한 오브젝트 제거 (필요 시 주석 해제)
-				//RemoveGameObject(otherObject);
-			}
+			// MTV 합산
+			totalMTV += mtv;
 		}
+	}
+
+	if (hasCollision)
+	{
+		// MTV 크기 제한 (플레이어가 과도하게 밀려나는 것을 방지)
+		float maxMTVLength = 1.0f; // 최대 MTV 크기
+		if (totalMTV.Length() > maxMTVLength)
+		{
+			totalMTV.Normalize();
+			totalMTV *= maxMTVLength;
+		}
+
+		// 플레이어 위치 보정
+		Vec3 newPosition = playerRootObject->GetTransform()->GetLocalPosition() + totalMTV;
+		playerRootObject->GetTransform()->SetLocalPosition(newPosition);
 	}
 }
 
 
 
+void BattleScene::CreateZombie()
+{
+	shared_ptr<MeshData> zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
+
+	vector<shared_ptr<GameObject>> gameObjects = zombie->Instantiate();
+	_zombies.push_back(gameObjects);
+
+	for (auto& gameObject : gameObjects)
+	{
+		gameObject->SetCheckFrustum(true);
+		gameObject->SetStatic(false);
+		AddGameObject(gameObject);
+	}
+
+	shared_ptr<GameObject> rootObject = gameObjects[0];
+
+	rootObject->GetTransform()->SetLocalPosition(Vec3(rand() % 100, rand() % 100, rand() % 100));
+	rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
+}
 
 //void BattleScene::CheckCollisions()
 //{
