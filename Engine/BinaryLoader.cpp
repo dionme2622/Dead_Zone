@@ -50,10 +50,6 @@ void BinaryLoader::LoadModelFromBinary(const char* path)
 
 	CreateTextures();
 	CreateMaterials();
-
-	/*for(int i = 0; i < _animClips.size(); ++i)
-		GetToRootTransform(_animClips[i], _meshes);*/
-
 }
 
 void BinaryLoader::LoadFrameHierarchyFromFile(shared_ptr<Transform> transform, FILE* pInFile)
@@ -597,7 +593,7 @@ void BinaryLoader::LoadAnimationFromFile(vector<BinaryMeshInfo>& meshes, FILE* p
 					float fKeyTime = ::ReadFloatFromFile(pInFile);
 
 					XMFLOAT4X4* matrix = new XMFLOAT4X4[frameCount];
-					for (int j = 0; j < frameCount; ++j)		// 계층의 갯수 24개
+					for (int j = 0; j < frameCount; ++j)		
 					{
 						keyFrameInfo[j].time = fKeyTime;			// time
 						nReads = (UINT)::fread(&matrix[j], sizeof(XMFLOAT4X4), 1, pInFile);
@@ -608,6 +604,14 @@ void BinaryLoader::LoadAnimationFromFile(vector<BinaryMeshInfo>& meshes, FILE* p
 						meshes[j].transform->SetLocalMatrix(keyFrameInfo[j].matTransform);
 						keyFrameInfo[j].matTransform = meshes[j].transform->GetToRootTransform();	// To-Root 행렬로 바꾼다.
 
+						/*XMVECTOR scale, rotation, translation;
+						XMMatrixDecompose(&scale, &rotation, &translation, meshes[j].transform->GetToRootTransform());
+						
+						meshes[j].transform->SetLocalPosition(translation);
+						meshes[j].transform->SetLocalRotation(rotation);
+						meshes[j].transform->SetLocalScale(scale);
+						meshes[j].transform->GetLocalMatrix();*/
+						//meshes[j].transform->SetLocalMatrix(keyFrameInfo[j].matTransform);
 						// 뼈 인덱스와 애니메이션 프레임 인덱스를 맞춰야한다. 이름으로 비교하면서
 						for (int b = 0; b < _bones.size(); ++b)
 						{
@@ -678,32 +682,32 @@ void BinaryLoader::CreateMaterials()
 
 void BinaryLoader::GetToRootTransform(shared_ptr<BinaryAnimClipInfo>& animClips, vector<BinaryMeshInfo> meshes)
 {
-	// 계층구조를 따라서 _animClips에 들어있는 행렬을 To-Root 행렬로 바꾼다
-	// Animation에 들어있는 Bone의 이름과 mesh의 이름을 비교해서 같다면 local transform을 변경한다.
-	//meshes.
+	//// 계층구조를 따라서 _animClips에 들어있는 행렬을 To-Root 행렬로 바꾼다
+	//// Animation에 들어있는 Bone의 이름과 mesh의 이름을 비교해서 같다면 local transform을 변경한다.
+	////meshes.
 
-	shared_ptr<BinaryAnimClipInfo> animClip = animClips;
-	for (int f = 0; f < animClip->frameCount; ++f)
-	{
-		for (int b = 0; b < meshes.size(); ++b)
-		{
-			meshes[b].transform->SetLocalMatrix(animClip->keyFrames[f][b].matTransform); // To-Root 월드 변환 적용
-			animClip->keyFrames[f][b].matTransform = meshes[b].transform->GetToRootTransform();
-		}
-	}
-	 
-	/*for (int i = 0; i < nFrame; ++i)
-	{
-		for (int b = 0; b < _bones.size(); ++b)
-		{
-			if (frameName[i] == _bones[b]->boneName)
-			{
-				keyFrameInfo[i].boneName = frameName[i];
-				animClip->keyFrames[i][b] = keyFrameInfo[i];
-				break;
-			}
-		}
-	}*/
+	//shared_ptr<BinaryAnimClipInfo> animClip = animClips;
+	//for (int f = 0; f < animClip->frameCount; ++f)
+	//{
+	//	for (int b = 0; b < meshes.size(); ++b)
+	//	{
+	//		meshes[b].transform->SetLocalMatrix(animClip->keyFrames[f][b].matTransform); // To-Root 월드 변환 적용
+	//		animClip->keyFrames[f][b].matTransform = meshes[b].transform->GetToRootTransform();
+	//	}
+	//}
+	// 
+	///*for (int i = 0; i < nFrame; ++i)
+	//{
+	//	for (int b = 0; b < _bones.size(); ++b)
+	//	{
+	//		if (frameName[i] == _bones[b]->boneName)
+	//		{
+	//			keyFrameInfo[i].boneName = frameName[i];
+	//			animClip->keyFrames[i][b] = keyFrameInfo[i];
+	//			break;
+	//		}
+	//	}
+	//}*/
 }
 
 

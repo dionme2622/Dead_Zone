@@ -9,6 +9,7 @@ public:
 
 	virtual void FinalUpdate() override;
 	Matrix GetToRootTransform();
+	Matrix GetLocalMatrix();
 	void PushData();
 
 public:
@@ -30,7 +31,7 @@ public:
 	void SetLocalPosition(const Vec3& position) { _localPosition = position; }
 	void SetLocalRotation(const Vec3& rotation) { _localRotation = rotation; }
 	void SetLocalScale(const Vec3& scale) { _localScale = scale; }
-	void SetLocalMatrix(Matrix& matrix) { _matLocal = matrix; }
+	void SetLocalMatrix(Matrix& matrix) { _matLocal = matrix;  _bManualMatrix = true;}
 	void LookAt(const Vec3& dir);
 
 	static bool CloseEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon());
@@ -48,6 +49,8 @@ private:
 
 	Matrix _matLocal = {};
 	Matrix _matWorld = {};
+	// 추가: 수동 설정된 Local Matrix를 사용할지 여부 플래그
+	bool _bManualMatrix = false;
 
 	weak_ptr<Transform> _parent;
 };

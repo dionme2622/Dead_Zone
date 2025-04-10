@@ -21,6 +21,11 @@ shared_ptr<Transform> Component::GetTransform()
 	return _gameObject.lock()->GetTransform();
 }
 
+shared_ptr<BaseCollider> Component::GetCollider()
+{
+	return _gameObject.lock()->GetCollider();
+}
+
 shared_ptr<MeshRenderer> Component::GetMeshRenderer()
 {
 	return _gameObject.lock()->GetMeshRenderer();
@@ -29,4 +34,9 @@ shared_ptr<MeshRenderer> Component::GetMeshRenderer()
 shared_ptr<Animator> Component::GetAnimator()
 {
 	return _gameObject.lock()->GetAnimator();
+}
+
+shared_ptr<Weapon> Component::GetWeapon()
+{
+	return _gameObject.lock()->GetWeapon();
 }

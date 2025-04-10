@@ -173,6 +173,7 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 				kfInfo.boneName = kf.boneName;
 				kfInfo.time = kf.time;
 				XMMatrixDecompose(&scale, &rotation, &translation, kf.matTransform);
+				
 				kfInfo.scale = scale;
 				kfInfo.rotation = rotation;
 				kfInfo.translate = translation;

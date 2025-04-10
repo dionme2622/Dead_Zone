@@ -174,6 +174,9 @@
     <ClInclude Include="BoxCollider.h">
       <Filter>Object\Component\Colider</Filter>
     </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -310,6 +313,9 @@
     </ClCompile>
     <ClCompile Include="BoxCollider.cpp">
       <Filter>Object\Component\Colider</Filter>
+    </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Object\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

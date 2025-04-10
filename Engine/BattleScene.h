@@ -21,7 +21,13 @@ private:
 
 
 	//TEST
+	vector<shared_ptr<GameObject>>		_character;
+	vector<shared_ptr<GameObject>>		_weapon;
+
 public:
 	void TestObjectPosition(shared_ptr<GameObject> sourceObj);
+
+	shared_ptr<StructuredBuffer>	_boneFinalMatrix;  // 특정 프레임의 최종 행렬
+
 };
 

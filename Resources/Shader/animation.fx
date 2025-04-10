@@ -15,6 +15,7 @@ struct AnimFrameParams
 StructuredBuffer<AnimFrameParams> g_bone_frame : register(t8);
 StructuredBuffer<matrix> g_offset : register(t9);
 RWStructuredBuffer<matrix> g_final : register(u0);
+RWStructuredBuffer<matrix> g_matBone : register(u1);
 
 // ComputeAnimation
 // g_int_0 : BoneCount
@@ -24,7 +25,7 @@ RWStructuredBuffer<matrix> g_final : register(u0);
 [numthreads(256, 1, 1)]
 void CS_Main(int3 threadIdx : SV_DispatchThreadID)
 {
-    if (g_int_0 <= threadIdx.x)     // 0 ~ bone의 개수 까지만 계산한다
+    if (g_int_0 <= threadIdx.x)     // 0 ~ bone의 개수 까지만 계산한다, threadIdx.x 은 bone의 Index라고 생각
         return;
 
     int boneCount = g_int_0;
@@ -32,8 +33,9 @@ void CS_Main(int3 threadIdx : SV_DispatchThreadID)
     int nextFrame = g_int_2;
     int frameCount = g_int_3;
     float ratio = g_float_0;
-                                                                // 0번 프레임일 때
-    uint idx = currentFrame + (frameCount * threadIdx.x); // 0   71   142  ... 
+    
+    // 0번 프레임일 때 /
+    uint idx = currentFrame + (frameCount * threadIdx.x); // 0   71   142  ...  // 1번 뼈, 2번 뼈, 3번 뼈, ...
     uint nextIdx = nextFrame + (frameCount * threadIdx.x); // 1   72   143  ... 
 
     float4 quaternionZero = float4(0.f, 0.f, 0.f, 1.f);
@@ -42,12 +44,13 @@ void CS_Main(int3 threadIdx : SV_DispatchThreadID)
     float4 rotation = QuaternionSlerp(g_bone_frame[idx].rotation, g_bone_frame[nextIdx].rotation, ratio);
     float4 translation = lerp(g_bone_frame[idx].translation, g_bone_frame[nextIdx].translation, ratio);
 
-    matrix matBone = MatrixAffineTransformation(scale, quaternionZero, rotation, translation);
+    //matrix g_matBone = MatrixAffineTransformation(scale, quaternionZero, rotation, translation); // Animation KeyFrame의 bone 행렬
 
     
-    //g_final[threadIdx.x] =  matBone;
+    g_matBone[threadIdx.x] = MatrixAffineTransformation(scale, quaternionZero, rotation, translation); // Animation KeyFrame의 bone 행렬
     
-    g_final[threadIdx.x] = mul(g_offset[threadIdx.x], matBone);
+    
+    g_final[threadIdx.x] = mul(g_offset[threadIdx.x], g_matBone[threadIdx.x]);
 
 }
 

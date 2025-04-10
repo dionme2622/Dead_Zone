@@ -12,7 +12,7 @@ PlayerScript::PlayerScript(HWND hwnd)
 {
 	_hwnd = hwnd;
 
-	_speed = 50.0f;
+	_speed = 10.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
@@ -64,6 +64,14 @@ void PlayerScript::UpdateKeyInput()
 		pos.y += _currentVelocity * DELTA_TIME;
 		_isGrounded = false;
 	}
+
+	if (INPUT->GetButton(KEY_TYPE::KEY_3));
+		// TODO : ÃÑ µé±â
+		// SetWeapon(WeaponType::Rifle);
+
+	if (INPUT->GetButton(KEY_TYPE::KEY_4));
+		// TODO : Ä® µé±â
+		// SetWeapon(WeaponType::Knife);
 
 	GetTransform()->SetLocalPosition(pos);
 }

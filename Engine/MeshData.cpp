@@ -120,7 +120,6 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 				}
 #endif
 			}
-			///////////////////////////////////////////
 			if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
 			{
 				shared_ptr<Animator> animator = make_shared<Animator>();
