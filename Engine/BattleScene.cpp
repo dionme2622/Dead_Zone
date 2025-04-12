@@ -498,14 +498,13 @@ void BattleScene::CheckCollisions()
 
 void BattleScene::CreateZombie()
 {
-	shared_ptr<MeshData> zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin");
+	shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
 
-	vector<shared_ptr<GameObject>> gameObjects = zombie->Instantiate();
+	vector<shared_ptr<GameObject>> zombies = Zombie->Instantiate();
 
-	_zombies.push_back(gameObjects);
-
-	for (auto& gameObject : gameObjects)
+	for (auto& gameObject : zombies)
 	{
+		//gameObject->SetName(L"FemaleSoldier");
 		gameObject->SetCheckFrustum(true);
 		gameObject->SetStatic(false);
 		AddGameObject(gameObject); 
