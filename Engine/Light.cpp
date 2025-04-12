@@ -13,6 +13,8 @@ Light::Light() : Component(COMPONENT_TYPE::LIGHT)
 	_shadowCamera = make_shared<GameObject>();
 	_shadowCamera->AddComponent(make_shared<Transform>());
 	_shadowCamera->AddComponent(make_shared<Camera>());
+	_shadowCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+
 }
 
 Light::~Light()
@@ -21,17 +23,26 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
+	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
+
 	_lightInfo.position = GetTransform()->GetWorldPosition();
 
 	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-	_shadowCamera->GetTransform()->SetLocalRotation(GetTransform()->GetLocalRotation());
+
+	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 없음
+
 	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
+
+	// 빛의 방향에 맞춰 카메라가 아래를 향하도록 설정
+	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(
+		Vec3(_lightInfo.direction.x + 45, 0, 0));
 
 	_shadowCamera->FinalUpdate();
 }
 
 void Light::Render()
 {
+	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
 	assert(_lightIndex >= 0);
 
 	GetTransform()->PushData();
@@ -42,6 +53,7 @@ void Light::Render()
 		_lightMaterial->SetTexture(2, shadowTex);
 
 		Matrix matVP = _shadowCamera->GetCamera()->GetViewMatrix() * _shadowCamera->GetCamera()->GetProjectionMatrix();
+
 		_lightMaterial->SetMatrix(0, matVP);
 	}
 	else
@@ -54,6 +66,7 @@ void Light::Render()
 	_lightMaterial->PushGraphicsData();
 
 	_volumeMesh->Render();
+
 }
 
 void Light::RenderShadow()
@@ -83,7 +96,7 @@ void Light::SetLightType(LIGHT_TYPE type)
 
 		_shadowCamera->GetCamera()->SetScale(1.f);
 		_shadowCamera->GetCamera()->SetNear(0.01);
-		_shadowCamera->GetCamera()->SetFar(1000.f);
+		_shadowCamera->GetCamera()->SetFar(200);
 		_shadowCamera->GetCamera()->SetWidth(500);
 		_shadowCamera->GetCamera()->SetHeight(500);
 
@@ -98,3 +111,6 @@ void Light::SetLightType(LIGHT_TYPE type)
 		break;
 	}
 }
+
+
+

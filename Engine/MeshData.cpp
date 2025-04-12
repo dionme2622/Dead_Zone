@@ -94,8 +94,8 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 			{
 				shared_ptr<BoxCollider> collider = info.boxCollider;
 				gameObject->AddComponent(collider);
-
 #ifdef _DEBUG_COLLIDER
+
 				shared_ptr<Mesh> mesh = gameObject->GetCollider()->GetColliderMesh();
 				GET_SINGLE(Resources)->Add<Mesh>(gameObject->GetMeshRenderer()->GetMesh()->GetName() + L"collider", mesh);
 

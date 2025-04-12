@@ -19,9 +19,11 @@ public:
 
 	void CheckCollisions();
 
-
+	static bool isPlayerGrounded;
 private:
 	shared_ptr<Player>			_player;
+	
+
 	shared_ptr<GameObject>		_playerCamera;
 	shared_ptr<GameObject>		_uiCamera;
 
@@ -29,10 +31,11 @@ private:
 
 	HWND _hwnd;
 
-	bool _isFirstFrame; // 첫 프레임 여부를 추적하는 멤버 변수
-
 
 private:
 	vector<vector<shared_ptr<GameObject>>> _zombies;
+
+
+
 };
 

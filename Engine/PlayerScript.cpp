@@ -9,9 +9,10 @@
 #include "Engine.h"
 #include "BoxCollider.h"
 #include "SceneManager.h"
+#include "BattleScene.h"
 
 PlayerScript::PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform) :
-	_hwnd(hwnd), _speed(30.0f), _jumpVelocity(50.0f), _currentVelocity(0.0f), 
+	_hwnd(hwnd), _speed(300.0f), _jumpVelocity(10.0f), _currentVelocity(0.0f), 
 	_gravity(-9.8f), _isGrounded(true), _pitch(0.0f), _yaw(0.0f), _mouseMove(false), 
 	_cameraTransform(playerTransform)
 {
@@ -28,16 +29,16 @@ void PlayerScript::LateUpdate()
 	//UpdatePlayerOnTerrain();
 
 	Vec3 playerPosition = GetTransform()->GetLocalPosition();
-
 	Vec3 cameraPosition = playerPosition;
 	_cameraTransform->SetLocalPosition(cameraPosition);
 
-	Vec3 pos = _cameraTransform->GetLocalPosition();
-
-	pos += GetTransform()->GetUp() * 3;
-	pos -= GetTransform()->GetLook() * 5.f;
-
-	_cameraTransform->SetLocalPosition(pos);
+	// µð¹ö±ë¿ë
+	{
+		Vec3 pos = _cameraTransform->GetLocalPosition();
+		pos += GetTransform()->GetUp() * 3;
+		pos -= GetTransform()->GetLook() * 10.f;
+		_cameraTransform->SetLocalPosition(pos);
+	}
 }
 
 
@@ -83,12 +84,12 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::SPACE))
 		pos += GetTransform()->GetUp() * adjustedSpeed * DELTA_TIME;
 
-	/*if (_isGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
+	if (BattleScene::isPlayerGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
 	{
 		_currentVelocity = _jumpVelocity;
 		pos.y += _currentVelocity * DELTA_TIME;
-		_isGrounded = false;
-	}*/
+		BattleScene::isPlayerGrounded = false;
+	}
 
 	GetTransform()->SetLocalPosition(pos);
 }
@@ -119,7 +120,6 @@ void PlayerScript::UpdateMouseInput()
 		POINT screenCenter = { center.x, center.y };
 		ClientToScreen(_hwnd, &screenCenter);
 		SetCursorPos(screenCenter.x, screenCenter.y);
-
 	}
 }
 
@@ -153,25 +153,16 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 void PlayerScript::UpdatePlayerOnTerrain()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
-	float terrainHeight = 0.f;  // ¼öÁ¤ÇØ¾ßµÊ
 
-	if (pos.y <= terrainHeight)
+
+	if (BattleScene::isPlayerGrounded)
 	{
-		pos.y = terrainHeight;
 		_currentVelocity = 0.0f;
-		_isGrounded = true;
 	}
 	else
 	{
-		_currentVelocity += _gravity * DELTA_TIME * 10;
+		_currentVelocity += _gravity * DELTA_TIME;
 		pos.y += _currentVelocity * DELTA_TIME;
-		_isGrounded = false;
 	}
 	GetTransform()->SetLocalPosition(pos);
 }
-
-
-
-
-
-

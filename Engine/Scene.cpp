@@ -225,4 +225,5 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 	auto findIt = std::find(_gameObjects.begin(), _gameObjects.end(), gameObject);
 	if (findIt != _gameObjects.end())
 		_gameObjects.erase(findIt);
+
 }

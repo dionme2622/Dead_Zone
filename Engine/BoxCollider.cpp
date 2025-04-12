@@ -15,6 +15,8 @@ BoxCollider::BoxCollider(Vec3 center, Vec3 extents) : BaseCollider(ColliderType:
 {
 	_boundingBox.Center = _center;
 	_boundingBox.Extents = _extents;
+
+	
 }
 
 BoxCollider::~BoxCollider()
@@ -27,6 +29,13 @@ void BoxCollider::FinalUpdate()
 	// TODO : 바운딩 박스가 오브젝트를 따라다녀야 한다.
 	_boundingBox.Center = GetGameObject()->GetTransform()->GetWorldPosition() + _center;
 	_boundingBox.Extents = _extents;
+
+	// Transform의 월드 회전 정보를 가져와 Orientation 업데이트
+	Matrix worldMatrix = GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
+	XMVECTOR rotationQuaternion = XMQuaternionRotationMatrix(XMLoadFloat4x4(&worldMatrix));
+
+	// Orientation 업데이트
+	XMStoreFloat4(&_boundingBox.Orientation, rotationQuaternion);
 }
 
 bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)
@@ -38,8 +47,8 @@ bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)
 
 shared_ptr<Mesh> BoxCollider::GetColliderMesh()
 {
-	Vec3 min = { _center.x - _extents.x, _center.y - _extents.y, _center.z - _extents.z };
-	Vec3 max = { _center.x + _extents.x, _center.y + _extents.y, _center.z + _extents.z };
+	Vec3 min = { _boundingBox.Center.x - _boundingBox.Extents.x, _boundingBox.Center.y - _boundingBox.Extents.y, _boundingBox.Center.z - _boundingBox.Extents.z };
+	Vec3 max = { _boundingBox.Center.x + _boundingBox.Extents.x, _boundingBox.Center.y + _boundingBox.Extents.y, _boundingBox.Center.z + _boundingBox.Extents.z };
 
 	vector<Vertex> vec(24);
 	// 앞면
