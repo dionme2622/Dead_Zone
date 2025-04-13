@@ -40,7 +40,7 @@ void BattleScene::LoadScene()
 		_playerCamera->SetName(L"Main_Camera");
 		_playerCamera->AddComponent(make_shared<Transform>());
 		_playerCamera->AddComponent(make_shared<Camera>());
-		_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
+		//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
 		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 2.3f, 0.9f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
@@ -179,7 +179,7 @@ void BattleScene::LoadScene()
 
 		vector<shared_ptr<GameObject>> gameObjects1 = FemaleSoldier->Instantiate();
 
-		shared_ptr<GameObject> character = gameObjects1[0];
+		_player = gameObjects1[0];
 		for (auto& gameObject : gameObjects1)
 		{
 			//gameObject->SetName(L"FemaleSoldier");
@@ -188,14 +188,15 @@ void BattleScene::LoadScene()
 			gameObject->GetTransform()->FinalUpdate();
 			AddGameObject(gameObject);
 		}
+		_playerCamera->GetTransform()->SetParent(_player->GetTransform());
 
-
+		_player->AddComponent(make_shared<PlayerScript>(_hwnd));
 		Matrix character_mat = gameObjects1[14]->GetTransform()->GetLocalMatrix();
 
 		shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_SMG.bin"); // MeshData* meshData
 		vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
 
-			//character->GetTransform()->GetLocalToWorldMatrix();
+		//character->GetTransform()->GetLocalToWorldMatrix();
 		for (auto& gameObject : gameObjects)
 		{
 			shared_ptr<Material> material = make_shared<Material>();
@@ -336,14 +337,8 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	/*for (auto gameObject : _character)
-	{
-		if (gameObject->GetAnimator())
-		{
-			_boneFinalMatrix = gameObject->GetAnimator()->GetBoneFinalMatirx();
-		}
-	}*/
-	//_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);		// 얘를 총 오브젝트에도 넘겨야 함
+	Vec3 pos = _player->GetTransform()->GetLocalPosition();
+	printf("%f %f %f\n", pos.x, pos.y, pos.z);
 
 	Scene::Update();
 }

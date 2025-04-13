@@ -14,6 +14,7 @@ void Game::Init(const WindowInfo& info)
 
 void Game::Update()
 {
+
 	/* ------------------------------ Å° ÀÔ·Â Debug -----------------------------------------*/
 	if (INPUT->GetButtonDown(KEY_TYPE::ESC)) exit(0);
 
