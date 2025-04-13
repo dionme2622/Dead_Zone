@@ -2,6 +2,7 @@
 #include "Resources.h"
 #include "Engine.h"
 #include "MeshData.h"
+#include "Camera.h"
 
 void Resources::Init()
 {
@@ -480,6 +481,29 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Shadow", shader);
 	}
 
+	// SSAO (Ãß°¡)
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::LIGHTING,
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, 
+		};
+
+		ShaderArg arg =
+		{
+			"VS_SSAO", 
+			"",        
+			"",        
+			"",        
+			"PS_SSAO"  
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
+		Add<Shader>(L"SSAO", shader);
+	}
+
 	//// Compute Shader
 	//{
 	//	shared_ptr<Shader> shader = make_shared<Shader>();
@@ -614,6 +638,7 @@ void Resources::CreateDefaultMaterial()
 		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"DiffuseTarget"));
 		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"DiffuseLightTarget"));
 		material->SetTexture(2, GET_SINGLE(Resources)->Get<Texture>(L"SpecularLightTarget"));
+		material->SetTexture(3, GET_SINGLE(Resources)->Get<Texture>(L"SSAOTexture"));
 		Add<Material>(L"Final", material);
 	}
 
@@ -625,13 +650,31 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"Shadow", material);
 	}
 
-	//// Compute Shader
-	//{
-	//	shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
-	//	shared_ptr<Material> material = make_shared<Material>();
-	//	material->SetShader(shader);
-	//	Add<Material>(L"ComputeShader", material);
-	//}
+
+	// SSAO
+	{
+		const WindowInfo& window = GEngine->GetWindow();
+		Vec2 resolution = { static_cast<float>(window.width), static_cast<float>(window.height) };
+
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"SSAO");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
+		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"NormalTarget"));
+		material->SetTexture(4, GET_SINGLE(Resources)->Get<Texture>(L"SSAONoiseTexture"));
+		material->SetVec2(0, resolution);
+		material->SetMatrix(0, Camera::S_MainMatProjection);
+		Add<Material>(L"SSAO", material);
+	}
+
+
+	// Compute Shader
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"ComputeShader");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		Add<Material>(L"ComputeShader", material);
+	}
 
 	// Particle
 	{

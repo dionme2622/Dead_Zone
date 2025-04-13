@@ -60,6 +60,8 @@ void Scene::Render()
 
 	RenderLights();
 
+	RenderSSAO(); // SSAO 패스 추가
+
 	RenderFinal();
 
 	RenderForward();
@@ -76,6 +78,8 @@ void Scene::ClearRTV()
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->ClearRenderTargetView();
 	// Lighting Group 초기화
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->ClearRenderTargetView();
+	//// SSAO Group 초기화
+	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->ClearRenderTargetView();
 }
 
 void Scene::RenderShadow()
@@ -97,7 +101,6 @@ void Scene::RenderShadow()
 
 void Scene::RenderDeferred()
 {
-
 	// Deferred OMSet
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->OMSetRenderTargets();
 
@@ -127,6 +130,21 @@ void Scene::RenderLights()
 	}
 
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->WaitTargetToResource();
+}
+
+void Scene::RenderSSAO()
+{
+	// SSAO 렌더 타겟 설정
+	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->OMSetRenderTargets();
+
+	// SSAO 머티리얼 바인딩
+	GET_SINGLE(Resources)->Get<Material>(L"SSAO")->PushGraphicsData();
+
+	// 화면 전체 사각형 렌더링
+	GET_SINGLE(Resources)->Get<Mesh>(L"Rectangle")->Render();
+
+	// 렌더 타겟 해제 및 리소스 상태 전환
+	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->WaitTargetToResource();
 }
 
 void Scene::RenderFinal()

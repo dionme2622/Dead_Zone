@@ -185,6 +185,36 @@ void Engine::CreateRenderTargetGroups()
 		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::LIGHTING)]->Create(RENDER_TARGET_GROUP_TYPE::LIGHTING, rtVec, dsTexture);
 	}
 
+	// SSAO Group
+	{
+		vector<RenderTarget> rtVec(RENDER_TARGET_SSAO_GROUP_MEMBER_COUNT);
+
+		rtVec[0].target = GET_SINGLE(Resources)->CreateTexture(L"SSAOTexture",
+			DXGI_FORMAT_R8G8B8A8_UNORM, _window.width, _window.height,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+
+		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::SSAO)] = make_shared<RenderTargetGroup>();
+		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::SSAO)]->Create(RENDER_TARGET_GROUP_TYPE::SSAO, rtVec, dsTexture);
+
+
+
+		// SSAO 노이즈 텍스처
+		std::vector<Vec2> noiseData(16 * 16);
+		for (size_t i = 0; i < noiseData.size(); ++i)
+		{
+			noiseData[i] = Vec2(
+				(float)rand() / RAND_MAX * 2.0f - 1.0f,
+				(float)rand() / RAND_MAX * 2.0f - 1.0f
+			);
+		}
+
+		GET_SINGLE(Resources)->CreateTexture(L"SSAONoiseTexture",
+			DXGI_FORMAT_R8G8_UNORM, 16, 16,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+	}
+
 	//// Final Render Group
 	//{
 	//	vector<RenderTarget> rtVec(RENDER_TARGET_BLUR_GROUP_MEMBER_COUNT);

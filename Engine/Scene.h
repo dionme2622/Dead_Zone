@@ -26,6 +26,7 @@ public:
 	void RenderShadow();
 	void RenderDeferred();
 	void RenderLights();
+	void RenderSSAO();
 	void RenderFinal();
 
 	void RenderForward();
