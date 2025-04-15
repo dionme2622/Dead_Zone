@@ -20,9 +20,12 @@ public:
 public:
 	virtual void FinalUpdate() override;
 
-private:
+protected:
 	shared_ptr<GameObject>			_weaponObject;
-	shared_ptr<StructuredBuffer>	_boneFinalMatrix;  // 특정 프레임의 최종 행렬
-	
-	bool							_boneFinalUpdated = false;
+	shared_ptr<Matrix>				_offsetMat;		// 무기의 Offset Matrix
+	Matrix							_characterWorldMat;		// 무기의 Offset Matrix
+	shared_ptr<StructuredBuffer>	_boneFinalMatrix;	// 특정 프레임의 최종 행렬
+
 };
+
+

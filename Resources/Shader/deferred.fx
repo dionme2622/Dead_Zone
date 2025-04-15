@@ -56,17 +56,17 @@ VS_OUT VS_Main(VS_IN input)
         if (g_int_1 == 1)
             Skinning(input.pos, input.normal, input.tangent, input.weight, input.indices);
         
-        row_major matrix rightHandMatrix = g_mat_bone[15];
+        row_major matrix rightHandMatrix = g_mat_bone[15];      // ¿À¸¥¼Õ »À
         row_major matrix characterWorldMatrix = g_mat_0;
         row_major matrix weaponOffsetMatrix = g_matWorld;
         //row_major matrix finalMat = g_mat_1;
         
-        row_major matrix finalWeaponMatrix = mul(mul(characterWorldMatrix, rightHandMatrix), weaponOffsetMatrix);
+        row_major matrix finalWeaponMatrix = mul(mul(weaponOffsetMatrix, rightHandMatrix), characterWorldMatrix);
 
         //row_major matrix finalWeaponMatrix = mul(rightHandMatrix, weaponOffsetMatrix);
         
         row_major matrix finalMat = mul(g_matWorld, rightHandMatrix);
-        row_major matrix weaponWVP = mul(mul(finalMat, g_matView), g_matProjection);
+        row_major matrix weaponWVP = mul(mul(finalWeaponMatrix, g_matView), g_matProjection);
         
         
         if (g_int_2 == 1)

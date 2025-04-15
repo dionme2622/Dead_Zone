@@ -180,6 +180,7 @@
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GunWeapon.h" />
     <ClInclude Include="InstancingBuffer.h" />
     <ClInclude Include="InstancingManager.h" />
     <ClInclude Include="KeyInput.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="MonoBehaviour.h" />
     <ClInclude Include="MouseInput.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="OneHandedMeleeWeapon.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
@@ -208,8 +210,10 @@
     <ClInclude Include="TableDescriptorHeap.h" />
     <ClInclude Include="TestAnimation.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="ThrowingWeapon.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.h" />
+    <ClInclude Include="TwoHandedMeleeWeapon.h" />
     <ClInclude Include="Weapon.h" />
   </ItemGroup>
   <ItemGroup>
@@ -227,6 +231,7 @@
     <ClCompile Include="EnginePch.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GunWeapon.cpp" />
     <ClCompile Include="InstancingBuffer.cpp" />
     <ClCompile Include="InstancingManager.cpp" />
     <ClCompile Include="KeyInput.cpp" />
@@ -239,6 +244,7 @@
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="MouseInput.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="OneHandedMeleeWeapon.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -260,8 +266,10 @@
     <ClCompile Include="TableDescriptorHeap.cpp" />
     <ClCompile Include="TestAnimation.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="ThrowingWeapon.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TwoHandedMeleeWeapon.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>

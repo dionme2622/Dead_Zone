@@ -41,7 +41,7 @@ void BattleScene::LoadScene()
 		_playerCamera->AddComponent(make_shared<Transform>());
 		_playerCamera->AddComponent(make_shared<Camera>());
 		//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 2.3f, 0.9f));
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.0f, -20.f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
@@ -188,15 +188,15 @@ void BattleScene::LoadScene()
 			gameObject->GetTransform()->FinalUpdate();
 			AddGameObject(gameObject);
 		}
-		_playerCamera->GetTransform()->SetParent(_player->GetTransform());
-
+		//_playerCamera->GetTransform()->SetParent(_player->GetTransform());
+		_player->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 3.4f));
 		_player->AddComponent(make_shared<PlayerScript>(_hwnd));
-		Matrix character_mat = gameObjects1[14]->GetTransform()->GetLocalMatrix();
+		Matrix character_mat = gameObjects1[0]->GetTransform()->GetLocalMatrix();
 
 		shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_SMG.bin"); // MeshData* meshData
 		vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
 
-		//character->GetTransform()->GetLocalToWorldMatrix();
+		_player->GetTransform()->GetLocalToWorldMatrix();
 		for (auto& gameObject : gameObjects)
 		{
 			shared_ptr<Material> material = make_shared<Material>();
@@ -206,8 +206,8 @@ void BattleScene::LoadScene()
 			gameObject->SetCheckFrustum(true);
 			gameObject->SetStatic(true);
 			material->SetInt(2, 1);
+			//material->SetMatrix(0, character_mat);
 			material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
-
 			material->SetTexture(0, texture);
 			gameObject->GetMeshRenderer()->SetMaterial(material);
 			weapon->SetWeaponObject(gameObjects1[23]);
@@ -229,14 +229,8 @@ void BattleScene::LoadScene()
 		}
 
 
-		// 캐릭터의 월드 행렬을 가져온다.
-		// 총의 오프셋 행렬과 캐릭터의 월드행렬을 곱해서 오른손의 위치에 총이 오도록 한다.
-		// 오른손의 자식으로 두면 알아서 자동으로 곱해짐
-
-		//rootObject->GetTransform()->SetLocalMatrix(gun_offsetMat);
-
 		// 오른손의 자식으로 설정한다.
-		//rootObject->GetTransform()->SetParent(gameObjects1[14]->GetTransform());	// [14] = Right Hand
+		//rootObject->GetTransform()->SetParent(gameObjects1[0]->GetTransform());	// [14] = Right Hand
 
 
 		shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
@@ -337,8 +331,8 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	Vec3 pos = _player->GetTransform()->GetLocalPosition();
-	printf("%f %f %f\n", pos.x, pos.y, pos.z);
+	/*Vec3 pos = _player->GetTransform()->GetLocalPosition();
+	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
 
 	Scene::Update();
 }

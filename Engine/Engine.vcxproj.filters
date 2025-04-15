@@ -34,6 +34,9 @@
     <Filter Include="Object\Component\Colider">
       <UniqueIdentifier>{571df238-0d65-4bb4-8170-f4fff0c64931}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Object\Component\Weapon">
+      <UniqueIdentifier>{8ff63a7a-293f-433f-a08f-ed1a96453872}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -175,7 +178,19 @@
       <Filter>Object\Component\Colider</Filter>
     </ClInclude>
     <ClInclude Include="Weapon.h">
-      <Filter>Object\Component</Filter>
+      <Filter>Object\Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="GunWeapon.h">
+      <Filter>Object\Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="OneHandedMeleeWeapon.h">
+      <Filter>Object\Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="ThrowingWeapon.h">
+      <Filter>Object\Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="TwoHandedMeleeWeapon.h">
+      <Filter>Object\Component\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -315,7 +330,19 @@
       <Filter>Object\Component\Colider</Filter>
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
-      <Filter>Object\Component</Filter>
+      <Filter>Object\Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="GunWeapon.cpp">
+      <Filter>Object\Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="OneHandedMeleeWeapon.cpp">
+      <Filter>Object\Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="ThrowingWeapon.cpp">
+      <Filter>Object\Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="TwoHandedMeleeWeapon.cpp">
+      <Filter>Object\Component\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

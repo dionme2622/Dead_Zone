@@ -604,14 +604,7 @@ void BinaryLoader::LoadAnimationFromFile(vector<BinaryMeshInfo>& meshes, FILE* p
 						meshes[j].transform->SetLocalMatrix(keyFrameInfo[j].matTransform);
 						keyFrameInfo[j].matTransform = meshes[j].transform->GetToRootTransform();	// To-Root 행렬로 바꾼다.
 
-						/*XMVECTOR scale, rotation, translation;
-						XMMatrixDecompose(&scale, &rotation, &translation, meshes[j].transform->GetToRootTransform());
-						
-						meshes[j].transform->SetLocalPosition(translation);
-						meshes[j].transform->SetLocalRotation(rotation);
-						meshes[j].transform->SetLocalScale(scale);
-						meshes[j].transform->GetLocalMatrix();*/
-						//meshes[j].transform->SetLocalMatrix(keyFrameInfo[j].matTransform);
+				
 						// 뼈 인덱스와 애니메이션 프레임 인덱스를 맞춰야한다. 이름으로 비교하면서
 						for (int b = 0; b < _bones.size(); ++b)
 						{
