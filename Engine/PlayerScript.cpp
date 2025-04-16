@@ -8,7 +8,6 @@
 #include "Timer.h"
 #include "Engine.h"
 #include "WeaponManager.h"
-#include "PlayerStats.h"
 
 PlayerScript::PlayerScript(HWND hwnd)
 {

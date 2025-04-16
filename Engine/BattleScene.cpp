@@ -176,7 +176,7 @@ void BattleScene::LoadScene()
 
 #pragma region Character
 	{
-		shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin"); // MeshData* meshData
+		shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> gameObjects1 = FemaleSoldier->Instantiate();
 
@@ -189,11 +189,11 @@ void BattleScene::LoadScene()
 			gameObject->GetTransform()->FinalUpdate();
 			AddGameObject(gameObject);
 		}
-		//_playerCamera->GetTransform()->SetParent(_player->GetTransform());
 		_player->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 		_player->AddComponent(make_shared<PlayerScript>(_hwnd));								// Add Player Controller
 		_player->AddComponent(make_shared<WeaponManager>());									// Add Weapon Manager
-		_player->AddComponent(make_shared<PlayerStats>());
+		//_player->AddComponent(make_shared<PlayerStats>());
+		//_playerCamera->GetTransform()->SetParent(_player->GetTransform());
 	
 
 

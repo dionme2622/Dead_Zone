@@ -107,7 +107,7 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)			// Instancing 
 		}
 
 		material->PushGraphicsData();
-		_mesh->Render(buffer, i);
+		_mesh->Render(buffer, i, _isRender);
 	}
 }
 

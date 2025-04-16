@@ -50,6 +50,7 @@ void WeaponManager::AddWeapon()
 		gameObject->SetCheckFrustum(true);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
+		gameObject->GetMeshRenderer()->SetRender(false);
 		GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
 	}
 	shared_ptr<GameObject> rootObject = gameObjects[0];
@@ -70,6 +71,7 @@ void WeaponManager::AddWeapon()
 		gameObject->SetCheckFrustum(true);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
+		gameObject->GetMeshRenderer()->SetRender(false);
 		GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
 	}
 
@@ -87,6 +89,7 @@ void WeaponManager::AddWeapon()
 		gameObject->SetCheckFrustum(true);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
+		gameObject->GetMeshRenderer()->SetRender(false);
 		GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
 	}
 
