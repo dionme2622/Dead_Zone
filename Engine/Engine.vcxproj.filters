@@ -192,6 +192,7 @@
     <ClInclude Include="TwoHandedMeleeWeapon.h">
       <Filter>Object\Component\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="WeaponManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -344,6 +345,7 @@
     <ClCompile Include="TwoHandedMeleeWeapon.cpp">
       <Filter>Object\Component\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="WeaponManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

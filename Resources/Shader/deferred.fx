@@ -56,30 +56,25 @@ VS_OUT VS_Main(VS_IN input)
         if (g_int_1 == 1)
             Skinning(input.pos, input.normal, input.tangent, input.weight, input.indices);
         
-        row_major matrix rightHandMatrix = g_mat_bone[15];      // ¿À¸¥¼Õ »À
+        row_major matrix rightHandMatrix = g_mat_bone[15]; // ¿À¸¥¼Õ »À
         row_major matrix characterWorldMatrix = g_mat_0;
         row_major matrix weaponOffsetMatrix = g_matWorld;
-        //row_major matrix finalMat = g_mat_1;
-        
-        row_major matrix finalWeaponMatrix = mul(mul(weaponOffsetMatrix, rightHandMatrix), characterWorldMatrix);
-
-        //row_major matrix finalWeaponMatrix = mul(rightHandMatrix, weaponOffsetMatrix);
-        
-        row_major matrix finalMat = mul(g_matWorld, rightHandMatrix);
-        row_major matrix weaponWVP = mul(mul(finalWeaponMatrix, g_matView), g_matProjection);
-        
         
         if (g_int_2 == 1)
+        {  
+            row_major matrix finalMat = mul(mul(weaponOffsetMatrix, rightHandMatrix), characterWorldMatrix);
+            row_major matrix weaponWVP = mul(mul(finalMat, g_matView), g_matProjection);
             output.pos = mul(float4(input.pos, 1.f), weaponWVP);
+        }
         else
             output.pos = mul(float4(input.pos, 1.f), g_matWVP);
         
-        output.uv = input.uv;
-        output.viewPos = mul(float4(input.pos, 1.f), g_matWV).xyz;
-        output.viewNormal = normalize(mul(float4(input.normal, 0.f), g_matWV).xyz);
-        output.viewTangent = normalize(mul(float4(input.tangent, 0.f), g_matWV).xyz);
-        output.viewBinormal = normalize(cross(output.viewTangent, output.viewNormal));
-    }
+            output.uv = input.uv;
+            output.viewPos = mul(float4(input.pos, 1.f), g_matWV).xyz;
+            output.viewNormal = normalize(mul(float4(input.normal, 0.f), g_matWV).xyz);
+            output.viewTangent = normalize(mul(float4(input.tangent, 0.f), g_matWV).xyz);
+            output.viewBinormal = normalize(cross(output.viewTangent, output.viewNormal));
+        }
 
     return output;
 }

@@ -36,6 +36,11 @@ shared_ptr<Animator> Component::GetAnimator()
 	return _gameObject.lock()->GetAnimator();
 }
 
+shared_ptr<WeaponManager> Component::GetWeaponManager()
+{
+	return _gameObject.lock()->GetWeaponManager();
+}
+
 shared_ptr<Weapon> Component::GetWeapon()
 {
 	return _gameObject.lock()->GetWeapon();

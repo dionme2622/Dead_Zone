@@ -11,6 +11,7 @@ enum class COMPONENT_TYPE : uint8
 	PLAYER,
 	COLLIDER,
 	ANIMATOR,
+	WEAPONMANAGER,
 	WEAPON,
 	// ...
 	MONO_BEHAVIOUR,
@@ -27,6 +28,7 @@ class Transform;
 class MeshRenderer;
 class Animator;
 class BaseCollider;
+class WeaponManager;
 class Weapon;
 
 class Component : public Object
@@ -51,6 +53,7 @@ public:
 	shared_ptr<BaseCollider> GetCollider();
 	shared_ptr<MeshRenderer> GetMeshRenderer();
 	shared_ptr<Animator> GetAnimator();
+	shared_ptr<WeaponManager> GetWeaponManager();
 	shared_ptr<Weapon> GetWeapon();
 private:
 	friend class GameObject;

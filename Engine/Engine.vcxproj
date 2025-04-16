@@ -215,6 +215,7 @@
     <ClInclude Include="Transform.h" />
     <ClInclude Include="TwoHandedMeleeWeapon.h" />
     <ClInclude Include="Weapon.h" />
+    <ClInclude Include="WeaponManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
@@ -271,6 +272,7 @@
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="TwoHandedMeleeWeapon.cpp" />
     <ClCompile Include="Weapon.cpp" />
+    <ClCompile Include="WeaponManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl" />

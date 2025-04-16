@@ -16,6 +16,7 @@
 #include "ParticleSystem.h"
 #include "BoxCollider.h"
 #include "Animator.h"
+#include "WeaponManager.h"
 #include "Weapon.h"
 #include "StructuredBuffer.h"
 // TEST
@@ -179,7 +180,7 @@ void BattleScene::LoadScene()
 
 		vector<shared_ptr<GameObject>> gameObjects1 = FemaleSoldier->Instantiate();
 
-		_player = gameObjects1[0];
+		_player = gameObjects1[23];
 		for (auto& gameObject : gameObjects1)
 		{
 			//gameObject->SetName(L"FemaleSoldier");
@@ -189,48 +190,11 @@ void BattleScene::LoadScene()
 			AddGameObject(gameObject);
 		}
 		//_playerCamera->GetTransform()->SetParent(_player->GetTransform());
-		_player->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 3.4f));
-		_player->AddComponent(make_shared<PlayerScript>(_hwnd));
-		Matrix character_mat = gameObjects1[0]->GetTransform()->GetLocalMatrix();
+		_player->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		_player->AddComponent(make_shared<PlayerScript>(_hwnd));				// Add Player Controller
+		_player->AddComponent(make_shared<WeaponManager>(shared_from_this()));					// Add Weapon Manager
 
-		shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_SMG.bin"); // MeshData* meshData
-		vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
-
-		_player->GetTransform()->GetLocalToWorldMatrix();
-		for (auto& gameObject : gameObjects)
-		{
-			shared_ptr<Material> material = make_shared<Material>();
-			shared_ptr<Weapon> weapon = make_shared<Weapon>();
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"SMG", L"..\\Resources\\Texture\\SimpleApocalypse_Texture.dds");
-
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			material->SetInt(2, 1);
-			//material->SetMatrix(0, character_mat);
-			material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
-			material->SetTexture(0, texture);
-			gameObject->GetMeshRenderer()->SetMaterial(material);
-			weapon->SetWeaponObject(gameObjects1[23]);
-			gameObject->AddComponent(weapon);
-			AddGameObject(gameObject);
-		}
-		shared_ptr<GameObject> rootObject = gameObjects[0];
-
-		_weapon = gameObjects;
-
-		rootObject->GetTransform()->SetLocalPosition(Vec3(0.2412, -0.033, 0.017));
-		rootObject->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 90.f));
-
-		Matrix gun_offsetMat = gameObjects[0]->GetTransform()->GetLocalMatrix();
-		Matrix finalMat = gun_offsetMat * character_mat;
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->GetMeshRenderer()->GetMaterial()->SetMatrix(1, finalMat);
-		}
-
-
-		// 오른손의 자식으로 설정한다.
-		//rootObject->GetTransform()->SetParent(gameObjects1[0]->GetTransform());	// [14] = Right Hand
+	
 
 
 		shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData

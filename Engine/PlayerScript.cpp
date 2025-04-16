@@ -7,10 +7,14 @@
 #include "MouseInput.h"
 #include "Timer.h"
 #include "Engine.h"
+#include "WeaponManager.h"
+
 
 PlayerScript::PlayerScript(HWND hwnd)
 {
 	_hwnd = hwnd;
+
+	// Player에 대한 정보 초기화 단계
 
 	_speed = 10.0f;
 	_jumpVelocity = 500.0f;
@@ -65,13 +69,14 @@ void PlayerScript::UpdateKeyInput()
 		_isGrounded = false;
 	}
 
-	if (INPUT->GetButton(KEY_TYPE::KEY_3));
-		// TODO : 총 들기
-		// SetWeapon(WeaponType::Rifle);
-
-	if (INPUT->GetButton(KEY_TYPE::KEY_4));
-		// TODO : 칼 들기
-		// SetWeapon(WeaponType::Knife);
+	if (INPUT->GetButton(KEY_TYPE::KEY_1))
+		GetWeaponManager()->EquipWeapon(0);
+	
+	if (INPUT->GetButton(KEY_TYPE::KEY_2))
+		GetWeaponManager()->EquipWeapon(1);
+	
+	if (INPUT->GetButton(KEY_TYPE::KEY_3))
+		GetWeaponManager()->EquipWeapon(2);
 
 	GetTransform()->SetLocalPosition(pos);
 }

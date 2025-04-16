@@ -8,6 +8,7 @@
 #include "InstancingBuffer.h"
 #include "Shader.h"
 #include "StructuredBuffer.h"
+#include "WeaponManager.h"
 #include "Weapon.h"
 
 MeshRenderer::MeshRenderer() : Component(COMPONENT_TYPE::MESH_RENDERER)
@@ -57,14 +58,19 @@ void MeshRenderer::Render()
 		if (GetAnimator())
 		{
 			GetAnimator()->PushData();
-			//_boneFinalMatrix = GetAnimator()->GetBoneFinalMatirx();
 			material->SetInt(1, 1);
 		}
 
+
+		if (GetWeaponManager())
+		{
+			GetWeaponManager()->PushData();
+		}
 		if (GetWeapon())
 		{
 			GetWeapon()->PushData();
 		}
+
 		material->PushGraphicsData();
 		_mesh->Render(1, i);
 	}

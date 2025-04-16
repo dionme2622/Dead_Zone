@@ -8,6 +8,7 @@
 #include "ParticleSystem.h"
 #include "Animator.h"
 #include "BaseCollider.h"
+#include "WeaponManager.h"
 #include "Weapon.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
@@ -108,6 +109,12 @@ shared_ptr<Animator> GameObject::GetAnimator()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::ANIMATOR);
 	return static_pointer_cast<Animator>(component);
+}
+
+shared_ptr<WeaponManager> GameObject::GetWeaponManager()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::WEAPONMANAGER);
+	return static_pointer_cast<WeaponManager>(component);
 }
 
 shared_ptr<Weapon> GameObject::GetWeapon()

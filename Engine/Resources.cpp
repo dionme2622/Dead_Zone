@@ -659,4 +659,13 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"ComputeAnimation", material);
 	}
 
+	// Weapon
+	{
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetInt(2, 1);
+		material->SetShader(shader);
+
+		Add<Material>(L"Weapon", material);
+	}
 }

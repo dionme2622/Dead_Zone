@@ -15,17 +15,24 @@ public:
 public:
 	void SetWeaponObject(shared_ptr<GameObject> weaponObject);
 	void PushData();
-	shared_ptr<StructuredBuffer> GetBoneFinalMatirx() { return _boneFinalMatrix; }
 
+	shared_ptr<StructuredBuffer> GetBoneFinalMatirx() { return _boneFinalMatrix; }
+	bool GetisEquipped() { return _isEquipped; }
+
+
+	void SetCharacterMatrix(Matrix matrix) { _characterWorldMat = matrix; }
+	void SetBoneFinalMatrix(shared_ptr<StructuredBuffer> boneMatrix) { _boneFinalMatrix = boneMatrix; }
+	void SetisEquipped(bool boolen) { _isEquipped = boolen; }
 public:
 	virtual void FinalUpdate() override;
 
 protected:
 	shared_ptr<GameObject>			_weaponObject;
-	shared_ptr<Matrix>				_offsetMat;		// 무기의 Offset Matrix
+	shared_ptr<Matrix>				_offsetMat;				// 무기의 Offset Matrix
 	Matrix							_characterWorldMat;		// 무기의 Offset Matrix
-	shared_ptr<StructuredBuffer>	_boneFinalMatrix;	// 특정 프레임의 최종 행렬
+	shared_ptr<StructuredBuffer>	_boneFinalMatrix;		// 뼈들의 최종 행렬
 
+	bool							_isEquipped = false;				// 무기가 장착되어있는가?
 };
 
 

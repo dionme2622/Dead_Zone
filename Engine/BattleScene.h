@@ -3,7 +3,7 @@
 #include "Player.h"
 
 
-class BattleScene : public Scene
+class BattleScene : public Scene, public std::enable_shared_from_this<BattleScene>
 {
 public:
 	BattleScene();

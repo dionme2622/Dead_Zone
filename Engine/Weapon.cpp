@@ -25,12 +25,14 @@ void Weapon::SetWeaponObject(shared_ptr<GameObject> weaponObject)
 
 void Weapon::PushData()
 {
-	_characterWorldMat = _weaponObject->GetTransform()->GetLocalToWorldMatrix();
-	_boneFinalMatrix = _weaponObject->GetAnimator()->GetBoneKeyFrameMatirx();// 무기 소유 객체->GetAnimator()->GetBoneFinalMatirx();
-
-	GetMeshRenderer()->GetMaterial()->SetMatrix(0, _characterWorldMat);
-	
-	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
+	if (GetisEquipped())
+	{
+		GetMeshRenderer()->GetMaterial()->SetInt(2, 1);
+		GetMeshRenderer()->GetMaterial()->SetMatrix(0, _characterWorldMat);
+		_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
+	}
+	else
+		GetMeshRenderer()->GetMaterial()->SetInt(2, 0);
 }
 
 void Weapon::FinalUpdate()
