@@ -132,7 +132,7 @@
     <ClInclude Include="LobbyScene.h">
       <Filter>Manager\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="PlayerStats.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
     <ClInclude Include="MouseInput.h">
@@ -192,7 +192,9 @@
     <ClInclude Include="TwoHandedMeleeWeapon.h">
       <Filter>Object\Component\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponManager.h" />
+    <ClInclude Include="WeaponManager.h">
+      <Filter>Object\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -285,7 +287,7 @@
     <ClCompile Include="LobbyScene.cpp">
       <Filter>Manager\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="PlayerStats.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="MouseInput.cpp">
@@ -345,7 +347,9 @@
     <ClCompile Include="TwoHandedMeleeWeapon.cpp">
       <Filter>Object\Component\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponManager.cpp" />
+    <ClCompile Include="WeaponManager.cpp">
+      <Filter>Object\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

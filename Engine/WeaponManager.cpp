@@ -11,11 +11,10 @@
 #include "MeshData.h"
 #include "Resources.h"
 
-WeaponManager::WeaponManager(shared_ptr<Scene> scene) : Component(COMPONENT_TYPE::WEAPONMANAGER)
+WeaponManager::WeaponManager() : Component(COMPONENT_TYPE::WEAPONMANAGER)
 {
 	// TODO : 플레이어 캐릭터 생성 시 무기 객체도 같이 생성한다.
 	AddWeapon();
-	
 	
 }
 
@@ -112,6 +111,7 @@ void WeaponManager::EquipWeapon(int index)
 	for (auto& weapon : _currentWeapon)				// 이전 무기는 장착 해제한다.
 	{
 		weapon->GetWeapon()->SetisEquipped(false);
+		weapon->GetMeshRenderer()->SetRender(false);
 	}
 
 	_currentWeapon = _weaponInventory[index];
@@ -119,5 +119,7 @@ void WeaponManager::EquipWeapon(int index)
 	for (auto& weapon : _currentWeapon)				// 현재 무기를 장착한다.
 	{
 		weapon->GetWeapon()->SetisEquipped(true);
+		weapon->GetMeshRenderer()->SetRender(true);
+
 	}
 }

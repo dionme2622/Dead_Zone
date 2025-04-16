@@ -9,7 +9,7 @@ class Weapon;
 class WeaponManager : public Component
 {
 public:
-	WeaponManager(shared_ptr<Scene> scene);
+	WeaponManager();
 	virtual ~WeaponManager();
 
 	virtual void FinalUpdate() override;
@@ -20,8 +20,6 @@ public:
 
 	void EquipWeapon(int index);
 private:
-	shared_ptr<Scene>						_scene;					// AddObject 할 Scene 
-
 	Matrix									_characterWorldMat;		// 캐릭터의 World Matrix
 
 	vector<shared_ptr<GameObject>>			_currentWeapon;			// 현재 장착하고 있는 무기

@@ -23,7 +23,7 @@ void Mesh::Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexB
 }
 
 
-void Mesh::Render(uint32 instanceCount, uint32 idx)
+void Mesh::Render(uint32 instanceCount, uint32 idx, bool isRender)
 {
 	GRAPHICS_CMD_LIST->IASetVertexBuffers(0, 1, &_vertexBufferView); // Slot: (0~15)
 	GRAPHICS_CMD_LIST->IASetIndexBuffer(&_vecIndexInfo[idx].bufferView);
@@ -33,7 +33,7 @@ void Mesh::Render(uint32 instanceCount, uint32 idx)
 	GRAPHICS_CMD_LIST->DrawIndexedInstanced(_vecIndexInfo[idx].count, instanceCount, 0, 0, 0);
 }
 
-void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx)
+void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx, bool isRender)
 {
 	D3D12_VERTEX_BUFFER_VIEW bufferViews[] = { _vertexBufferView, buffer->GetBufferView() };
 	GRAPHICS_CMD_LIST->IASetVertexBuffers(0, 2, bufferViews);

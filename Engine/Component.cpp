@@ -45,3 +45,8 @@ shared_ptr<Weapon> Component::GetWeapon()
 {
 	return _gameObject.lock()->GetWeapon();
 }
+
+shared_ptr<PlayerStats> Component::GetPlayerStats()
+{
+	return _gameObject.lock()->GetPlayerStats();
+}

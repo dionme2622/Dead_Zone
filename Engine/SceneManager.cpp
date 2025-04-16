@@ -12,7 +12,7 @@
 
 #include "Resources.h"
 #include "KeyInput.h"
-#include "Player.h"
+#include "PlayerStats.h"
 #include "Timer.h"
 
 void SceneManager::Update()

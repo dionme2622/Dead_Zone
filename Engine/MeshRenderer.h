@@ -27,6 +27,7 @@ public:
 
 	void SetMesh(shared_ptr<Mesh> mesh) { _mesh = mesh; }
 	void SetMaterial(shared_ptr<Material> material, uint32 idx = 0);
+	void SetRender(bool isRender) { _isRender = isRender; }
 
 	void Render();
 	void Render(shared_ptr<class InstancingBuffer>& buffer);
@@ -36,9 +37,9 @@ public:
 
 
 private:
-	shared_ptr<Mesh> _mesh;
-	vector<shared_ptr<Material>> _materials;
+	shared_ptr<Mesh>					_mesh;
+	vector<shared_ptr<Material>>		_materials;
 
-	shared_ptr<class StructuredBuffer>	_boneFinalMatrix;
+	bool								_isRender = true;		// 객체를 Render 하는가?
 };
 

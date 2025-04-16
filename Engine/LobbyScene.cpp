@@ -7,7 +7,7 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
-#include "Player.h"
+#include "PlayerStats.h"
 #include "Engine.h"
 #include "Resources.h"
 

@@ -7,7 +7,6 @@
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
-#include "Player.h"
 #include "PlayerScript.h"
 #include "Engine.h"
 #include "Resources.h"
@@ -18,6 +17,7 @@
 #include "Animator.h"
 #include "WeaponManager.h"
 #include "Weapon.h"
+#include "PlayerStats.h"
 #include "StructuredBuffer.h"
 // TEST
 #include "KeyInput.h"
@@ -191,9 +191,9 @@ void BattleScene::LoadScene()
 		}
 		//_playerCamera->GetTransform()->SetParent(_player->GetTransform());
 		_player->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		_player->AddComponent(make_shared<PlayerScript>(_hwnd));				// Add Player Controller
-		_player->AddComponent(make_shared<WeaponManager>(shared_from_this()));					// Add Weapon Manager
-
+		_player->AddComponent(make_shared<PlayerScript>(_hwnd));								// Add Player Controller
+		_player->AddComponent(make_shared<WeaponManager>());									// Add Weapon Manager
+		_player->AddComponent(make_shared<PlayerStats>());
 	
 
 

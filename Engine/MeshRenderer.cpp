@@ -13,7 +13,6 @@
 
 MeshRenderer::MeshRenderer() : Component(COMPONENT_TYPE::MESH_RENDERER)
 {
-	_boneFinalMatrix = make_shared<StructuredBuffer>();
 }
 
 MeshRenderer::~MeshRenderer()
@@ -72,7 +71,7 @@ void MeshRenderer::Render()
 		}
 
 		material->PushGraphicsData();
-		_mesh->Render(1, i);
+		_mesh->Render(1, i, _isRender);
 	}
 }
 

@@ -8,13 +8,13 @@ enum class COMPONENT_TYPE : uint8
 	CAMERA,
 	LIGHT,
 	PARTICLE_SYSTEM,
-	PLAYER,
 	COLLIDER,
 	ANIMATOR,
 	WEAPONMANAGER,
 	WEAPON,
 	// ...
 	MONO_BEHAVIOUR,
+	PLAYERSTATS,
 	END,
 };
 
@@ -30,6 +30,7 @@ class Animator;
 class BaseCollider;
 class WeaponManager;
 class Weapon;
+class PlayerStats;
 
 class Component : public Object
 {
@@ -55,6 +56,8 @@ public:
 	shared_ptr<Animator> GetAnimator();
 	shared_ptr<WeaponManager> GetWeaponManager();
 	shared_ptr<Weapon> GetWeapon();
+	shared_ptr<PlayerStats> GetPlayerStats();
+
 private:
 	friend class GameObject;
 	void SetGameObject(shared_ptr<GameObject> gameObject) { _gameObject = gameObject; }
