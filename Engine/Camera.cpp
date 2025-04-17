@@ -46,10 +46,10 @@ void Camera::SortGameObject()
 	S_MatView = _matView;
 	S_MatProjection = _matProjection;
 
-	/*if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
+	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
 		S_MainMatView = _matView;
 		S_MainMatProjection = _matProjection;
-	}*/
+	}
 
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	const vector<shared_ptr<GameObject>>& gameObjects = scene->GetGameObjects();
@@ -115,8 +115,8 @@ void Camera::SortShadowObject()
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	const vector<shared_ptr<GameObject>>& gameObjects = scene->GetGameObjects();
 
-	S_MatView = _matView;
-	S_MatProjection = _matProjection;
+	/*S_MatView = _matView;
+	S_MatProjection = _matProjection;*/
 
 	_vecShadow.clear();
 
@@ -176,7 +176,7 @@ void Camera::Render_Deferred()
 		gameObject->GetMeshRenderer()->Render();
 	}
 #endif
-
+	
 }
 
 void Camera::Render_Forward()
@@ -211,11 +211,6 @@ void Camera::Render_Shadow()
 {
 	S_MatView = _matView;
 	S_MatProjection = _matProjection;
-
-	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
-		S_MainMatView = _matView;
-		S_MainMatProjection = _matProjection;
-	}
 
 	for (auto& gameObject : _vecShadow)
 	{

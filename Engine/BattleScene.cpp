@@ -317,19 +317,20 @@ void BattleScene::Update()
 
 
 	{
-		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
-		float angle = XMConvertToRadians(10.0f); // 10도 회전 예시
-		Vec3 center = Vec3(0.f, Pos.y, 0.f);
-		Vec3 relativePos = Pos - center;
-		float cosTheta = cos(angle);
-		float sinTheta = sin(angle);
-		Vec3 rotatedPos;
-		rotatedPos.x = relativePos.x * cosTheta - relativePos.z * sinTheta;
-		rotatedPos.y = relativePos.y; // y축은 그대로 유지
-		rotatedPos.z = relativePos.x * sinTheta + relativePos.z * cosTheta;
-		rotatedPos += center;
-		_mainLight->GetTransform()->SetLocalPosition(rotatedPos);
+		//Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
+		//float angle = XMConvertToRadians(10.0f); // 10도 회전 예시
+		//Vec3 center = Vec3(0.f, Pos.y, 0.f);
+		//Vec3 relativePos = Pos - center;
+		//float cosTheta = cos(angle);
+		//float sinTheta = sin(angle);
+		//Vec3 rotatedPos;
+		//rotatedPos.x = relativePos.x * cosTheta - relativePos.z * sinTheta;
+		//rotatedPos.y = relativePos.y; // y축은 그대로 유지
+		//rotatedPos.z = relativePos.x * sinTheta + relativePos.z * cosTheta;
+		//rotatedPos += center;
+		//_mainLight->GetTransform()->SetLocalPosition(rotatedPos);
 	}
+
 }
 
 void BattleScene::FinalUpdate()

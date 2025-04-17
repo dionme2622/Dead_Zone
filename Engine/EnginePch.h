@@ -47,6 +47,7 @@ using namespace Microsoft::WRL;
 #endif
 
 //#define _DEBUG_COLLIDER
+#define _DEBUG_SSAO
 #define _INSTANCING_MODE
 extern bool _WIRE_FRAME_MODE;
 

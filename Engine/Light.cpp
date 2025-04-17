@@ -4,7 +4,6 @@
 #include "Engine.h"
 #include "Resources.h"
 #include "Camera.h"
-#include "Transform.h"
 #include "Texture.h"
 #include "SceneManager.h"
 
@@ -42,7 +41,6 @@ void Light::FinalUpdate()
 
 void Light::Render()
 {
-	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
 	assert(_lightIndex >= 0);
 
 	GetTransform()->PushData();

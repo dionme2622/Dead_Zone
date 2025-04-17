@@ -5,7 +5,6 @@
 #include "Engine.h"
 #include "ConstantBuffer.h"
 #include "Light.h"
-#include "Engine.h"
 #include "Resources.h"
 
 void Scene::Awake()
@@ -60,7 +59,9 @@ void Scene::Render()
 
 	RenderLights();
 
+#ifdef _DEBUG_SSAO
 	RenderSSAO(); // SSAO 패스 추가
+#endif
 
 	RenderFinal();
 
@@ -78,8 +79,10 @@ void Scene::ClearRTV()
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->ClearRenderTargetView();
 	// Lighting Group 초기화
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->ClearRenderTargetView();
-	//// SSAO Group 초기화
+	// SSAO Group 초기화
+#ifdef _DEBUG_SSAO
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->ClearRenderTargetView();
+#endif
 }
 
 void Scene::RenderShadow()
@@ -114,13 +117,6 @@ void Scene::RenderDeferred()
 
 void Scene::RenderLights()
 {
-	shared_ptr<Camera> mainCamera = _cameras[0];
-	Camera::S_MatView = mainCamera->GetViewMatrix();
-	Camera::S_MatProjection = mainCamera->GetProjectionMatrix();
-
-	Camera::S_MainMatView = mainCamera->GetViewMatrix();
-	Camera::S_MainMatProjection = mainCamera->GetProjectionMatrix();
-
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->OMSetRenderTargets();
 
 	// 광원을 그린다.
@@ -134,16 +130,38 @@ void Scene::RenderLights()
 
 void Scene::RenderSSAO()
 {
-	// SSAO 렌더 타겟 설정
+	//GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->OMSetRenderTargets();
+	////material->SetMatrix(0, Camera::S_MatProjection);
+	//// 메인 카메라 뷰-프로젝션 행렬 설정
+	//shared_ptr<Camera> mainCamera = _cameras[0];
+	//Matrix viewProj = mainCamera->GetViewMatrix() * mainCamera->GetProjectionMatrix();
+
+	//GET_SINGLE(Resources)->Get<Material>(L"SSAO")->SetMatrix(1, viewProj); // g_mat_1에 설정
+	//GET_SINGLE(Resources)->Get<Material>(L"SSAO")->PushGraphicsData();
+	//GET_SINGLE(Resources)->Get<Mesh>(L"Rectangle")->Render();
+	//GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->WaitTargetToResource();
+
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->OMSetRenderTargets();
 
-	// SSAO 머티리얼 바인딩
-	GET_SINGLE(Resources)->Get<Material>(L"SSAO")->PushGraphicsData();
+	shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(L"SSAO");
+	material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
+	material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"NormalTarget"));
+	material->SetTexture(2, GET_SINGLE(Resources)->Get<Texture>(L"SSAONoiseTexture"));
 
-	// 화면 전체 사각형 렌더링
+	shared_ptr<Camera> mainCamera = _cameras[0];
+	Matrix viewProj = mainCamera->GetViewMatrix() * mainCamera->GetProjectionMatrix();
+	material->SetMatrix(1, viewProj);
+
+	Matrix projInv = mainCamera->GetProjectionMatrix().Invert();
+	material->SetMatrix(2, projInv);
+
+	Vec2 resolution = Vec2(WINDOW.width, WINDOW.height);
+	material->SetVec2(0, resolution);
+
+	material->PushGraphicsData();
+
 	GET_SINGLE(Resources)->Get<Mesh>(L"Rectangle")->Render();
 
-	// 렌더 타겟 해제 및 리소스 상태 전환
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->WaitTargetToResource();
 }
 

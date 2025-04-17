@@ -23,7 +23,7 @@ public:
 	void UpdatePlayerOnTerrain();
 
 private:
-	float _speed;     // 기존에 있던 이동 속도
+	float _speed;			// 기존에 있던 이동 속도
 	float _jumpVelocity;    // 점프 초기 속도
 	float _currentVelocity; // 현재 수직 속도
 	float _gravity;         // 중력 가속도

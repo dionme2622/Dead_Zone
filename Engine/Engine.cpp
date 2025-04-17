@@ -185,6 +185,8 @@ void Engine::CreateRenderTargetGroups()
 		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::LIGHTING)]->Create(RENDER_TARGET_GROUP_TYPE::LIGHTING, rtVec, dsTexture);
 	}
 
+
+#ifdef _DEBUG_SSAO
 	// SSAO Group
 	{
 		vector<RenderTarget> rtVec(RENDER_TARGET_SSAO_GROUP_MEMBER_COUNT);
@@ -198,14 +200,13 @@ void Engine::CreateRenderTargetGroups()
 		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::SSAO)]->Create(RENDER_TARGET_GROUP_TYPE::SSAO, rtVec, dsTexture);
 
 
-
 		// SSAO 노이즈 텍스처
 		std::vector<Vec2> noiseData(16 * 16);
 		for (size_t i = 0; i < noiseData.size(); ++i)
 		{
 			noiseData[i] = Vec2(
-				(float)rand() / RAND_MAX * 2.0f - 1.0f,
-				(float)rand() / RAND_MAX * 2.0f - 1.0f
+				(float)rand() / RAND_MAX, // 0.0 ~ 1.0
+				(float)rand() / RAND_MAX  // 0.0 ~ 1.0
 			);
 		}
 
@@ -214,6 +215,7 @@ void Engine::CreateRenderTargetGroups()
 			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 	}
+#endif
 
 	//// Final Render Group
 	//{

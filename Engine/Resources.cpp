@@ -485,9 +485,9 @@ void Resources::CreateDefaultShader()
 	{
 		ShaderInfo info =
 		{
-			SHADER_TYPE::LIGHTING,
+			SHADER_TYPE::SSAO,
 			RASTERIZER_TYPE::CULL_NONE,
-			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE, 
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
 		};
 
 		ShaderArg arg =
@@ -517,6 +517,8 @@ void Resources::CreateDefaultShader()
 		shader->CreateComputeShader(L"..\\Resources\\Shader\\animation.fx", "CS_Main", "cs_5_0");
 		Add<Shader>(L"ComputeAnimation", shader);
 	}
+
+
 	// Particle
 	{
 		ShaderInfo info =
@@ -650,7 +652,7 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"Shadow", material);
 	}
 
-
+#ifdef _DEBUG_SSAO
 	// SSAO
 	{
 		const WindowInfo& window = GEngine->GetWindow();
@@ -659,14 +661,13 @@ void Resources::CreateDefaultMaterial()
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"SSAO");
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
-		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
+		/*material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
 		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"NormalTarget"));
-		material->SetTexture(4, GET_SINGLE(Resources)->Get<Texture>(L"SSAONoiseTexture"));
-		material->SetVec2(0, resolution);
-		material->SetMatrix(0, Camera::S_MainMatProjection);
+		material->SetTexture(2, GET_SINGLE(Resources)->Get<Texture>(L"SSAONoiseTexture"));*/
+		//material->SetVec2(0, resolution);
 		Add<Material>(L"SSAO", material);
 	}
-
+#endif
 
 	// Compute Shader
 	{
