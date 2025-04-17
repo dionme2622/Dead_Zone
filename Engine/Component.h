@@ -8,11 +8,13 @@ enum class COMPONENT_TYPE : uint8
 	CAMERA,
 	LIGHT,
 	PARTICLE_SYSTEM,
-	PLAYER,
 	COLLIDER,
 	ANIMATOR,
+	WEAPONMANAGER,
+	WEAPON,
 	// ...
-	MONO_BEHAVIOUR,
+	PLAYERSTATS,
+	MONO_BEHAVIOUR,			// 반드시 END 전에 위치해야한다.
 	END,
 };
 
@@ -25,6 +27,10 @@ class GameObject;
 class Transform;
 class MeshRenderer;
 class Animator;
+class BaseCollider;
+class WeaponManager;
+class Weapon;
+class PlayerStats;
 
 class Component : public Object
 {
@@ -45,8 +51,13 @@ public:
 
 	shared_ptr<GameObject> GetGameObject();
 	shared_ptr<Transform> GetTransform();
+	shared_ptr<BaseCollider> GetCollider();
 	shared_ptr<MeshRenderer> GetMeshRenderer();
 	shared_ptr<Animator> GetAnimator();
+	shared_ptr<WeaponManager> GetWeaponManager();
+	shared_ptr<Weapon> GetWeapon();
+	shared_ptr<PlayerStats> GetPlayerStats();
+
 private:
 	friend class GameObject;
 	void SetGameObject(shared_ptr<GameObject> gameObject) { _gameObject = gameObject; }

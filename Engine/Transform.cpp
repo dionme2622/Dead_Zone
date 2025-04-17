@@ -22,11 +22,14 @@ void Transform::FinalUpdate()
 	float radZ = _localRotation.z * (XM_PI / 180.0f);
 
 	Matrix matScale = Matrix::CreateScale(_localScale);
-	Matrix matRotation = Matrix::CreateRotationX(radX);
-	matRotation *= Matrix::CreateRotationY(radY);
-	matRotation *= Matrix::CreateRotationZ(radZ);
+	Matrix matRotation = Matrix::CreateRotationZ(radZ)
+		* Matrix::CreateRotationX(radX)
+		* Matrix::CreateRotationY(radY);
 	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
+
 	_matLocal = matScale * matRotation * matTranslation;
+
+
 	_matWorld = _matLocal;
 
 	shared_ptr<Transform> parent = GetParent().lock();
@@ -39,6 +42,32 @@ void Transform::FinalUpdate()
 
 Matrix Transform::GetToRootTransform()
 {
+	_matWorld = _matLocal;
+
+	shared_ptr<Transform> parent = GetParent().lock();
+	if (parent != nullptr)
+	{
+		_matWorld *= parent->GetLocalToWorldMatrix();
+	}
+
+	return _matWorld;
+}
+
+Matrix Transform::GetLocalMatrix()
+{
+	float radX = _localRotation.x * (XM_PI / 180.0f);
+	float radY = _localRotation.y * (XM_PI / 180.0f);
+	float radZ = _localRotation.z * (XM_PI / 180.0f);
+
+	Matrix matScale = Matrix::CreateScale(_localScale);
+	Matrix matRotation = Matrix::CreateRotationZ(radZ)
+		* Matrix::CreateRotationX(radX)
+		* Matrix::CreateRotationY(radY);
+	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
+
+	_matLocal = matScale * matRotation * matTranslation;
+
+
 	_matWorld = _matLocal;
 
 	shared_ptr<Transform> parent = GetParent().lock();

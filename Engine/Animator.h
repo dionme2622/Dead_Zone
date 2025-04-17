@@ -19,6 +19,9 @@ public:
 
 	int32 GetAnimCount() { return static_cast<uint32>(_animClips->size()); }
 	int32 GetCurrentClipIndex() { return _clipIndex; }
+	shared_ptr<StructuredBuffer> GetBoneFinalMatirx() { return _boneFinalMatrix; }
+	shared_ptr<StructuredBuffer> GetBoneKeyFrameMatirx() { return _bonekeyFrameMatrix; }
+
 	void Play(uint32 idx);
 
 public:
@@ -29,7 +32,7 @@ private:
 	const vector<AnimClipInfo>*		_animClips;
 
 	float							_updateTime = 0.f;
-	int32							_clipIndex = 2;
+	int32							_clipIndex = 0;
 	int32							_frame = 0;
 	int32							_frameCount = 0;
 	int32							_nextFrame = 0;
@@ -41,5 +44,7 @@ private:
 	shared_ptr<Material>			_computeMaterial;
 
 	shared_ptr<StructuredBuffer>	_boneFinalMatrix;  // 특정 프레임의 최종 행렬
+	shared_ptr<StructuredBuffer>	_bonekeyFrameMatrix;  // 뼈 프레임의 최종 행렬
+
 	bool							_boneFinalUpdated = false;
 };

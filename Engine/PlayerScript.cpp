@@ -10,6 +10,7 @@
 #include "BoxCollider.h"
 #include "SceneManager.h"
 #include "BattleScene.h"
+#include "WeaponManager.h"
 
 PlayerScript::PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform) :
 	_hwnd(hwnd), _speed(300.0f), _jumpVelocity(10.0f), _currentVelocity(0.0f), 
@@ -90,6 +91,15 @@ void PlayerScript::UpdateKeyInput()
 		pos.y += _currentVelocity * DELTA_TIME;
 		BattleScene::isPlayerGrounded = false;
 	}
+
+	if (INPUT->GetButton(KEY_TYPE::KEY_1))
+		GetWeaponManager()->EquipWeapon(0);
+	
+	if (INPUT->GetButton(KEY_TYPE::KEY_2))
+		GetWeaponManager()->EquipWeapon(1);
+	
+	if (INPUT->GetButton(KEY_TYPE::KEY_3))
+		GetWeaponManager()->EquipWeapon(2);
 
 	GetTransform()->SetLocalPosition(pos);
 }

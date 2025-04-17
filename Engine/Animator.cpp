@@ -11,6 +11,8 @@ Animator::Animator() : Component(COMPONENT_TYPE::ANIMATOR)
 {
 	_computeMaterial = GET_SINGLE(Resources)->Get<Material>(L"ComputeAnimation");
 	_boneFinalMatrix = make_shared<StructuredBuffer>();
+	_bonekeyFrameMatrix = make_shared<StructuredBuffer>();
+
 }
 
 Animator::~Animator()
@@ -32,7 +34,8 @@ void Animator::FinalUpdate()
 	_frame = static_cast<int32>(_updateTime * ratio);
 	_frame = min(_frame, animClip.frameCount - 1);
 	_nextFrame = min(_frame + 1, animClip.frameCount - 1);
-	_frameRatio = static_cast<float>(_frame - _frame);		// [질문] _nextFrame을 넣어야하지않나?
+	_frameRatio = static_cast<float>(_nextFrame - _frame);		// [질문] _nextFrame을 넣어야하지않나?
+
 }
 
 void Animator::SetAnimClip(const vector<AnimClipInfo>* animClips)
@@ -42,10 +45,11 @@ void Animator::SetAnimClip(const vector<AnimClipInfo>* animClips)
 
 void Animator::PushData()
 {
-	//uint32 boneCount = static_cast<uint32>(_bones->size());
 	if (_boneFinalMatrix->GetElementCount() < _bonesCount)
 		_boneFinalMatrix->Init(sizeof(Matrix), _bonesCount);
 
+	if (_bonekeyFrameMatrix->GetElementCount() < _bonesCount)
+		_bonekeyFrameMatrix->Init(sizeof(Matrix), _bonesCount);
 
 	// Compute Shader
 	shared_ptr<Mesh> mesh = GetGameObject()->GetMeshRenderer()->GetMesh();
@@ -53,6 +57,8 @@ void Animator::PushData()
 	mesh->GetBoneOffsetBuffer()->PushComputeSRVData(SRV_REGISTER::t9);
 
 	_boneFinalMatrix->PushComputeUAVData(UAV_REGISTER::u0);
+	_bonekeyFrameMatrix->PushComputeUAVData(UAV_REGISTER::u1);
+
 
 	_computeMaterial->SetInt(0, _bonesCount);
 	_computeMaterial->SetInt(1, _frame);
@@ -64,7 +70,7 @@ void Animator::PushData()
 	_computeMaterial->Dispatch(groupCount, 1, 1);
 	
 	// Graphics Shader
-	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
+	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);		// 얘를 총 오브젝트에도 넘겨야 함
 }
 
 void Animator::Play(uint32 idx)

@@ -45,8 +45,8 @@ public:
 	virtual ~Mesh();
 
 	void Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexbuffer);
-	void Render(uint32 instanceCount = 1, uint32 idx = 0);
-	void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0);
+	void Render(uint32 instanceCount = 1, uint32 idx = 0, bool isRender = true);
+	void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0, bool isRender = true);
 	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class BinaryLoader& loader);
 
 
@@ -78,5 +78,10 @@ private:
 
 	shared_ptr<StructuredBuffer>		 _offsetBuffer; // 각 뼈의 offset 행렬
 	vector<shared_ptr<StructuredBuffer>> _frameBuffer; // 전체 본 프레임 정보
+
+		
+
+	shared_ptr<StructuredBuffer>		_boneFinalMatrix;  // 특정 프레임의 최종 행렬
+
 };
 

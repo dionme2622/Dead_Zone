@@ -1,6 +1,6 @@
 #pragma once
 #include "Scene.h"
-#include "Player.h"
+#include "PlayerStats.h"
 
 
 class BattleScene : public Scene
@@ -21,14 +21,11 @@ public:
 
 	static bool isPlayerGrounded;
 private:
-	shared_ptr<Player>			_player;
-	
-
 	shared_ptr<GameObject>		_playerCamera;
 	shared_ptr<GameObject>		_uiCamera;
 
 	shared_ptr<GameObject>		_mainLight;
-
+	shared_ptr<GameObject>		_player;
 	HWND _hwnd;
 
 

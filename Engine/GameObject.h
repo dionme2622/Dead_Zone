@@ -9,7 +9,9 @@ class Light;
 class MonoBehaviour;
 class BaseCollider;
 class ParticleSystem;
-
+class WeaponManager;
+class Weapon;
+class PlayerStats;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -28,6 +30,10 @@ public:
 	shared_ptr<Transform> GetTransform();
 	shared_ptr<MeshRenderer> GetMeshRenderer();
 	shared_ptr<Animator> GetAnimator();
+	shared_ptr<WeaponManager> GetWeaponManager();
+	shared_ptr<Weapon> GetWeapon();
+	shared_ptr<PlayerStats> GetPlayerStats();
+
 	shared_ptr<Camera> GetCamera();
 	shared_ptr<Light> GetLight();
 	shared_ptr<BaseCollider> GetCollider();
