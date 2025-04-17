@@ -227,7 +227,7 @@ void BattleScene::LoadScene()
 			AddGameObject(gameObject);
 		}
 		_player->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		_player->AddComponent(make_shared<PlayerScript>(_hwnd));								// Add Player Controller
+		_player->AddComponent(make_shared<PlayerScript>(_hwnd, _playerCamera->GetTransform()));								// Add Player Controller
 		_player->AddComponent(make_shared<WeaponManager>());									// Add Weapon Manager
 		//_player->AddComponent(make_shared<PlayerStats>());
 		//_playerCamera->GetTransform()->SetParent(_player->GetTransform());
