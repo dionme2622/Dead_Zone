@@ -56,7 +56,7 @@ void WeaponManager::AddWeapon()
 	shared_ptr<GameObject> rootObject = gameObjects[0];
 
 	rootObject->GetTransform()->SetLocalPosition(Vec3(0.2412, -0.033, 0.017));
-	rootObject->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 90.f));
+	rootObject->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 86.f));
 
 	_weaponInventory.push_back(gameObjects);
 
@@ -76,7 +76,7 @@ void WeaponManager::AddWeapon()
 	}
 
 	SMG[0]->GetTransform()->SetLocalPosition(Vec3(0.2412, -0.033, 0.017));
-	SMG[0]->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 90.f));
+	SMG[0]->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 87.0f));
 
 	_weaponInventory.push_back(SMG);
 
