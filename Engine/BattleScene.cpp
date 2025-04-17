@@ -330,6 +330,9 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
+	/*Vec3 pos = _player->GetTransform()->GetLocalPosition();
+	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
+
 	Scene::Update();
 	//CheckCollisions();
 
@@ -418,10 +421,10 @@ float GetOverlap(float minA, float maxA, float minB, float maxB)
 
 void BattleScene::CheckCollisions()
 {
-	shared_ptr<GameObject> playerRootObject = _player->GetGameObjects()[0];
+	shared_ptr<GameObject> playerRootObject = _player;
 	vector<shared_ptr<GameObject>> allGameObjects = GetGameObjects();
 
-	shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(_player->GetGameObjects()[24]->GetCollider());
+	shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(_player->GetCollider());
 	BoundingOrientedBox playerBox = playerCollider->GetBoundingBox();
 
 	Vec3 totalMTV = Vec3(0, 0, 0); // 모든 MTV를 합산
@@ -547,13 +550,7 @@ void BattleScene::CheckCollisions()
 	}
 }
 
-void BattleScene::Update()
-{
-	/*Vec3 pos = _player->GetTransform()->GetLocalPosition();
-	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
 
-	Scene::Update();
-}
 
 void BattleScene::CreateZombie()
 {
