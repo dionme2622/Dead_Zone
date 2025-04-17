@@ -3,5 +3,12 @@
 
 class OneHandedMeleeWeapon : public Weapon
 {
+public:
+
+	OneHandedMeleeWeapon() {};
+	virtual ~OneHandedMeleeWeapon() {};
+public:
+	virtual void Attack();
+	virtual void Reload();
 };
 

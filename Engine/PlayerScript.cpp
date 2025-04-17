@@ -11,9 +11,10 @@
 #include "SceneManager.h"
 #include "BattleScene.h"
 #include "WeaponManager.h"
+#include "Weapon.h"
 
 PlayerScript::PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform) :
-	_hwnd(hwnd), _speed(300.0f), _jumpVelocity(10.0f), _currentVelocity(0.0f), 
+	_hwnd(hwnd), _speed(30.0f), _jumpVelocity(10.0f), _currentVelocity(0.0f), 
 	_gravity(-9.8f), _isGrounded(true), _pitch(0.0f), _yaw(0.0f), _mouseMove(false), 
 	_cameraTransform(playerTransform)
 {
@@ -29,17 +30,17 @@ void PlayerScript::LateUpdate()
 
 	//UpdatePlayerOnTerrain();
 
-	Vec3 playerPosition = GetTransform()->GetLocalPosition();
+	/*Vec3 playerPosition = GetTransform()->GetLocalPosition();
 	Vec3 cameraPosition = playerPosition;
-	_cameraTransform->SetLocalPosition(cameraPosition);
+	_cameraTransform->SetLocalPosition(cameraPosition);*/
 
-	// 디버깅용
-	{
-		Vec3 pos = _cameraTransform->GetLocalPosition();
-		pos += GetTransform()->GetUp() * 3;
-		pos -= GetTransform()->GetLook() * 10.f;
-		_cameraTransform->SetLocalPosition(pos);
-	}
+	//// 디버깅용
+	//{
+	//	Vec3 pos = _cameraTransform->GetLocalPosition();
+	//	pos += GetTransform()->GetUp() * 3;
+	//	pos -= GetTransform()->GetLook() * 10.f;
+	//	_cameraTransform->SetLocalPosition(pos);
+	//}
 }
 
 
@@ -101,6 +102,13 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
 		GetWeaponManager()->EquipWeapon(2);
 
+	/*if (INPUT->마우스좌클릭)
+		GetWeaponManager()->GetCurrentWeapon()->GetWeapon()->Attack*/
+
+	if (INPUT->GetButton(KEY_TYPE::LEFTCLICK))
+		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
+
+
 	GetTransform()->SetLocalPosition(pos);
 }
 
@@ -156,8 +164,8 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 	}
 
 	// 카메라는 Pitch와 Yaw 모두 적용
-	Vec3 cameraRotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); // Pitch와 Yaw 적용
-	_cameraTransform->SetLocalRotation(cameraRotation);
+	//Vec3 cameraRotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); // Pitch와 Yaw 적용
+	//_cameraTransform->SetLocalRotation(cameraRotation);
 }
 
 void PlayerScript::UpdatePlayerOnTerrain()

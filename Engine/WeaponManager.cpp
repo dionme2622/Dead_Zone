@@ -11,6 +11,10 @@
 #include "MeshData.h"
 #include "Resources.h"
 
+#include "GunWeapon.h"
+#include "TwoHandedMeleeWeapon.h"
+
+
 WeaponManager::WeaponManager() : Component(COMPONENT_TYPE::WEAPONMANAGER)
 {
 	// TODO : 플레이어 캐릭터 생성 시 무기 객체도 같이 생성한다.
@@ -46,7 +50,7 @@ void WeaponManager::AddWeapon()
 
 	for (auto& gameObject : gameObjects)
 	{
-		shared_ptr<Weapon> weapon = make_shared<Weapon>();
+		shared_ptr<Weapon> weapon = make_shared<GunWeapon>();
 		gameObject->SetCheckFrustum(true);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
@@ -67,7 +71,7 @@ void WeaponManager::AddWeapon()
 
 	for (auto& gameObject : SMG)
 	{
-		shared_ptr<Weapon> weapon = make_shared<Weapon>();
+		shared_ptr<Weapon> weapon = make_shared<GunWeapon>();
 		gameObject->SetCheckFrustum(true);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
@@ -85,7 +89,7 @@ void WeaponManager::AddWeapon()
 
 	for (auto& gameObject : Bat)
 	{
-		shared_ptr<Weapon> weapon = make_shared<Weapon>();
+		shared_ptr<Weapon> weapon = make_shared<TwoHandedMeleeWeapon>();
 		gameObject->SetCheckFrustum(true);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);

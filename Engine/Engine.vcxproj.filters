@@ -193,7 +193,10 @@
       <Filter>Object\Component\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="WeaponManager.h">
-      <Filter>Object\Component</Filter>
+      <Filter>Object\Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Object\Component\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -348,7 +351,10 @@
       <Filter>Object\Component\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="WeaponManager.cpp">
-      <Filter>Object\Component</Filter>
+      <Filter>Object\Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Object\Component\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

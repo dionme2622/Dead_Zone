@@ -23,6 +23,12 @@ public:
 	void SetCharacterMatrix(Matrix matrix) { _characterWorldMat = matrix; }
 	void SetBoneFinalMatrix(shared_ptr<StructuredBuffer> boneMatrix) { _boneFinalMatrix = boneMatrix; }
 	void SetisEquipped(bool boolen) { _isEquipped = boolen; }
+
+public:
+	virtual void Attack() = 0;
+	virtual void Reload() = 0;
+
+
 public:
 	virtual void FinalUpdate() override;
 

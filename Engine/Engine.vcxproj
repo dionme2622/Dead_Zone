@@ -170,6 +170,7 @@
     <ClInclude Include="BattleScene.h" />
     <ClInclude Include="BinaryLoader.h" />
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommandQueue.h" />
     <ClInclude Include="Component.h" />
@@ -223,6 +224,7 @@
     <ClCompile Include="BattleScene.cpp" />
     <ClCompile Include="BinaryLoader.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CommandQueue.cpp" />
     <ClCompile Include="Component.cpp" />
