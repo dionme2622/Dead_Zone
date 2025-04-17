@@ -41,10 +41,10 @@ void BattleScene::LoadScene()
 		_playerCamera->SetName(L"Main_Camera");
 		_playerCamera->AddComponent(make_shared<Transform>());
 		_playerCamera->AddComponent(make_shared<Camera>());
-		_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
+		//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
 
 		//_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 1.f, -5.f));
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.3f, 2.15f, 0.55f));
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.01f, 2.03f, 0.65f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
@@ -130,7 +130,7 @@ void BattleScene::LoadScene()
 	_player->AddComponent(make_shared<PlayerScript>(_hwnd));								// Add Player Controller
 	_player->AddComponent(make_shared<WeaponManager>());									// Add Weapon Manager
 	_player->AddComponent(make_shared<PlayerStats>());
-	//_playerCamera->GetTransform()->SetParent(_player->GetTransform());						// Player에게 Camera 를 붙인다.
+	_playerCamera->GetTransform()->SetParent(_player->GetTransform());						// Player에게 Camera 를 붙인다.
 
 #pragma endregion
 
