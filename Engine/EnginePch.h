@@ -3,6 +3,17 @@
 // std::byte 사용하지 않음
 #define _HAS_STD_BYTE 0
 
+#define NOMINMAX       // 이미 있으면 OK
+#define byte _win_byte //byte 이름 충돌 방지
+// 먼저 Winsock2 헤더 포함
+#define WIN32_LEAN_AND_MEAN
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <mswsock.h>
+#include <thread>
+
+#pragma comment(lib, "ws2_32.lib")
+
 // 각종 include
 #include "iostream"
 #include <windows.h>

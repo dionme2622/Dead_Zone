@@ -35,6 +35,9 @@
     <ClInclude Include="Game.h">
       <Filter>소스 파일\Game</Filter>
     </ClInclude>
+    <ClInclude Include="game_header.h">
+      <Filter>소스 파일\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">

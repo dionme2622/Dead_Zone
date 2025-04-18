@@ -90,34 +90,6 @@ void BattleScene::LoadScene()
 	}
 #pragma endregion
 
-#pragma region Player
-	/*_player = make_shared<Player>();
-	_player->GetGameObject()->SetLayerIndex(LayerNameToIndex(L"Battle"));
-	_player->GetGameObject()->AddComponent(make_shared<PlayerScript>(_hwnd));
-	AddGameObject(_player->GetGameObject());
-	_playerCamera->GetTransform()->SetParent(_player->GetGameObject()->GetTransform());*/
-
-	//shared_ptr<MeshData> FemaleHero = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier2.bin"); // MeshData* meshData
-
-	//vector<shared_ptr<GameObject>> gameObjects = FemaleHero->Instantiate();
-
-	//for (auto& gameObject : gameObjects)
-	//{
-	//	gameObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
-	//	gameObject->SetCheckFrustum(true);
-	//	gameObject->SetStatic(true);
-	//	//AddGameObject(gameObject);
-	//}
-	//shared_ptr<GameObject> rootObject = gameObjects[0];
-
-	////rootObject->AddComponent(make_shared<Player>());
-	//rootObject->AddComponent(make_shared<PlayerScript>(_hwnd));
-	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.0f, 0.f));
-	//rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-
-	//_playerCamera->GetTransform()->SetParent(rootObject->GetTransform());
-
-#pragma endregion
 
 
 #pragma region Aiming Point
@@ -295,8 +267,8 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	/*Vec3 pos = _player->GetTransform()->GetLocalPosition();
-	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
-
+	Vec3 pos = _player->GetTransform()->GetLocalPosition();
+	printf("%f %f %f\n", pos.x, pos.y, pos.z);
+	
 	Scene::Update();
 }

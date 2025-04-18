@@ -77,6 +77,12 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
 		GetWeaponManager()->EquipWeapon(2);
 
+	// 내 위치 보내고
+
+
+
+	// 위치를 서버로부터 받아
+
 	GetTransform()->SetLocalPosition(pos);
 }
 
