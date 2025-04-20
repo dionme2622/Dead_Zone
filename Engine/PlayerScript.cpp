@@ -9,10 +9,11 @@
 #include "Engine.h"
 #include "WeaponManager.h"
 
-PlayerScript::PlayerScript(HWND hwnd)
+PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 {
 	_hwnd = hwnd;
-
+	_isLocal = isLocal;
+	_playerId = playerId;
 	// Player에 대한 정보 초기화 단계
 
 	_speed = 50.0f;
@@ -28,9 +29,26 @@ PlayerScript::~PlayerScript()
 
 void PlayerScript::LateUpdate()
 {
-	UpdatePlayerInput();
+	
 
 	//UpdatePlayerOnTerrain();
+
+	if (_isLocal)
+	{
+		// 1) 로컬 입력 읽어서 내 캐릭터 움직임 계산 → 클라이언트 예측
+		UpdatePlayerInput();
+	}
+	else
+	{
+		// 2) 원격 플레이어: 네트워크 상태를 받아서 Transform에 적용
+		// TODO : 여기서 다른 플레이어 객체들의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
+		// EX) 서버로 부터 자기 ID에 맞는 객체의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
+		GetTransform()->SetLocalPosition(Vec3(0.f, 50.f + 10 * DELTA_TIME, 0.f));		// 임시
+
+		
+		/*auto state = NetworkManager::Get()->GetPlayerState(_playerId);
+		ApplyNetworkState(state.position, state.rotationEuler, state.equippedWeapon);*/
+	}
 }
 
 
@@ -76,6 +94,14 @@ void PlayerScript::UpdateKeyInput()
 	
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
 		GetWeaponManager()->EquipWeapon(2);
+
+
+	// TODO : pos 값을 서버로 보낸다.
+
+
+	 
+	// TODO : pos 값을 서버로 받아.
+
 
 	GetTransform()->SetLocalPosition(pos);
 }

@@ -47,7 +47,7 @@ void WeaponManager::AddWeapon()
 	for (auto& gameObject : gameObjects)
 	{
 		shared_ptr<Weapon> weapon = make_shared<Weapon>();
-		gameObject->SetCheckFrustum(true);
+		gameObject->SetCheckFrustum(false);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
 		gameObject->GetMeshRenderer()->SetRender(false);
@@ -68,7 +68,7 @@ void WeaponManager::AddWeapon()
 	for (auto& gameObject : SMG)
 	{
 		shared_ptr<Weapon> weapon = make_shared<Weapon>();
-		gameObject->SetCheckFrustum(true);
+		gameObject->SetCheckFrustum(false);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
 		gameObject->GetMeshRenderer()->SetRender(false);
@@ -86,7 +86,7 @@ void WeaponManager::AddWeapon()
 	for (auto& gameObject : Bat)
 	{
 		shared_ptr<Weapon> weapon = make_shared<Weapon>();
-		gameObject->SetCheckFrustum(true);
+		gameObject->SetCheckFrustum(false);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
 		gameObject->GetMeshRenderer()->SetRender(false);
