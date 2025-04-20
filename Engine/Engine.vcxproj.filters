@@ -198,6 +198,9 @@
     <ClInclude Include="game_header.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkClient.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -352,6 +355,9 @@
     </ClCompile>
     <ClCompile Include="WeaponManager.cpp">
       <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkClient.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -74,6 +74,4 @@ struct ctos_packet_position {
 	float x, y, z;
 };
 
-
 #pragma pack (pop)
-

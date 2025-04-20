@@ -11,7 +11,6 @@
 #include <ws2tcpip.h>
 #include <mswsock.h>
 #include <thread>
-
 #pragma comment(lib, "ws2_32.lib")
 
 // °¢Á¾ include
@@ -26,6 +25,7 @@
 #include <map>
 
 #include "game_header.h"
+#include "NetworkClient.h"
 
 using namespace std;
 

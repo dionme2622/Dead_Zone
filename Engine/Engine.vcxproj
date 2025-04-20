@@ -193,6 +193,7 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="MonoBehaviour.h" />
     <ClInclude Include="MouseInput.h" />
+    <ClInclude Include="NetworkClient.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="OneHandedMeleeWeapon.h" />
     <ClInclude Include="ParticleSystem.h" />
@@ -245,6 +246,7 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="MouseInput.cpp" />
+    <ClCompile Include="NetworkClient.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OneHandedMeleeWeapon.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
