@@ -4,87 +4,8 @@
 #include "SceneManager.h"
 #include "KeyInput.h"
 
-#pragma once
 
-constexpr short GAME_PORT = 3000;
-//Packet Type - SToC
-constexpr char SToC_PLAYER_INFO = 1;
-constexpr char SToC_PLAYER_MOVE = 2;
-constexpr char SToC_PLAYER_ENTER = 3;
-constexpr char SToC_PLAYER_LEAVE = 4;
-constexpr char SToC_ALL_POSITION = 9;
-
-//Packet Type - CToS
-constexpr char CToS_PLAYER_LOGIN = 5;
-constexpr char CToS_PLAYER_POS = 6;
-
-
-constexpr char MAX_ID_LENGTH = 20;
-
-constexpr char MOVE_UP = 1;
-constexpr char MOVE_DOWN = 2;
-constexpr char MOVE_LEFT = 3;
-constexpr char MOVE_RIGHT = 4;
-
-#pragma pack (push, 1)
-//Packet - stoc
-struct stoc_packet_player_info {
-    unsigned char size;
-    char type;
-    long long  id;
-    short x, y;
-};
-
-struct stoc_packet_enter {
-    unsigned char size;
-    char type;
-    long long  id;
-    char name[MAX_ID_LENGTH];
-    char o_type;
-    short x, y;
-};
-
-struct stoc_packet_leave {
-    unsigned char size;
-    char type;
-    long long  id;
-};
-
-struct stoc_packet_move {
-    unsigned char size;
-    char type;
-    long long id;
-    short x, y;
-};
-
-struct stoc_packet_all_position {
-    unsigned char size;
-    char type;
-    short count;
-    struct {
-        long long id;
-        short x, y;
-    } players[10];  // 최대 10명
-};
-
-//Packet - ctos
-struct ctos_packet_login {
-    unsigned char  size;
-    char  type;
-    char  name[MAX_ID_LENGTH];
-};
-
-struct ctos_packet_position {
-    unsigned char size;
-    char type;
-    short x, y;
-};
-
-#pragma pack (pop)
-
-
-
-short my_x = 4, my_y = 4;
+float my_x = 4.001f, my_y = 4.002f, my_z = 4.003f;
 SOCKET sock;
 std::atomic<bool> running{ true };
 
@@ -106,12 +27,12 @@ void recv_thread(SOCKET sock) {
             switch (type) {
             case SToC_PLAYER_INFO: {
                 stoc_packet_player_info* p = reinterpret_cast<stoc_packet_player_info*>(&buffer[offset]);
-                std::cout << "[내 정보] ID: " << p->id << " 위치: (" << p->x << ", " << p->y << ")\n";
+                std::cout << "[내 정보] ID: " << p->id << " 위치: (" << p->x << ", " << p->y << ", " << p->z << ")\n";
                 break;
             }
             case SToC_PLAYER_ENTER: {
                 stoc_packet_enter* p = reinterpret_cast<stoc_packet_enter*>(&buffer[offset]);
-                std::cout << "[입장] ID: " << p->id << " 이름: " << p->name << " 위치: (" << p->x << ", " << p->y << ")\n";
+                std::cout << "[입장] ID: " << p->id << " 이름: " << p->name << " 위치: (" << p->x << ", " << p->y << ", " << p->z << ")\n";
                 break;
             }
             case SToC_PLAYER_LEAVE: {
@@ -124,7 +45,7 @@ void recv_thread(SOCKET sock) {
                 std::cout << "[전체 위치 업데이트] 인원수: " << p->count << "\n";
                 for (int i = 0; i < p->count; ++i) {
                     std::cout << "- ID: " << p->players[i].id << " 위치: ("
-                        << p->players[i].x << ", " << p->players[i].y << ")\n";
+                        << p->players[i].x << ", " << p->players[i].y << ", " << p->players[i].z << ")\n";
                 }
                 break;
             }
@@ -144,7 +65,7 @@ void pos_sender_thread() {
         pos.type = CToS_PLAYER_POS;
         pos.x = my_x;
         pos.y = my_y;
-
+        pos.z = my_z;
         send(sock, reinterpret_cast<char*>(&pos), sizeof(pos), 0);
         std::this_thread::sleep_for(std::chrono::seconds(1)); // 1초마다 전송
     }
@@ -152,6 +73,8 @@ void pos_sender_thread() {
 
 void Game::Init(const WindowInfo& info)
 {
+    ///////////////Server
+
     WSADATA wsaData;
     WSAStartup(MAKEWORD(2, 2), &wsaData);
 
@@ -181,9 +104,12 @@ void Game::Init(const WindowInfo& info)
     // 위치 송신 쓰레드 시작
     std::thread(pos_sender_thread).detach();
 
+    ///////////////Server
+
 	GEngine->Init(info);
 	
 	GET_SINGLE(SceneManager)->LoadScene(SCENETYPE::EBATTLESCENE);
+
 }
 
 void Game::Update()

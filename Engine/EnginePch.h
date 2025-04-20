@@ -24,6 +24,9 @@
 #include <array>
 #include <list>
 #include <map>
+
+#include "game_header.h"
+
 using namespace std;
 
 #include <filesystem>

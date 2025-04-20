@@ -180,6 +180,7 @@
     <ClInclude Include="EnginePch.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="game_header.h" />
     <ClInclude Include="GunWeapon.h" />
     <ClInclude Include="InstancingBuffer.h" />
     <ClInclude Include="InstancingManager.h" />

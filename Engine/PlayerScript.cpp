@@ -9,6 +9,8 @@
 #include "Engine.h"
 #include "WeaponManager.h"
 
+
+
 PlayerScript::PlayerScript(HWND hwnd)
 {
 	_hwnd = hwnd;
@@ -20,6 +22,8 @@ PlayerScript::PlayerScript(HWND hwnd)
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
 	_isGrounded = true;
+
+
 }
 
 PlayerScript::~PlayerScript()
@@ -78,7 +82,6 @@ void PlayerScript::UpdateKeyInput()
 		GetWeaponManager()->EquipWeapon(2);
 
 	// 내 위치 보내고
-
 
 
 	// 위치를 서버로부터 받아
@@ -152,8 +155,6 @@ void PlayerScript::UpdatePlayerOnTerrain()
 	}
 	GetTransform()->SetLocalPosition(pos);
 }
-
-
 
 
 

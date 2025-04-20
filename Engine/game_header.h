@@ -26,7 +26,7 @@ struct stoc_packet_player_info {
 	unsigned char size;
 	char type;
 	long long  id;
-	short x, y;
+	float x, y, z;
 };
 
 struct stoc_packet_enter {
@@ -35,7 +35,7 @@ struct stoc_packet_enter {
 	long long  id;
 	char name[MAX_ID_LENGTH];
 	char o_type;
-	short x, y;
+	float x, y, z;
 };
 
 struct stoc_packet_leave {
@@ -48,7 +48,7 @@ struct stoc_packet_move {
 	unsigned char size;
 	char type;
 	long long id;
-	short x, y;
+	float x, y, z;
 };
 
 struct stoc_packet_all_position {
@@ -57,7 +57,7 @@ struct stoc_packet_all_position {
 	short count;
 	struct {
 		long long id;
-		short x, y;
+		float x, y, z;
 	} players[64];  // √÷¥Î 64∏Ì
 };
 
@@ -71,8 +71,9 @@ struct ctos_packet_login {
 struct ctos_packet_position {
 	unsigned char size;
 	char type;
-	short x, y;
+	float x, y, z;
 };
+
 
 #pragma pack (pop)
 

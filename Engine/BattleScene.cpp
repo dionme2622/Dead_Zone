@@ -263,12 +263,12 @@ void BattleScene::LoadScene()
 #pragma endregion
 }
 
-
-
 void BattleScene::Update()
 {
-	Vec3 pos = _player->GetTransform()->GetLocalPosition();
-	printf("%f %f %f\n", pos.x, pos.y, pos.z);
+	/*Vec3 pos = _player->GetTransform()->GetLocalPosition();
+	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
 	
+
+
 	Scene::Update();
 }
