@@ -7,6 +7,7 @@ public:
 	Transform();
 	virtual ~Transform();
 
+	virtual void Update() override;
 	virtual void FinalUpdate() override;
 	Matrix GetToRootTransform();
 	Matrix GetLocalMatrix();

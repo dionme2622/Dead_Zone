@@ -21,11 +21,11 @@ Animator::~Animator()
 
 void Animator::FinalUpdate()
 {
-	_updateTime += DELTA_TIME;
+	_updateTime += DELTA_TIME * _speed;
 
 	const AnimClipInfo& animClip = _animClips->at(_clipIndex);  // 몇 번째 클립을 틀고있는지
 	if (_updateTime >= animClip.duration)
-		_updateTime = 0.f;
+		_updateTime = 0.0f;
 
 	_frameCount = animClip.frameCount;
 	_bonesCount = _bones->size();
@@ -77,6 +77,6 @@ void Animator::Play(uint32 idx)
 {
 	assert(idx < _animClips->size());
 	_clipIndex = idx;
-	_updateTime = 0.f;
+	_updateTime = 0.0f;
 }
 

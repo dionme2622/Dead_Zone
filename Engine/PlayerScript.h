@@ -4,7 +4,7 @@
 class PlayerScript : public MonoBehaviour
 {
 public:
-	PlayerScript(HWND hwnd);
+	PlayerScript(HWND hwnd, bool isLocal, int playerId);
 	virtual ~PlayerScript();
 
 	virtual void LateUpdate() override;
@@ -23,6 +23,10 @@ public:
 	void UpdatePlayerOnTerrain();
 
 private:
+	HWND _hwnd;
+	bool _isLocal;
+	int  _playerId;
+
 	float _speed;     // 기존에 있던 이동 속도
 	float _jumpVelocity;    // 점프 초기 속도
 	float _currentVelocity; // 현재 수직 속도
@@ -39,7 +43,6 @@ private:
 
 
 
-	HWND _hwnd;
 	bool _mouseMove;
 };
 

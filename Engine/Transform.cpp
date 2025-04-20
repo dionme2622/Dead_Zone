@@ -13,23 +13,32 @@ Transform::~Transform()
 
 }
 
+void Transform::Update()
+{
+	/*float radX = _localRotation.x * (XM_PI / 180.0f);
+	float radY = _localRotation.y * (XM_PI / 180.0f);
+	float radZ = _localRotation.z * (XM_PI / 180.0f);
+
+	Matrix matScale = Matrix::CreateScale(_localScale);
+	Matrix matRotation = Matrix::CreateRotationZ(radZ)
+		* Matrix::CreateRotationX(radX)
+		* Matrix::CreateRotationY(radY);
+	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
+
+	_matLocal = matScale * matRotation * matTranslation;
+
+
+	_matWorld = _matLocal;
+
+	shared_ptr<Transform> parent = GetParent().lock();
+	if (parent != nullptr)
+	{
+		_matWorld *= parent->GetLocalToWorldMatrix();
+	}*/
+}
+
 void Transform::FinalUpdate()
 {
-	//if (!_bManualMatrix)  // 수동 모드가 아니라면 기본 S, R, T 로 계산
-	//{
-	//	float radX = _localRotation.x * (XM_PI / 180.0f);
-	//	float radY = _localRotation.y * (XM_PI / 180.0f);
-	//	float radZ = _localRotation.z * (XM_PI / 180.0f);
-
-	//	Matrix matScale = Matrix::CreateScale(_localScale);
-	//	Matrix matRotation = Matrix::CreateRotationZ(radZ)
-	//		* Matrix::CreateRotationX(radX)
-	//		* Matrix::CreateRotationY(radY);
-	//	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
-
-	//	_matLocal = matScale * matRotation * matTranslation;
-	//}
-	// _matLocal이 수동으로 설정되었으면 그 값을 그대로 사용
 	float radX = _localRotation.x * (XM_PI / 180.0f);
 	float radY = _localRotation.y * (XM_PI / 180.0f);
 	float radZ = _localRotation.z * (XM_PI / 180.0f);
@@ -50,7 +59,6 @@ void Transform::FinalUpdate()
 	{
 		_matWorld *= parent->GetLocalToWorldMatrix();
 	}
-
 }
 
 Matrix Transform::GetToRootTransform()

@@ -14,10 +14,10 @@ public:
 
 private:
 	//shared_ptr<Player>			_player;
-	shared_ptr<GameObject>		_playerCamera;
-	shared_ptr<GameObject>		_uiCamera;
+	shared_ptr<GameObject>			_playerCamera;
+	shared_ptr<GameObject>			_uiCamera;
 
-	shared_ptr<GameObject>		_player;
+	vector<shared_ptr<GameObject>>	_player;
 	HWND _hwnd;
 
 public:

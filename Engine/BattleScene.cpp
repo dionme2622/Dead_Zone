@@ -30,40 +30,31 @@ BattleScene::BattleScene()
 
 void BattleScene::LoadScene()
 {
+	int _myID = 2;
+	int _theirID = 0;
 #pragma region LayerMask
 	SetLayerName(0, L"Battle");
 	SetLayerName(1, L"UI");
 #pragma endregion
 
-#pragma region PlayerCamera
+#pragma region DebugCamera
 	{
-		_playerCamera = make_shared<GameObject>();
-		_playerCamera->SetName(L"Main_Camera");
-		_playerCamera->AddComponent(make_shared<Transform>());
-		_playerCamera->AddComponent(make_shared<Camera>());
-		//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.0f, -20.f));
-		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-		uint8 layerIndex = LayerNameToIndex(L"UI");
-		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
-		AddGameObject(_playerCamera);
+		//_playerCamera = make_shared<GameObject>();
+		//_playerCamera->SetName(L"Debug_Camera");
+		//_playerCamera->AddComponent(make_shared<Transform>());
+		//_playerCamera->AddComponent(make_shared<Camera>());
+		////_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
+
+		//_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 2.0f, 7.f));
+		//_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+		//_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
+		//uint8 layerIndex = LayerNameToIndex(L"UI");
+		//_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
+		//AddGameObject(_playerCamera);
 	}
 #pragma endregion
 
-#pragma region UI_Camera
-	{
-		_uiCamera = make_shared<GameObject>();
-		_uiCamera->SetName(L"Orthographic_Camera");
-		_uiCamera->AddComponent(make_shared<Transform>());
-		_uiCamera->AddComponent(make_shared<Camera>());
-		_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
-		uint8 layerIndex = LayerNameToIndex(L"UI");
-		_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
-		_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
-		AddGameObject(_uiCamera);
-	}
-#pragma endregion
+
 
 #pragma region SkyBox
 	{
@@ -90,7 +81,90 @@ void BattleScene::LoadScene()
 	}
 #pragma endregion
 
+#pragma region Player1
+	_theirID = 1;
+	bool islocal = (_theirID == _myID);
 
+	shared_ptr<MeshData> FemaleSoldier_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin"); // MeshData* meshData
+
+	vector<shared_ptr<GameObject>> FemaleSoldier = FemaleSoldier_data->Instantiate();
+
+	shared_ptr<GameObject> player1 = FemaleSoldier[23];
+	for (auto& gameObject : FemaleSoldier)
+	{
+		//gameObject->SetName(L"FemaleSoldier");
+		gameObject->SetCheckFrustum(true);
+		gameObject->SetStatic(true);
+		gameObject->GetTransform()->FinalUpdate();
+		AddGameObject(gameObject);
+	}
+
+	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
+	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
+	player1->AddComponent(make_shared<WeaponManager>());												// Add Weapon Manager
+	player1->AddComponent(make_shared<PlayerStats>());
+
+	_player.push_back(player1);
+#pragma endregion
+
+#pragma region Player2
+	_theirID = 2;
+	islocal = (_theirID == _myID);
+
+	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
+
+	vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate();
+
+	shared_ptr<GameObject> player2 = FemaleHero[23];
+	for (auto& gameObject : FemaleHero)
+	{
+		//gameObject->SetName(L"FemaleSoldier");
+		gameObject->SetCheckFrustum(true);
+		gameObject->SetStatic(true);
+		gameObject->GetTransform()->FinalUpdate();
+		AddGameObject(gameObject);
+	}
+
+	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
+	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
+
+	_player.push_back(player2);
+
+#pragma endregion
+
+#pragma region PlayerCamera
+	{
+		_playerCamera = make_shared<GameObject>();
+		_playerCamera->SetName(L"Main_Camera");
+		_playerCamera->AddComponent(make_shared<Transform>());
+		_playerCamera->AddComponent(make_shared<Camera>());
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.01f, 2.03f, 0.65f));
+		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
+		AddGameObject(_playerCamera);
+
+		_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player¿¡°Ô Camera ¸¦ ºÙÀÎ´Ù.
+
+	}	
+	
+#pragma endregion
+
+
+#pragma region UI_Camera
+	{
+		_uiCamera = make_shared<GameObject>();
+		_uiCamera->SetName(L"Orthographic_Camera");
+		_uiCamera->AddComponent(make_shared<Transform>());
+		_uiCamera->AddComponent(make_shared<Camera>());
+		_uiCamera->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
+		_uiCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_uiCamera->GetCamera()->SetCullingMaskAll(); // ´Ù ²ô°í
+		_uiCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, false); // UI¸¸ Å´
+		AddGameObject(_uiCamera);
+	}
+#pragma endregion
 
 #pragma region Aiming Point
 
@@ -122,9 +196,9 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 500, 0));
+		light->GetTransform()->SetLocalPosition(Vec3(0, 800.f, 0));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
+		light->GetLight()->SetLightDirection(Vec3(0, -1.f, 0.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
@@ -148,27 +222,6 @@ void BattleScene::LoadScene()
 
 #pragma region Character
 	{
-		shared_ptr<MeshData> FemaleSoldier = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin"); // MeshData* meshData
-
-		vector<shared_ptr<GameObject>> gameObjects1 = FemaleSoldier->Instantiate();
-
-		_player = gameObjects1[23];
-		for (auto& gameObject : gameObjects1)
-		{
-			//gameObject->SetName(L"FemaleSoldier");
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			gameObject->GetTransform()->FinalUpdate();
-			AddGameObject(gameObject);
-		}
-		_player->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-		_player->AddComponent(make_shared<PlayerScript>(_hwnd));								// Add Player Controller
-		_player->AddComponent(make_shared<WeaponManager>());									// Add Weapon Manager
-		//_player->AddComponent(make_shared<PlayerStats>());
-		//_playerCamera->GetTransform()->SetParent(_player->GetTransform());
-	
-
-
 		shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
 
 		vector<shared_ptr<GameObject>> zombies = Zombie->Instantiate();
@@ -182,30 +235,29 @@ void BattleScene::LoadScene()
 		}
 		
 
-		zombies[0]->GetTransform()->SetLocalPosition(Vec3(10.f, 0.f, 0.f));
+		zombies[0]->GetTransform()->SetLocalPosition(Vec3(10.f, 0.f , 0.f));
 	}
 
 #pragma endregion
 
 
 #pragma region Map
-	//{
-	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo.bin"); // MeshData* meshData
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
 
-	//	shared_ptr<GameObject> rootObject = gameObjects[0];
+		shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	//	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	//}
+		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	}
 
 	//{
 	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\BldDemo.bin"); // MeshData* meshData

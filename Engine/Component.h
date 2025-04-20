@@ -13,8 +13,8 @@ enum class COMPONENT_TYPE : uint8
 	WEAPONMANAGER,
 	WEAPON,
 	// ...
-	MONO_BEHAVIOUR,
 	PLAYERSTATS,
+	MONO_BEHAVIOUR,			// 반드시 END 전에 위치해야한다.
 	END,
 };
 
