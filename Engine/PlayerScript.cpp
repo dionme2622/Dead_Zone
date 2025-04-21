@@ -9,6 +9,7 @@
 #include "Engine.h"
 #include "WeaponManager.h"
 
+
 PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 {
 	_hwnd = hwnd;
@@ -100,7 +101,14 @@ void PlayerScript::UpdateKeyInput()
 
 	// TODO : pos 값을 서버로 보낸다.
 
-
+	ctos_packet_position ctos_pos{};
+	ctos_pos.size = sizeof(ctos_pos);
+	ctos_pos.type = CToS_PLAYER_POS;
+	ctos_pos.x = pos.x;
+	ctos_pos.y = pos.y;
+	ctos_pos.z = pos.z;
+	send(sock, reinterpret_cast<char*>(&ctos_pos), sizeof(ctos_pos), 0);
+	//std::this_thread::sleep_for(std::chrono::seconds(1));
 	 
 	// TODO : pos 값을 서버로 받아.
 

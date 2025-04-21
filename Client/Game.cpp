@@ -14,7 +14,7 @@ void Game::Init(const WindowInfo& info)
     // 수신 쓰레드 시작
     std::thread(recv_thread, sock).detach();
     // 위치 송신 쓰레드 시작
-    std::thread(pos_sender_thread, sock).detach();
+    //std::thread(pos_sender_thread, sock).detach();
 
 	GEngine->Init(info);
 	

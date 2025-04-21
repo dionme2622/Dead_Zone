@@ -90,15 +90,15 @@ void recv_thread(SOCKET sock) {
     }
 }
 
-void pos_sender_thread(SOCKET sock) {
-    while (running) {
-        ctos_packet_position pos{};
-        pos.size = sizeof(pos);
-        pos.type = CToS_PLAYER_POS;
-        pos.x = my_x;
-        pos.y = my_y;
-        pos.z = my_z;
-        send(sock, reinterpret_cast<char*>(&pos), sizeof(pos), 0);
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-}
+//void pos_sender_thread(SOCKET sock) {
+//    while (running) {
+//        ctos_packet_position pos{};
+//        pos.size = sizeof(pos);
+//        pos.type = CToS_PLAYER_POS;
+//        pos.x = my_x;
+//        pos.y = my_y;
+//        pos.z = my_z;
+//        send(sock, reinterpret_cast<char*>(&pos), sizeof(pos), 0);
+//        std::this_thread::sleep_for(std::chrono::seconds(1));
+//    }
+//}
