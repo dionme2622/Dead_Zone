@@ -195,6 +195,7 @@
     <ClInclude Include="WeaponManager.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationStateMachine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -350,6 +351,7 @@
     <ClCompile Include="WeaponManager.cpp">
       <Filter>Object\Component</Filter>
     </ClCompile>
+    <ClCompile Include="AnimationStateMachine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
