@@ -43,10 +43,24 @@ void PlayerScript::LateUpdate()
 	}
 	else
 	{
+		
+
+
 		// 2) 원격 플레이어: 네트워크 상태를 받아서 Transform에 적용
 		// TODO : 여기서 다른 플레이어 객체들의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
 		// EX) 서버로 부터 자기 ID에 맞는 객체의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
-		GetTransform()->SetLocalPosition(Vec3(0.f, 50.f + 10 * DELTA_TIME, 0.f));		// 임시
+		std::lock_guard<std::mutex> lock(g_posMutex);
+
+		std::cout << "[LateUpdate] 전체 위치 정보\n";
+		for (const auto& [id, pos] : g_otherPlayerPositions)
+		{
+			float x = std::get<0>(pos);
+			float y = std::get<1>(pos);
+			float z = std::get<2>(pos);
+
+			std::cout << "- ID: " << id << " 위치: (" << x << ", " << y << ", " << z << ")\n";
+			GetTransform()->SetLocalPosition(Vec3(x, y, z));
+		}
 
 
 		
@@ -54,18 +68,7 @@ void PlayerScript::LateUpdate()
 		ApplyNetworkState(state.position, state.rotationEuler, state.equippedWeapon);*/
 	}
 
-	std::lock_guard<std::mutex> lock(g_posMutex);
-
-	std::cout << "[LateUpdate] 전체 위치 정보\n";
-	for (const auto& [id, pos] : g_otherPlayerPositions)
-	{
-		float x = std::get<0>(pos);
-		float y = std::get<1>(pos);
-		float z = std::get<2>(pos);
-
-		std::cout << "- ID: " << id << " 위치: (" << x << ", " << y << ", " << z << ")\n";
-	}
-
+	
 
 }
 

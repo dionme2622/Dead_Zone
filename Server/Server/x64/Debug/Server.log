@@ -1,3 +1,0 @@
-﻿  iocp_server.cpp
-C:\Users\wolf1\Desktop\Server\iocp_server.cpp(214,42): warning C4267: '=': 'size_t'에서 'unsigned char'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Server.vcxproj -> C:\Users\wolf1\Desktop\Server\x64\Debug\Server.exe
