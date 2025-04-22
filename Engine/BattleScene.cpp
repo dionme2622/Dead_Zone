@@ -24,14 +24,28 @@
 
 BattleScene::BattleScene()
 {
+
 }
 
 
 
 void BattleScene::LoadScene()
 {
-	int _myID = 2;
+	int _myID;
 	int _theirID = 0;
+	if (!g_receivedMyInfo)
+	{
+		std::cout << "[오류] 아직 내 플레이어 정보가 서버에서 도착하지 않았습니다.\n";
+		return;
+	}
+	if (g_myInfo.id == 0)
+		_myID = g_myInfo.id + 1;
+	else
+		_myID = 2;
+	std::cout << "[BattleScene] 내 ID는 " << _myID << ", 위치는 ("
+		<< g_myInfo.x << ", " << g_myInfo.y << ", " << g_myInfo.z << ")\n";
+	
+	
 #pragma region LayerMask
 	SetLayerName(0, L"Battle");
 	SetLayerName(1, L"UI");

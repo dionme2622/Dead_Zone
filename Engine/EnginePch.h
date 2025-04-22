@@ -24,6 +24,10 @@
 #include <list>
 #include <map>
 
+#include <unordered_map>
+#include <tuple>
+#include <mutex>
+
 #include "game_header.h"
 #include "NetworkClient.h"
 

@@ -4,6 +4,11 @@
 float my_x = 4.001f, my_y = 4.002f, my_z = 4.003f;
 SOCKET sock;
 std::atomic<bool> running{ true };
+bool g_receivedMyInfo = false;
+stoc_packet_player_info g_myInfo;
+
+std::unordered_map<long long, std::tuple<float, float, float>> g_otherPlayerPositions;
+std::mutex g_posMutex;
 
 bool ConnectAndLogin()
 {
@@ -61,6 +66,8 @@ void recv_thread(SOCKET sock) {
             case SToC_PLAYER_INFO: {
                 auto* p = reinterpret_cast<stoc_packet_player_info*>(&buffer[offset]);
                 std::cout << "[내 정보] ID: " << p->id << " 위치: (" << p->x << ", " << p->y << ", " << p->z << ")\n";
+                g_myInfo = *p;
+                g_receivedMyInfo = true;
                 break;
             }
             case SToC_PLAYER_ENTER: {
@@ -75,10 +82,17 @@ void recv_thread(SOCKET sock) {
             }
             case SToC_ALL_POSITION: {
                 auto* p = reinterpret_cast<stoc_packet_all_position*>(&buffer[offset]);
-                std::cout << "[전체 위치 업데이트] 인원수: " << p->count << "\n";
+
+                std::lock_guard<std::mutex> lock(g_posMutex);
+
                 for (int i = 0; i < p->count; ++i) {
-                    std::cout << "- ID: " << p->players[i].id << " 위치: (" << p->players[i].x << ", " << p->players[i].y << ", " << p->players[i].z << ")\n";
+                    g_otherPlayerPositions[p->players[i].id] = std::make_tuple(
+                        p->players[i].x,
+                        p->players[i].y,
+                        p->players[i].z
+                    );
                 }
+
                 break;
             }
             default:

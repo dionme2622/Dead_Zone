@@ -48,10 +48,25 @@ void PlayerScript::LateUpdate()
 		// EX) 서버로 부터 자기 ID에 맞는 객체의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
 		GetTransform()->SetLocalPosition(Vec3(0.f, 50.f + 10 * DELTA_TIME, 0.f));		// 임시
 
+
 		
 		/*auto state = NetworkManager::Get()->GetPlayerState(_playerId);
 		ApplyNetworkState(state.position, state.rotationEuler, state.equippedWeapon);*/
 	}
+
+	std::lock_guard<std::mutex> lock(g_posMutex);
+
+	std::cout << "[LateUpdate] 전체 위치 정보\n";
+	for (const auto& [id, pos] : g_otherPlayerPositions)
+	{
+		float x = std::get<0>(pos);
+		float y = std::get<1>(pos);
+		float z = std::get<2>(pos);
+
+		std::cout << "- ID: " << id << " 위치: (" << x << ", " << y << ", " << z << ")\n";
+	}
+
+
 }
 
 
