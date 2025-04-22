@@ -10,5 +10,6 @@ public:
 public:
 	virtual void Attack();
 	virtual void Reload();
+	virtual void DeleteBullet();
 };
 

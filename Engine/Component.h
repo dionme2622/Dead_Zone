@@ -12,6 +12,7 @@ enum class COMPONENT_TYPE : uint8
 	ANIMATOR,
 	WEAPONMANAGER,
 	WEAPON,
+	BULLET,
 	// ...
 	PLAYERSTATS,
 	MONO_BEHAVIOUR,			// 반드시 END 전에 위치해야한다.
@@ -30,6 +31,7 @@ class Animator;
 class BaseCollider;
 class WeaponManager;
 class Weapon;
+class Bullet;
 class PlayerStats;
 
 class Component : public Object
@@ -56,6 +58,7 @@ public:
 	shared_ptr<Animator> GetAnimator();
 	shared_ptr<WeaponManager> GetWeaponManager();
 	shared_ptr<Weapon> GetWeapon();
+	shared_ptr<Bullet> GetBullet();
 	shared_ptr<PlayerStats> GetPlayerStats();
 
 private:

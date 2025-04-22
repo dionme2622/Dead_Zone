@@ -9,3 +9,7 @@ void TwoHandedMeleeWeapon::Attack()
 void TwoHandedMeleeWeapon::Reload()
 {
 }
+
+void TwoHandedMeleeWeapon::DeleteBullet()
+{
+}

@@ -488,7 +488,6 @@ void BattleScene::CheckCollisions()
 			{
 				if (axes[i].LengthSquared() < 0.0001f) // 유효하지 않은 축 건너뛰기
 				{
-					//cout << "축이 무시됨\n" << endl;
 					continue;
 				}
 				axes[i].Normalize();

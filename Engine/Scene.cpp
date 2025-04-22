@@ -5,7 +5,6 @@
 #include "Engine.h"
 #include "ConstantBuffer.h"
 #include "Light.h"
-#include "Engine.h"
 #include "Resources.h"
 
 void Scene::Awake()
@@ -44,7 +43,7 @@ void Scene::FinalUpdate()
 {
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-		gameObject->FinalUpdate();
+		if(gameObject) gameObject->FinalUpdate();
 	}
 }
 
@@ -63,6 +62,7 @@ void Scene::Render()
 	RenderFinal();
 
 	RenderForward();
+
 }
 
 void Scene::ClearRTV()
@@ -225,5 +225,5 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 	auto findIt = std::find(_gameObjects.begin(), _gameObjects.end(), gameObject);
 	if (findIt != _gameObjects.end())
 		_gameObjects.erase(findIt);
-
+	
 }

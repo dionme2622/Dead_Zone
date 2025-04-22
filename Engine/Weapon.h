@@ -27,6 +27,7 @@ public:
 public:
 	virtual void Attack() = 0;
 	virtual void Reload() = 0;
+	virtual void DeleteBullet() = 0;
 
 
 public:

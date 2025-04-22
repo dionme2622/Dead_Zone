@@ -10,6 +10,7 @@
 #include "BaseCollider.h"
 #include "WeaponManager.h"
 #include "Weapon.h"
+#include "Bullet.h"
 #include "PlayerStats.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
@@ -122,6 +123,12 @@ shared_ptr<Weapon> GameObject::GetWeapon()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::WEAPON);
 	return static_pointer_cast<Weapon>(component);
+}
+
+shared_ptr<Bullet> GameObject::GetBullet()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BULLET);
+	return static_pointer_cast<Bullet>(component);
 }
 
 shared_ptr<PlayerStats> GameObject::GetPlayerStats()

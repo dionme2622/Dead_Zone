@@ -11,6 +11,7 @@ class BaseCollider;
 class ParticleSystem;
 class WeaponManager;
 class Weapon;
+class Bullet;
 class PlayerStats;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
@@ -32,6 +33,7 @@ public:
 	shared_ptr<Animator> GetAnimator();
 	shared_ptr<WeaponManager> GetWeaponManager();
 	shared_ptr<Weapon> GetWeapon();
+	shared_ptr<Bullet> GetBullet();
 	shared_ptr<PlayerStats> GetPlayerStats();
 
 	shared_ptr<Camera> GetCamera();

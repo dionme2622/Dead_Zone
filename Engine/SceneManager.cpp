@@ -23,12 +23,6 @@ void SceneManager::Update()
 	_activeScene->Update();
 	_activeScene->LateUpdate();
 	_activeScene->FinalUpdate();
-
-
-	/*if (INPUT->GetButtonDown(KEY_TYPE::LEFTCLICK))
-	{
-		LoadScene(SCENETYPE((ACTIVESCENE + 1)));
-	}*/
 }
 
 // TEMP

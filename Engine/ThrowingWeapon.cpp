@@ -8,3 +8,7 @@ void ThrowingWeapon::Attack()
 void ThrowingWeapon::Reload()
 {
 }
+
+void ThrowingWeapon::DeleteBullet()
+{
+}

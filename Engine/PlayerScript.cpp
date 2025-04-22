@@ -30,17 +30,17 @@ void PlayerScript::LateUpdate()
 
 	//UpdatePlayerOnTerrain();
 
-	/*Vec3 playerPosition = GetTransform()->GetLocalPosition();
+	Vec3 playerPosition = GetTransform()->GetLocalPosition();
 	Vec3 cameraPosition = playerPosition;
-	_cameraTransform->SetLocalPosition(cameraPosition);*/
+	_cameraTransform->SetLocalPosition(cameraPosition);
 
-	//// 디버깅용
-	//{
-	//	Vec3 pos = _cameraTransform->GetLocalPosition();
-	//	pos += GetTransform()->GetUp() * 3;
-	//	pos -= GetTransform()->GetLook() * 10.f;
-	//	_cameraTransform->SetLocalPosition(pos);
-	//}
+	// 디버깅용
+	{
+		Vec3 pos = _cameraTransform->GetLocalPosition();
+		pos += GetTransform()->GetUp() * 3;
+		pos -= GetTransform()->GetLook() * 10.f;
+		_cameraTransform->SetLocalPosition(pos);
+	}
 }
 
 
@@ -102,9 +102,6 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
 		GetWeaponManager()->EquipWeapon(2);
 
-	/*if (INPUT->마우스좌클릭)
-		GetWeaponManager()->GetCurrentWeapon()->GetWeapon()->Attack*/
-
 	if (INPUT->GetButton(KEY_TYPE::LEFTCLICK))
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
 
@@ -154,8 +151,8 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 	_yaw += deltaX * sensitivity;
 
 	// 플레이어는 Yaw 회전만 적용 (Pitch는 제외)
-	//Vec3 rotation = Vec3(0.0f, _yaw * 50, 0.0f); // Pitch는 0으로 유지
-	//GetTransform()->SetLocalRotation(rotation);
+	Vec3 rotation = Vec3(0.0f, _yaw * 50, 0.0f); // Pitch는 0으로 유지
+	GetTransform()->SetLocalRotation(rotation);
 	
 	// 디버그용
 	{
@@ -164,8 +161,8 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 	}
 
 	// 카메라는 Pitch와 Yaw 모두 적용
-	//Vec3 cameraRotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); // Pitch와 Yaw 적용
-	//_cameraTransform->SetLocalRotation(cameraRotation);
+	Vec3 cameraRotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); // Pitch와 Yaw 적용
+	_cameraTransform->SetLocalRotation(cameraRotation);
 }
 
 void PlayerScript::UpdatePlayerOnTerrain()
