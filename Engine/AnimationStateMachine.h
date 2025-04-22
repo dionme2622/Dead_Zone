@@ -17,7 +17,7 @@ struct AnimTransition
     EAnimState    from;
     EAnimState    to;
     // 조건이 true 이면 전이
-    std::function<bool()>  condition;
+    function<bool()>  condition;
     float          exitTime;       // 현재 클립 진행(0~1) 이후에만 전이
     float          blendDuration;  // 블렌딩 시간(초)
 };
@@ -25,7 +25,7 @@ struct AnimTransition
 class AnimationStateMachine
 {
 public:
-    AnimationStateMachine(std::shared_ptr<Animator> animator);
+    AnimationStateMachine(shared_ptr<Animator> animator);
 
     // 매 프레임 호출
     void Update(float deltaTime);
@@ -52,7 +52,7 @@ private:
     bool  _didJump = false;
     bool  _attackTriggered = false;
 
-    std::vector<AnimTransition> _transitions;
+    vector<AnimTransition> _transitions;
     float _blendDurationDefault = 0.2f;
 
     // Helper: 스테이트 → 애니메이션 클립 인덱스 매핑

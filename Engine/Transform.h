@@ -35,7 +35,7 @@ public:
 	void SetLocalMatrix(Matrix& matrix) { _matLocal = matrix;  _bManualMatrix = true;}
 	void LookAt(const Vec3& dir);
 
-	static bool CloseEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon());
+	static bool CloseEnough(const float& a, const float& b, const float& epsilon = numeric_limits<float>::epsilon());
 	static Vec3 DecomposeRotationMatrix(const Matrix& rotation);
 
 public:

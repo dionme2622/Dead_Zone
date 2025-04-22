@@ -2,7 +2,7 @@
 #include "AnimationStateMachine.h"
 #include "Animator.h"
 
-AnimationStateMachine::AnimationStateMachine(std::shared_ptr<Animator> animator)
+AnimationStateMachine::AnimationStateMachine(shared_ptr<Animator> animator)
     : _animator(animator)
 {
     // 트랜지션들을 등록

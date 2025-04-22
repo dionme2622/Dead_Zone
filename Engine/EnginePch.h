@@ -1,6 +1,6 @@
 #pragma once
 
-// std::byte 사용하지 않음
+// byte 사용하지 않음
 #define _HAS_STD_BYTE 0
 
 // 각종 include
@@ -16,7 +16,7 @@
 using namespace std;
 
 #include <filesystem>
-namespace fs = std::filesystem;
+namespace fs = filesystem;
 
 #include "d3dx12.h"
 #include "SimpleMath.h"
@@ -200,19 +200,19 @@ extern unique_ptr<class Engine> GEngine;
 //	// roll (x-axis rotation)
 //	float sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
 //	float cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-//	euler.x = std::atan2(sinr_cosp, cosr_cosp);
+//	euler.x = atan2(sinr_cosp, cosr_cosp);
 //
 //	// pitch (y-axis rotation)
 //	float sinp = 2 * (q.w * q.y - q.z * q.x);
-//	if (std::abs(sinp) >= 1)
-//		euler.y = std::copysign(DirectX::XM_PIDIV2, sinp); // 90도 클램핑
+//	if (abs(sinp) >= 1)
+//		euler.y = copysign(DirectX::XM_PIDIV2, sinp); // 90도 클램핑
 //	else
-//		euler.y = std::asin(sinp);
+//		euler.y = asin(sinp);
 //
 //	// yaw (z-axis rotation)
 //	float siny_cosp = 2 * (q.w * q.z + q.x * q.y);
 //	float cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-//	euler.z = std::atan2(siny_cosp, cosy_cosp);
+//	euler.z = atan2(siny_cosp, cosy_cosp);
 //
 //	return euler;
 //}

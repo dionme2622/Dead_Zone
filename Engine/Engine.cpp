@@ -116,7 +116,7 @@ void Engine::CreateRenderTargetGroups()
 
 		for (uint32 i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 		{
-			wstring name = L"SwapChainTarget_" + std::to_wstring(i);
+			wstring name = L"SwapChainTarget_" + to_wstring(i);
 			ComPtr<ID3D12Resource> resource;
 			_swapChain->GetSwapChain()->GetBuffer(i, IID_PPV_ARGS(&resource));
 			rtVec[i].target = GET_SINGLE(Resources)->CreateTextureFromResource(name, resource);

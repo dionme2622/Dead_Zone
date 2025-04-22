@@ -47,7 +47,7 @@ private:
 	void CreateDefaultMaterial();
 
 private:
-	using KeyObjMap = std::map<wstring/*key*/, shared_ptr<Object>>;
+	using KeyObjMap = map<wstring/*key*/, shared_ptr<Object>>;
 	array<KeyObjMap, OBJECT_TYPE_COUNT> _resources;
 
 	unordered_map<wstring, shared_ptr<AnimClipInfo>> _animClips;		// 애니메이션 클립 map
@@ -103,17 +103,17 @@ shared_ptr<T> Resources::Get(const wstring& key)
 template<typename T>
 inline OBJECT_TYPE Resources::GetObjectType()
 {
-	if (std::is_same_v<T, GameObject>)
+	if (is_same_v<T, GameObject>)
 		return OBJECT_TYPE::GAMEOBJECT;
-	else if (std::is_same_v<T, Material>)
+	else if (is_same_v<T, Material>)
 		return OBJECT_TYPE::MATERIAL;
-	else if (std::is_same_v<T, Mesh>)
+	else if (is_same_v<T, Mesh>)
 		return OBJECT_TYPE::MESH;
-	else if (std::is_same_v<T, Shader>)
+	else if (is_same_v<T, Shader>)
 		return OBJECT_TYPE::SHADER;
-	else if (std::is_same_v<T, Texture>)
+	else if (is_same_v<T, Texture>)
 		return OBJECT_TYPE::TEXTURE;
-	else if (std::is_convertible_v<T, Component>)
+	else if (is_convertible_v<T, Component>)
 		return OBJECT_TYPE::COMPONENT;
 	else
 		return OBJECT_TYPE::NONE;

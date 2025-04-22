@@ -210,18 +210,18 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 {
 	if (gameObject->GetCamera())
 	{
-		auto findIt = std::find(_cameras.begin(), _cameras.end(), gameObject->GetCamera());
+		auto findIt = find(_cameras.begin(), _cameras.end(), gameObject->GetCamera());
 		if (findIt != _cameras.end())
 			_cameras.erase(findIt);
 	}
 	else if (gameObject->GetLight())
 	{
-		auto findIt = std::find(_lights.begin(), _lights.end(), gameObject->GetLight());
+		auto findIt = find(_lights.begin(), _lights.end(), gameObject->GetLight());
 		if (findIt != _lights.end())
 			_lights.erase(findIt);
 	}
 
-	auto findIt = std::find(_gameObjects.begin(), _gameObjects.end(), gameObject);
+	auto findIt = find(_gameObjects.begin(), _gameObjects.end(), gameObject);
 	if (findIt != _gameObjects.end())
 		_gameObjects.erase(findIt);
 }

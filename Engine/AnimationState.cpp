@@ -2,8 +2,8 @@
 #include "AnimationState.h"
 #include "Transition.h"
 
-AnimationState::AnimationState(const wstring& name, shared_ptr<AnimClipInfo> clip, int index, float speed = 1.0f, bool loop = true)
-    : _name(name), _clip(clip), _clipIndex(index), _speed(speed), _loop(loop) {}
+AnimationState::AnimationState(const wstring& name, shared_ptr<AnimClipInfo> clip, int32 _clipIndex, float speed, bool loop)
+    : _name(name), _clip(clip), _clipIndex(_clipIndex), _speed(speed), _loop(loop) {}
 
 void AnimationState::AddTransition(shared_ptr<Transition> transition)
 {
