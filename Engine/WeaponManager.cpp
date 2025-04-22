@@ -30,7 +30,7 @@ void WeaponManager::PushData()
 	for (auto& weapon : _currentWeapon)
 	{
 		weapon->GetWeapon()->SetCharacterMatrix(_characterWorldMat);							// Weapon 객체로 캐릭터의 월드 행렬을 보낸다.
-		weapon->GetWeapon()->SetBoneFinalMatrix(GetAnimator()->GetBoneKeyFrameMatirx());		// Weapon 객체로 뼈의 최종 행렬을 보낸다.
+		weapon->GetWeapon()->SetBoneFinalMatrix(GetAnimator()->GetBoneKeyFrameMatrix());		// Weapon 객체로 뼈의 최종 행렬을 보낸다.
 	}
 }
 

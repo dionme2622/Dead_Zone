@@ -196,6 +196,10 @@
       <Filter>Object\Component</Filter>
     </ClInclude>
     <ClInclude Include="AnimationStateMachine.h" />
+    <ClInclude Include="AnimatorController.h" />
+    <ClInclude Include="AnimationState.h" />
+    <ClInclude Include="AnimatorParameter.h" />
+    <ClInclude Include="Transition.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -352,6 +356,9 @@
       <Filter>Object\Component</Filter>
     </ClCompile>
     <ClCompile Include="AnimationStateMachine.cpp" />
+    <ClCompile Include="AnimatorController.cpp" />
+    <ClCompile Include="AnimationState.cpp" />
+    <ClCompile Include="Transition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

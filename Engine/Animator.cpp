@@ -6,13 +6,16 @@
 #include "Mesh.h"
 #include "MeshRenderer.h"
 #include "StructuredBuffer.h"
+#include "AnimatorController.h"
+#include "AnimationState.h"
 
 Animator::Animator() : Component(COMPONENT_TYPE::ANIMATOR)
 {
 	_computeMaterial = GET_SINGLE(Resources)->Get<Material>(L"ComputeAnimation");
 	_boneFinalMatrix = make_shared<StructuredBuffer>();
-	_bonekeyFrameMatrix = make_shared<StructuredBuffer>();
+	_boneKeyFrameMatrix = make_shared<StructuredBuffer>();
 
+	_controller = GET_SINGLE(Resources)->LoadAnimatorController();
 }
 
 Animator::~Animator()
@@ -21,45 +24,64 @@ Animator::~Animator()
 
 void Animator::FinalUpdate()
 {
-	_updateTime += DELTA_TIME * _speed;
+	if (_controller == nullptr || _bones == nullptr )
+		return;
 
-	const AnimClipInfo& animClip = _animClips->at(_clipIndex);  // 몇 번째 클립을 틀고있는지
-	if (_updateTime >= animClip.duration)
-		_updateTime = 0.0f;
+	// 1. 상태 전이 갱신
+	//_controller->Update(shared_from_this());
 
-	_frameCount = animClip.frameCount;
-	_bonesCount = _bones->size();
+	auto state = _controller->GetCurrentState();				// 컨트롤러의 현재 State를 가져온다
+	auto currentClip = _controller->GetCurrentClip();			// 컨트롤러의 현재 State의 애니메이션 클립을 가져온다
+	if (state)
+	{
+		_speed = state->GetSpeed();
+		_loop = state->IsLooping();  // bool _loop 멤버 추가해주면 좋아
 
-	const int32 ratio = static_cast<int32>(animClip.frameCount / animClip.duration);
-	_frame = static_cast<int32>(_updateTime * ratio);
-	_frame = min(_frame, animClip.frameCount - 1);
-	_nextFrame = min(_frame + 1, animClip.frameCount - 1);
-	_frameRatio = static_cast<float>(_nextFrame - _frame);		// [질문] _nextFrame을 넣어야하지않나?
+		// 그리고 아래처럼 애니메이션 시간을 조절해
+		_updateTime += DELTA_TIME * _speed;
 
+		
+		if (_loop)
+		{
+			if (_updateTime >= currentClip->duration)
+				_updateTime = 0.f;
+		}
+		else
+		{
+			_updateTime = min(_updateTime, currentClip->duration);
+		}
+	}
+
+	// 4. 프레임 계산
+	_frameCount = currentClip->frameCount;
+	_bonesCount = static_cast<int32>(_bones->size());
+
+	float frameDuration = currentClip->duration / static_cast<float>(_frameCount);
+	_frame = static_cast<int32>(_updateTime / frameDuration);
+	_nextFrame = min(_frame + 1, _frameCount - 1);
+	_frameRatio = (_updateTime - (_frame * frameDuration)) / frameDuration;
 }
 
-void Animator::SetAnimClip(const vector<AnimClipInfo>* animClips)
-{
-	_animClips = animClips;
-}
 
 void Animator::PushData()
 {
 	if (_boneFinalMatrix->GetElementCount() < _bonesCount)
 		_boneFinalMatrix->Init(sizeof(Matrix), _bonesCount);
 
-	if (_bonekeyFrameMatrix->GetElementCount() < _bonesCount)
-		_bonekeyFrameMatrix->Init(sizeof(Matrix), _bonesCount);
+	if (_boneKeyFrameMatrix->GetElementCount() < _bonesCount)
+		_boneKeyFrameMatrix->Init(sizeof(Matrix), _bonesCount);
 
-	// Compute Shader
+
+	// Compute Shader에 클립 데이터 전송
+	auto currentClipIndex = _controller->GetCurrentClipIndex();									// 컨트롤러의 현재 State의 애니메이션 클립 Index 값을 가져온다
 	shared_ptr<Mesh> mesh = GetGameObject()->GetMeshRenderer()->GetMesh();
-	mesh->GetBoneFrameDataBuffer(_clipIndex)->PushComputeSRVData(SRV_REGISTER::t8);
-	mesh->GetBoneOffsetBuffer()->PushComputeSRVData(SRV_REGISTER::t9);
+	mesh->GetBoneFrameDataBuffer(currentClipIndex)->PushComputeSRVData(SRV_REGISTER::t8);		// 컨트롤러의 현재 State의 몇 번째 애니메이션 클립인지 보내야 한다.
+	mesh->GetBoneOffsetBuffer()->PushComputeSRVData(SRV_REGISTER::t9);						// 그대로 유지
 
 	_boneFinalMatrix->PushComputeUAVData(UAV_REGISTER::u0);
-	_bonekeyFrameMatrix->PushComputeUAVData(UAV_REGISTER::u1);
+	_boneKeyFrameMatrix->PushComputeUAVData(UAV_REGISTER::u1);
 
-
+	// 파라미터 설정
 	_computeMaterial->SetInt(0, _bonesCount);
 	_computeMaterial->SetInt(1, _frame);
 	_computeMaterial->SetInt(2, _nextFrame);
@@ -68,15 +90,8 @@ void Animator::PushData()
 
 	uint32 groupCount = (_frameCount / 256) + 1;
 	_computeMaterial->Dispatch(groupCount, 1, 1);
-	
-	// Graphics Shader
-	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);		// 얘를 총 오브젝트에도 넘겨야 함
-}
 
-void Animator::Play(uint32 idx)
-{
-	assert(idx < _animClips->size());
-	_clipIndex = idx;
-	_updateTime = 0.0f;
+	// 그래픽 셰이더용 데이터 전달
+	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
 }
 

@@ -62,7 +62,6 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		info.transform = transform;
 		info.boxCollider = boxCollider;
 
-		
 
 		////////////////////////////////////////
 		meshData->_meshRenders.push_back(info);
@@ -120,13 +119,13 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 				}
 #endif
 			}
-			if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
+			if (info.mesh->hasAnimation())				// Mesh가 애니메이션을 가지고 있다면?
 			{
 				shared_ptr<Animator> animator = make_shared<Animator>();
 				animator->SetBones(info.mesh->GetBones());
-				animator->SetAnimClip(info.mesh->GetAnimClip());
+				animator->SetController(GET_SINGLE(Resources)->LoadAnimatorController());			// 미리 만들어둔 컨트롤러를 연결한다
 				gameObject->AddComponent(animator);
-				gameObject->AddComponent(make_shared<TestAnimation>());
+				//gameObject->AddComponent(make_shared<TestAnimation>());
 			}
 		}
 		v.push_back(gameObject);

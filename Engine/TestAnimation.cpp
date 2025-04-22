@@ -15,14 +15,14 @@ void TestAnimation::Update()
 		GetAnimator()->Play(index);
 	}*/
 
-	if (INPUT->GetButtonDown(KEY_TYPE::KEY_4))
+	/*if (INPUT->GetButtonDown(KEY_TYPE::KEY_4))
 	{
 		int32 count = GetAnimator()->GetAnimCount();
 		int32 currentIndex = GetAnimator()->GetCurrentClipIndex();
 
 		int32 index = (currentIndex + 1) % count;
 		GetAnimator()->Play(index);
-	}
+	}*/
 
 	Vec3 pos = GetTransform()->GetLocalPosition();
 

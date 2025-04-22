@@ -2,6 +2,8 @@
 #include "Resources.h"
 #include "Engine.h"
 #include "MeshData.h"
+#include "AnimatorController.h"
+#include "AnimationState.h"
 
 void Resources::Init()
 {
@@ -266,6 +268,22 @@ shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
 	return meshData;
 }
 
+shared_ptr<AnimatorController> Resources::LoadAnimatorController()
+{
+	shared_ptr<AnimatorController> controller = make_shared<AnimatorController>();
+
+	shared_ptr<AnimationState> state = make_shared<AnimationState>(L"Idle", GetAnimClip(L"Idle"), 5, 1.0f, true);		// 이런 식으로 state 생성
+	shared_ptr<AnimationState> state2 = make_shared<AnimationState>(L"Walk", GetAnimClip(L"Walk"), 6, 1.0f, true);		// 이런 식으로 state 생성
+	shared_ptr<AnimationState> state3 = make_shared<AnimationState>(L"Run", GetAnimClip(L"Run"), 7, 1.0f, true);		// 이런 식으로 state 생성
+
+
+	controller->AddState(state);				// State를 추가한다.
+	controller->AddState(state2);
+	controller->AddState(state3);
+	controller->SetDefaultState(L"Walk");		// Idle 상태를 Default State로 만든다.
+	return controller;
+}
+
 //void Resources::LoadSceneFromBinary(const wstring& path)
 //{
 //	wstring name;
@@ -294,6 +312,20 @@ shared_ptr<Texture> Resources::CreateTextureFromResource(const wstring& name, Co
 
 	return texture;
 }
+
+void Resources::AddAnimClip(const wstring& key, shared_ptr<AnimClipInfo> clip)
+{
+	_animClips[key] = clip;
+}
+
+shared_ptr<AnimClipInfo> Resources::GetAnimClip(const wstring& key) const
+{
+	auto it = _animClips.find(key);
+	if (it != _animClips.end())
+		return it->second;
+	return nullptr;
+}
+
 
 void Resources::CreateDefaultShader()
 {
