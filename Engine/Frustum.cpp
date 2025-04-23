@@ -30,15 +30,15 @@ void Frustum::FinalUpdate()
 
 bool Frustum::ContainsSphere(const Vec3& pos, float radius)
 {
-    //for (const Vec4& plane : _planes)
-    //{
-    //    // n = (a, b, c)
-    //    Vec3 normal = Vec3(plane.x, plane.y, plane.z);
+    for (const Vec4& plane : _planes)
+    {
+        // n = (a, b, c)
+        Vec3 normal = Vec3(plane.x, plane.y, plane.z);
 
-    //    // ax + by + cz + d > radius
-    //    if (normal.Dot(pos) + plane.w > radius)
-    //        return false;
-    //}
+        // ax + by + cz + d > radius
+        if (normal.Dot(pos) + plane.w > radius)
+            return false;
+    }
 
     return true;
 }
