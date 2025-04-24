@@ -1,40 +1,59 @@
+// AnimatorController.h
 #pragma once
-#include "Mesh.h"
-
-class Animator;
-class AnimationState;
-class AnimatorParameter;
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <memory>
+#include "AnimatorParameter.h"
+#include "AnimationState.h"
 
 class AnimatorController
 {
 public:
-    AnimatorController();
-    ~AnimatorController();
+    void AddParameter(const AnimatorParameter& param)
+    {
+        int idx = (int)_paramDefs.size();
+        _paramMap[param.name] = idx;
+        _paramDefs.push_back(param);
+    }
 
-    void Update(shared_ptr<Animator> animator);
+    void AddState(shared_ptr<AnimationState> state)
+    {
+        _states[state->GetName()] = state;
+    }
 
-    void AddState(shared_ptr<AnimationState> state);
-    void SetAnyState(shared_ptr<AnimationState> state);
-    void SetDefaultState(const wstring& name);
-    void SetState(const wstring& name);
+    void SetEntryState(const wstring& name)
+    {
+        _entryState = _states[name];
+        _currentState = _entryState;
+    }
 
+    void SetAnyState(const wstring& name)
+    {
+        _anyState = _states[name];
+    }
+
+    void SetCurrentState(const wstring& name)
+    {
+        _currentState = _states[name];
+    }
     shared_ptr<AnimationState> GetCurrentState() const { return _currentState; }
-    shared_ptr<AnimClipInfo> GetCurrentClip() const;
-    const int GetCurrentClipIndex() const;
+    shared_ptr<AnimationState> GetEntryState() const { return _entryState; }
+    shared_ptr<AnimationState> GetAnyState() const { return _anyState; }
 
-    void AddParameter(const AnimatorParameter& parameter);
-    void SetBool(const string& name, bool value);
-    void SetFloat(const string& name, float value);
-    void SetInt(const string& name, int value);
-    bool GetBool(const string& name) const;
-    float GetFloat(const string& name) const;
-    int GetInt(const string& name) const;
+    const vector<AnimatorParameter>& GetParamDefs() const { return _paramDefs; }
+    int GetParamIndex(const string& name) const
+    {
+        auto it = _paramMap.find(name);
+        return it == _paramMap.end() ? -1 : it->second;
+    }
 
 private:
+    vector<AnimatorParameter> _paramDefs;
+    unordered_map<string, int> _paramMap;
+
     unordered_map<wstring, shared_ptr<AnimationState>> _states;
-    shared_ptr<AnimationState> _defaultState;
+    shared_ptr<AnimationState> _entryState;
     shared_ptr<AnimationState> _anyState;
     shared_ptr<AnimationState> _currentState;
-
-    unordered_map<string, AnimatorParameter> _parameters;
 };

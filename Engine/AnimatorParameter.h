@@ -1,26 +1,16 @@
 ﻿#pragma once
 #include <string>
 
-enum class ParameterConditionType
-{
-    EQUAL,
-    GREATER,
-    LESS
-};
-
 enum class ParameterType
 {
-    BOOL,
-    FLOAT,
-    INT,
+    Bool,
+    Float,
+    Trigger,
 };
 
 struct AnimatorParameter
 {
     string name;
     ParameterType type;
-
-    bool boolValue = false;
-    float floatValue = 0.0f;
-    int intValue = 0;
+    float defaultValue;
 };

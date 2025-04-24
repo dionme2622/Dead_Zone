@@ -8,58 +8,119 @@
 #include "StructuredBuffer.h"
 #include "AnimatorController.h"
 #include "AnimationState.h"
+#include "KeyInput.h"
 
-Animator::Animator() : Component(COMPONENT_TYPE::ANIMATOR)
+Animator::Animator(shared_ptr<AnimatorController> controller) : Component(COMPONENT_TYPE::ANIMATOR), _controller(controller)
 {
+	// 컨트롤러에 정의된 파라미터 개수만큼 벡터 초기화
+	int paramCount = (int)_controller->GetParamDefs().size();
+	_floatParams.assign(paramCount, 0.0f);
+	_boolParams.assign(paramCount, false);
+	_triggerParams.assign(paramCount, false);
+
+	// 기본값 채우기
+	for (int i = 0; i < paramCount; ++i) {
+		const auto& def = _controller->GetParamDefs()[i];
+		_floatParams[i] = def.defaultValue;
+		if (def.type == ParameterType::Bool)
+			_boolParams[i] = (def.defaultValue != 0.0f);
+	}
+
+	// 초기 스테이트
+	_currentState = _controller->GetEntryState();
+
+	// GPU 스키닝 리소스
 	_computeMaterial = GET_SINGLE(Resources)->Get<Material>(L"ComputeAnimation");
 	_boneFinalMatrix = make_shared<StructuredBuffer>();
 	_boneKeyFrameMatrix = make_shared<StructuredBuffer>();
-
-	_controller = GET_SINGLE(Resources)->LoadAnimatorController();
 }
 
-Animator::~Animator()
-{
-}
+
 
 void Animator::FinalUpdate()
 {
-	if (_controller == nullptr || _bones == nullptr )
+	if (!_controller)
 		return;
 
-	// 1. 상태 전이 갱신
-	//_controller->Update(shared_from_this());
+	if (INPUT->GetButton(KEY_TYPE::Q))
+		_controller->SetCurrentState(L"Walk");
+	if (INPUT->GetButton(KEY_TYPE::E))
+		_controller->SetCurrentState(L"Idle");
 
-	auto state = _controller->GetCurrentState();				// 컨트롤러의 현재 State를 가져온다
-	auto currentClip = _controller->GetCurrentClip();			// 컨트롤러의 현재 State의 애니메이션 클립을 가져온다
-	if (state)
-	{
-		_speed = state->GetSpeed();
-		_loop = state->IsLooping();  // bool _loop 멤버 추가해주면 좋아
 
-		// 그리고 아래처럼 애니메이션 시간을 조절해
-		_updateTime += DELTA_TIME * _speed;
+	
 
-		
-		if (_loop)
-		{
-			if (_updateTime >= currentClip->duration)
-				_updateTime = 0.f;
+	
+	// 1) 전이 평가
+	EvaluateTransitions();
+	// 2) 시간 누적 및 전이 처리
+	AdvanceTime();
+	// 3) 프레임 인덱스 계산
+	ComputeFrameValues();
+}
+
+void Animator::EvaluateTransitions()
+{
+	// 현재 스테이트 전이
+	for (auto& t : _currentState->GetTransitions()) {
+		if (t->IsConditionMet(_floatParams, _boolParams, _triggerParams)) {
+			_nextState = t->GetTarget();
+			_inTransition = true;
+			_transitionTime = 0.0f;
+			return;
 		}
-		else
-		{
-			_updateTime = min(_updateTime, currentClip->duration);
+	}
+	// Any-State 전이
+	auto anyState = _controller->GetAnyState();
+	if (anyState) {
+		for (auto& t : anyState->GetTransitions()) {
+			if (t->IsConditionMet(_floatParams, _boolParams, _triggerParams)) {
+				_nextState = t->GetTarget();
+				_inTransition = true;
+				_transitionTime = 0.0f;
+				return;
+			}
+		}
+	}
+}
+
+void Animator::AdvanceTime()
+{
+	float dt = DELTA_TIME * _currentState->GetSpeed();
+	_stateTime += dt;
+
+	
+	auto clip = _currentState->GetClip();
+	if (_currentState->IsLooping()) {
+		if (_stateTime >= clip->duration)
+			_stateTime = fmodf(_stateTime, clip->duration);
+	}
+	else {
+		_stateTime = (_stateTime < clip->duration) ? _stateTime : clip->duration;
+	}
+
+	if (_inTransition) {
+		_transitionTime += dt;
+		float dur =  /* transition duration 가져오기 */ 0.f;
+		if (_transitionTime >= dur) {
+			_inTransition = false;
+			_currentState = _nextState;
+			_stateTime = _transitionTime - dur;
 		}
 	}
 
-	// 4. 프레임 계산
-	_frameCount = currentClip->frameCount;
-	_bonesCount = static_cast<int32>(_bones->size());
+}
 
-	float frameDuration = currentClip->duration / static_cast<float>(_frameCount);
-	_frame = static_cast<int32>(_updateTime / frameDuration);
-	_nextFrame = min(_frame + 1, _frameCount - 1);
-	_frameRatio = (_updateTime - (_frame * frameDuration)) / frameDuration;
+void Animator::ComputeFrameValues()
+{
+	auto clip = _currentState->GetClip();
+	_frameCount = clip->frameCount;
+	_bonesCount = static_cast<int>(_bones->size());
+
+	float frameDuration = clip->duration / static_cast<float>(_frameCount);
+	_frame = ((_stateTime / frameDuration) < (_frameCount - 1)) ? static_cast<int>(_stateTime / frameDuration) : (_frameCount - 1);
+	_nextFrame = (_frame + 1 < _frameCount) ? _frame + 1 : _frame;
+	_frameRatio = (_stateTime - (_frame * frameDuration)) / frameDuration;
 }
 
 
@@ -73,9 +134,9 @@ void Animator::PushData()
 
 
 	// Compute Shader에 클립 데이터 전송
-	auto currentClipIndex = _controller->GetCurrentClipIndex();									// 컨트롤러의 현재 State의 애니메이션 클립 Index 값을 가져온다
+	auto currentClipIndex = _currentState->GetClipIndex();					// 컨트롤러의 현재 State의 애니메이션 클립 Index 값을 가져온다
 	shared_ptr<Mesh> mesh = GetGameObject()->GetMeshRenderer()->GetMesh();
-	mesh->GetBoneFrameDataBuffer(currentClipIndex)->PushComputeSRVData(SRV_REGISTER::t8);		// 컨트롤러의 현재 State의 몇 번째 애니메이션 클립인지 보내야 한다.
+	mesh->GetBoneFrameDataBuffer(currentClipIndex)->PushComputeSRVData(SRV_REGISTER::t8);					// 컨트롤러의 현재 State의 몇 번째 애니메이션 클립인지 보내야 한다.
 	mesh->GetBoneOffsetBuffer()->PushComputeSRVData(SRV_REGISTER::t9);						// 그대로 유지
 
 	_boneFinalMatrix->PushComputeUAVData(UAV_REGISTER::u0);
@@ -95,3 +156,26 @@ void Animator::PushData()
 	_boneFinalMatrix->PushGraphicsData(SRV_REGISTER::t7);
 }
 
+void Animator::SetFloat(const string& name, float value)
+{
+	int idx = _controller->GetParamIndex(name);
+	if (idx >= 0) _floatParams[idx] = value;
+}
+
+void Animator::SetBool(const string& name, bool value)
+{
+	int idx = _controller->GetParamIndex(name);
+	if (idx >= 0) _boolParams[idx] = value;
+}
+
+void Animator::SetTrigger(const string& name)
+{
+	int idx = _controller->GetParamIndex(name);
+	if (idx >= 0) _triggerParams[idx] = true;
+}
+
+void Animator::ResetTrigger(const string& name)
+{
+	int idx = _controller->GetParamIndex(name);
+	if (idx >= 0) _triggerParams[idx] = false;
+}

@@ -121,9 +121,8 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 			}
 			if (info.mesh->hasAnimation())				// Mesh가 애니메이션을 가지고 있다면?
 			{
-				shared_ptr<Animator> animator = make_shared<Animator>();
+				shared_ptr<Animator> animator = make_shared<Animator>(GET_SINGLE(Resources)->LoadAnimatorController());
 				animator->SetBones(info.mesh->GetBones());
-				animator->SetController(GET_SINGLE(Resources)->LoadAnimatorController());			// 미리 만들어둔 컨트롤러를 연결한다
 				gameObject->AddComponent(animator);
 				//gameObject->AddComponent(make_shared<TestAnimation>());
 			}

@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "Engine.h"
 #include "WeaponManager.h"
+#include "Animator.h"
 
 PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 {
@@ -16,7 +17,7 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 	_playerId = playerId;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 50.0f;
+	_speed = 5.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
@@ -62,27 +63,28 @@ void PlayerScript::UpdatePlayerInput()
 
 void PlayerScript::UpdateKeyInput()
 {
-	Vec3 pos = GetTransform()->GetLocalPosition();
-
+	// 1) 이전 위치 저장
+	Vec3 oldPos = GetTransform()->GetLocalPosition();
+	Vec3 newPos = oldPos;
+	
+	// 2) 입력에 따라 newPos 변경	
 	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-
+		newPos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-
+		newPos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-
+		newPos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-
+		newPos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+	if (INPUT->GetButton(KEY_TYPE::Q))
+		newPos += GetTransform()->GetLook() * _speed * 2 * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::CTRL))
-		pos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
+		newPos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
 
 	if (_isGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
 	{
 		_currentVelocity = _jumpVelocity;
-		pos.y += _currentVelocity * DELTA_TIME;
+		newPos.y += _currentVelocity * DELTA_TIME;
 		_isGrounded = false;
 	}
 
@@ -95,15 +97,25 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
 		GetWeaponManager()->EquipWeapon(2);
 
-
+	// 3) 실제 이동량 계산
+	Vec3 delta = newPos - oldPos;
 	// TODO : pos 값을 서버로 보낸다.
 
-
+	// 4) 초당 속도로 변환
+	float currentSpeed = 0.0f;
+	if (delta.LengthSquared() > 0.0f)   // >0 이면
+	{
+		float dist = delta.Length();    // 이동 거리
+		currentSpeed = dist / DELTA_TIME;
+		// (만약 애니메이터가 0~1 사이 값을 기대하면
+		//  currentSpeed /= _speed; // maxSpeed 로 정규화)
+	}
 	 
-	// TODO : pos 값을 서버로 받아.
-
-
-	GetTransform()->SetLocalPosition(pos);
+	// 5) Animator 에 전달
+	GetAnimator()->SetFloat("Speed", currentSpeed);
+	printf("속도: %f\n", currentSpeed);
+	// 6) 위치 적용
+	GetTransform()->SetLocalPosition(newPos);
 }
 
 

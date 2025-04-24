@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Resources.h"
 #include "Engine.h"
 #include "MeshData.h"
@@ -41,7 +41,7 @@ shared_ptr<Mesh> Resources::LoadRectangleMesh()
 
 	vector<Vertex> vec(4);
 
-	// ¾Õ¸é
+	// ì•ë©´
 	vec[0] = Vertex(Vec3(-w2, -h2, 0), Vec2(0.0f, 1.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[1] = Vertex(Vec3(-w2, +h2, 0), Vec2(0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[2] = Vertex(Vec3(+w2, +h2, 0), Vec2(1.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
@@ -49,7 +49,7 @@ shared_ptr<Mesh> Resources::LoadRectangleMesh()
 
 	vector<uint32> idx(6);
 
-	// ¾Õ¸é
+	// ì•ë©´
 	idx[0] = 0; idx[1] = 1; idx[2] = 2;
 	idx[3] = 0; idx[4] = 2; idx[5] = 3;
 
@@ -72,32 +72,32 @@ shared_ptr<Mesh> Resources::LoadCubeMesh()
 
 	vector<Vertex> vec(24);
 
-	// ¾Õ¸é
+	// ì•ë©´
 	vec[0] = Vertex(Vec3(-w2, -h2, -d2), Vec2(0.0f, 1.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[1] = Vertex(Vec3(-w2, +h2, -d2), Vec2(0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[2] = Vertex(Vec3(+w2, +h2, -d2), Vec2(1.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[3] = Vertex(Vec3(+w2, -h2, -d2), Vec2(1.0f, 1.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
-	// µŞ¸é
+	// ë’·ë©´
 	vec[4] = Vertex(Vec3(-w2, -h2, +d2), Vec2(1.0f, 1.0f), Vec3(0.0f, 0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[5] = Vertex(Vec3(+w2, -h2, +d2), Vec2(0.0f, 1.0f), Vec3(0.0f, 0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[6] = Vertex(Vec3(+w2, +h2, +d2), Vec2(0.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[7] = Vertex(Vec3(-w2, +h2, +d2), Vec2(1.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f));
-	// À­¸é
+	// ìœ—ë©´
 	vec[8] = Vertex(Vec3(-w2, +h2, -d2), Vec2(0.0f, 1.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[9] = Vertex(Vec3(-w2, +h2, +d2), Vec2(0.0f, 0.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[10] = Vertex(Vec3(+w2, +h2, +d2), Vec2(1.0f, 0.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[11] = Vertex(Vec3(+w2, +h2, -d2), Vec2(1.0f, 1.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));
-	// ¾Æ·§¸é
+	// ì•„ë«ë©´
 	vec[12] = Vertex(Vec3(-w2, -h2, -d2), Vec2(1.0f, 1.0f), Vec3(0.0f, -1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[13] = Vertex(Vec3(+w2, -h2, -d2), Vec2(0.0f, 1.0f), Vec3(0.0f, -1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[14] = Vertex(Vec3(+w2, -h2, +d2), Vec2(0.0f, 0.0f), Vec3(0.0f, -1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[15] = Vertex(Vec3(-w2, -h2, +d2), Vec2(1.0f, 0.0f), Vec3(0.0f, -1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));
-	// ¿ŞÂÊ¸é
+	// ì™¼ìª½ë©´
 	vec[16] = Vertex(Vec3(-w2, -h2, +d2), Vec2(0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));
 	vec[17] = Vertex(Vec3(-w2, +h2, +d2), Vec2(0.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));
 	vec[18] = Vertex(Vec3(-w2, +h2, -d2), Vec2(1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));
 	vec[19] = Vertex(Vec3(-w2, -h2, -d2), Vec2(1.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));
-	// ¿À¸¥ÂÊ¸é
+	// ì˜¤ë¥¸ìª½ë©´
 	vec[20] = Vertex(Vec3(+w2, -h2, -d2), Vec2(0.0f, 1.0f), Vec3(1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f));
 	vec[21] = Vertex(Vec3(+w2, +h2, -d2), Vec2(0.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f));
 	vec[22] = Vertex(Vec3(+w2, +h2, +d2), Vec2(1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f));
@@ -105,22 +105,22 @@ shared_ptr<Mesh> Resources::LoadCubeMesh()
 
 	vector<uint32> idx(36);
 
-	// ¾Õ¸é
+	// ì•ë©´
 	idx[0] = 0; idx[1] = 1; idx[2] = 2;
 	idx[3] = 0; idx[4] = 2; idx[5] = 3;
-	// µŞ¸é
+	// ë’·ë©´
 	idx[6] = 4; idx[7] = 5; idx[8] = 6;
 	idx[9] = 4; idx[10] = 6; idx[11] = 7;
-	// À­¸é
+	// ìœ—ë©´
 	idx[12] = 8; idx[13] = 9; idx[14] = 10;
 	idx[15] = 8; idx[16] = 10; idx[17] = 11;
-	// ¾Æ·§¸é
+	// ì•„ë«ë©´
 	idx[18] = 12; idx[19] = 13; idx[20] = 14;
 	idx[21] = 12; idx[22] = 14; idx[23] = 15;
-	// ¿ŞÂÊ¸é
+	// ì™¼ìª½ë©´
 	idx[24] = 16; idx[25] = 17; idx[26] = 18;
 	idx[27] = 16; idx[28] = 18; idx[29] = 19;
-	// ¿À¸¥ÂÊ¸é
+	// ì˜¤ë¥¸ìª½ë©´
 	idx[30] = 20; idx[31] = 21; idx[32] = 22;
 	idx[33] = 20; idx[34] = 22; idx[35] = 23;
 
@@ -137,15 +137,15 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 	if (findMesh)
 		return findMesh;
 
-	float radius = 0.5f; // ±¸ÀÇ ¹İÁö¸§
-	uint32 stackCount = 20; // °¡·Î ºĞÇÒ
-	uint32 sliceCount = 20; // ¼¼·Î ºĞÇÒ
+	float radius = 0.5f; // êµ¬ì˜ ë°˜ì§€ë¦„
+	uint32 stackCount = 20; // ê°€ë¡œ ë¶„í• 
+	uint32 sliceCount = 20; // ì„¸ë¡œ ë¶„í• 
 
 	vector<Vertex> vec;
 
 	Vertex v;
 
-	// ºÏ±Ø
+	// ë¶ê·¹
 	v.pos = Vec3(0.0f, radius, 0.0f);
 	v.uv = Vec2(0.5f, 0.0f);
 	v.normal = v.pos;
@@ -159,12 +159,12 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 	float deltaU = 1.f / static_cast<float>(sliceCount);
 	float deltaV = 1.f / static_cast<float>(stackCount);
 
-	// °í¸®¸¶´Ù µ¹¸é¼­ Á¤Á¡À» °è»êÇÑ´Ù (ºÏ±Ø/³²±Ø ´ÜÀÏÁ¡Àº °í¸®°¡ X)
+	// ê³ ë¦¬ë§ˆë‹¤ ëŒë©´ì„œ ì •ì ì„ ê³„ì‚°í•œë‹¤ (ë¶ê·¹/ë‚¨ê·¹ ë‹¨ì¼ì ì€ ê³ ë¦¬ê°€ X)
 	for (uint32 y = 1; y <= stackCount - 1; ++y)
 	{
 		float phi = y * stackAngle;
 
-		// °í¸®¿¡ À§Ä¡ÇÑ Á¤Á¡
+		// ê³ ë¦¬ì— ìœ„ì¹˜í•œ ì •ì 
 		for (uint32 x = 0; x <= sliceCount; ++x)
 		{
 			float theta = x * sliceAngle;
@@ -187,7 +187,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 		}
 	}
 
-	// ³²±Ø
+	// ë‚¨ê·¹
 	v.pos = Vec3(0.0f, -radius, 0.0f);
 	v.uv = Vec2(0.5f, 1.0f);
 	v.normal = v.pos;
@@ -197,7 +197,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 
 	vector<uint32> idx(36);
 
-	// ºÏ±Ø ÀÎµ¦½º
+	// ë¶ê·¹ ì¸ë±ìŠ¤
 	for (uint32 i = 0; i <= sliceCount; ++i)
 	{
 		//  [0]
@@ -208,7 +208,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 		idx.push_back(i + 1);
 	}
 
-	// ¸öÅë ÀÎµ¦½º
+	// ëª¸í†µ ì¸ë±ìŠ¤
 	uint32 ringVertexCount = sliceCount + 1;
 	for (uint32 y = 0; y < stackCount - 2; ++y)
 	{
@@ -229,7 +229,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 		}
 	}
 
-	// ³²±Ø ÀÎµ¦½º
+	// ë‚¨ê·¹ ì¸ë±ìŠ¤
 	uint32 bottomIndex = static_cast<uint32>(vec.size()) - 1;
 	uint32 lastRingStartIndex = bottomIndex - ringVertexCount;
 	for (uint32 i = 0; i < sliceCount; ++i)
@@ -270,24 +270,90 @@ shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
 
 shared_ptr<AnimatorController> Resources::LoadAnimatorController()
 {
-	shared_ptr<AnimatorController> controller = make_shared<AnimatorController>();
+	// 1) Controller ìƒì„±
+	auto controller = make_shared<AnimatorController>();
 
-	shared_ptr<AnimationState> state = make_shared<AnimationState>(L"Idle", GetAnimClip(L"Idle"), 5, 1.0f, true);		// ÀÌ·± ½ÄÀ¸·Î state »ı¼º
-	shared_ptr<AnimationState> state2 = make_shared<AnimationState>(L"Walk", GetAnimClip(L"Walk"), 6, 1.0f, true);		// ÀÌ·± ½ÄÀ¸·Î state »ı¼º
-	shared_ptr<AnimationState> state3 = make_shared<AnimationState>(L"Run", GetAnimClip(L"Run"), 7, 1.0f, true);		// ÀÌ·± ½ÄÀ¸·Î state »ı¼º
+	// 2) íŒŒë¼ë¯¸í„° ì •ì˜: Speed (float)
+	AnimatorParameter speedParam;
+	speedParam.name = "Speed";
+	speedParam.type = ParameterType::Float;
+	speedParam.defaultValue = 0.1f;
+	controller->AddParameter(speedParam);
 
+	// 2) íŒŒë¼ë¯¸í„° ì •ì˜: Speed (float)
+	AnimatorParameter speedParam2;
+	speedParam2.name = "Speed2";
+	speedParam2.type = ParameterType::Float;
+	speedParam2.defaultValue = 0.2f;
+	controller->AddParameter(speedParam2);
 
-	controller->AddState(state);				// State¸¦ Ãß°¡ÇÑ´Ù.
-	controller->AddState(state2);
-	controller->AddState(state3);
-	controller->SetDefaultState(L"Walk");		// Idle »óÅÂ¸¦ Default State·Î ¸¸µç´Ù.
+	// 3) ìŠ¤í…Œì´íŠ¸ ìƒì„± (ì´ë¦„, í´ë¦½, í´ë¦½ ì¸ë±ìŠ¤, ì†ë„, loop)
+	auto idle = make_shared<AnimationState>(L"Idle", GetAnimClip(L"Idle"), 5, 1.0f, true);
+	auto walk = make_shared<AnimationState>(L"Walk", GetAnimClip(L"Walk"), 6, 1.0f, true);
+	auto run = make_shared<AnimationState>(L"Run", GetAnimClip(L"Run"), 7, 1.0f, true);
+
+	controller->AddState(idle);
+	controller->AddState(walk);
+	controller->AddState(run);
+	int speedIdx = controller->GetParamIndex("Speed");
+
+	// 4) Idle â†’ Walk ì „ì´ ì¶”ê°€ (Speed > 0.1)
+	{
+		auto t = make_shared<Transition>(walk);
+		t->AddCondition(
+			/*paramIndex=*/speedIdx,
+			ConditionMode::Greater,
+			/*threshold=*/4.0f,
+			/*exitTime=*/0.0f,
+			/*duration=*/0.0f
+		);
+		idle->AddTransition(t);
+	}
+
+	// 5) Walk â†’ Idle ì „ì´ ì¶”ê°€ (Speed < 0.05)
+	{
+		auto t = make_shared<Transition>(run);
+		t->AddCondition(
+			/*paramIndex=*/speedIdx,
+			ConditionMode::Greater,
+			/*threshold=*/10.0f,
+			/*exitTime=*/0.0f,
+			/*duration=*/0.0f
+		);
+		walk->AddTransition(t);
+	}
+	{
+		auto t = make_shared<Transition>(idle);
+		t->AddCondition(
+			/*paramIndex=*/speedIdx,
+			ConditionMode::Less,
+			/*threshold=*/4.0f,
+			/*exitTime=*/0.0f,
+			/*duration=*/0.0f
+		);
+		walk->AddTransition(t);
+	}
+	{
+		auto t = make_shared<Transition>(walk);
+		t->AddCondition(
+			/*paramIndex=*/speedIdx,
+			ConditionMode::Less,
+			/*threshold=*/8.0f,
+			/*exitTime=*/0.0f,
+			/*duration=*/0.0f
+		);
+		run->AddTransition(t);
+	}
+	// 6) Entry State ì„¤ì •
+	controller->SetEntryState(L"Idle");
+
 	return controller;
 }
 
 //void Resources::LoadSceneFromBinary(const wstring& path)
 //{
 //	wstring name;
-//	for (; ;)		// °´Ã¼ ¼ö ¸¸Å­
+//	for (; ;)		// ê°ì²´ ìˆ˜ ë§Œí¼
 //	{
 //		LoadModelFromBinary(L"..\\Resources\\Model\\" + name + L".bin");
 //	}
