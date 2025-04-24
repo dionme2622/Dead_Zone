@@ -176,8 +176,8 @@ void BattleScene::LoadScene()
 				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
 			else if (i < 5)
 				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
-			else
-				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->GetRTTexture(0);
+			/*else
+				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SSAO)->GetRTTexture(0);*/
 
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
@@ -278,7 +278,7 @@ void BattleScene::LoadScene()
 void BattleScene::Update()
 {
 	Scene::Update();
-	//CheckCollisions();
+	CheckCollisions();
 
 	/*if (GET_SINGLE(KeyInput)->GetButtonDown(KEY_TYPE::TAB))
 		CreateZombie();*/
@@ -343,7 +343,7 @@ void ProjectBoxOntoAxis(const BoundingOrientedBox& box, const Vec3& axis, float&
 {
 	Vec3 corners[8];
 	box.GetCorners(corners);
-
+	
 	min_ = max_ = corners[0].Dot(axis);
 
 	for (int i = 1; i < 8; i++)
