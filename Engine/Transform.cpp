@@ -186,3 +186,15 @@ Vec3 Transform::DecomposeRotationMatrix(const Matrix& rotation)
 
 	return ret;
 }
+
+shared_ptr<Transform> Transform::Clone()
+{
+	shared_ptr<Transform> transform = make_shared<Transform>();
+
+	transform->SetLocalPosition(GetLocalPosition());
+	transform->SetLocalRotation(GetLocalRotation());
+	transform->SetLocalScale(GetLocalScale());
+	//transform->SetParent(GetParent());
+
+	return transform;
+}

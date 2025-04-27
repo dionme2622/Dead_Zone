@@ -442,7 +442,7 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Deferred", shader);
 	}
 
-	// Deferred (Deferred)
+	// Deferred Wireframe (Deferred)
 	{
 		ShaderInfo info =
 		{

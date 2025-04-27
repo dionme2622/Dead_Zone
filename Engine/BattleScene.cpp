@@ -38,20 +38,20 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region DebugCamera
-	//{
-	//	_playerCamera = make_shared<GameObject>();
-	//	_playerCamera->SetName(L"Debug_Camera");
-	//	_playerCamera->AddComponent(make_shared<Transform>());
-	//	_playerCamera->AddComponent(make_shared<Camera>());
-	//	//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
+	{
+		//_playerCamera = make_shared<GameObject>();
+		//_playerCamera->SetName(L"Debug_Camera");
+		//_playerCamera->AddComponent(make_shared<Transform>());
+		//_playerCamera->AddComponent(make_shared<Camera>());
+		////_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
 
-	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 0.0f, 40.f));
-	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-	//	_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
-	//	uint8 layerIndex = LayerNameToIndex(L"UI");
-	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
-	//	AddGameObject(_playerCamera);
-	//}
+		//_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 0.0f, 100.f));
+		//_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+		//_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
+		//uint8 layerIndex = LayerNameToIndex(L"UI");
+		//_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
+		//AddGameObject(_playerCamera);
+	}
 #pragma endregion
 
 
@@ -101,7 +101,7 @@ void BattleScene::LoadScene()
 
 	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
-	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
+	//player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
 
 	_player.push_back(player1);
@@ -221,22 +221,24 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Character
-	//{
-	//	shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
+	{
+		for (int i = 0; i < 10; ++i)
+		{
+			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> zombies = Zombie->Instantiate();
-
-	//	for (auto& gameObject : zombies)
-	//	{
-	//		//gameObject->SetName(L"FemaleSoldier");
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
-	//	
-
-	//	zombies[0]->GetTransform()->SetLocalPosition(Vec3(10.f, 0.f , 0.f));
-	//}
+			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate();
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetCheckFrustum(true);
+				gameObject->SetStatic(true);
+				//gameObject->SetTransform();  gameObject->GetTransform();
+				AddGameObject(gameObject);
+			}
+			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 0.0f, 0.0f));
+			gameObjects[23]->GetTransform()->GetLocalMatrix();
+			_player.push_back(gameObjects[23]);
+		}
+	}
 
 #pragma endregion
 
@@ -259,59 +261,59 @@ void BattleScene::LoadScene()
 		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
 	}
 
-	//{
-	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\BldDemo.bin"); // MeshData* meshData
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\BldDemo.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
 
-	//	shared_ptr<GameObject> rootObject = gameObjects[0];
+		shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	//	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	//}
+		//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	}
 
-	//{
-	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
 
-	//	shared_ptr<GameObject> rootObject = gameObjects[0];
+		shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	//	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	//}
+		//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	}
 
-	//{
-	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\VehDemo.bin"); // MeshData* meshData
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\VehDemo.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
 
-	//	shared_ptr<GameObject> rootObject = gameObjects[0];
+		shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	//	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	//}
+		//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	}
 #pragma endregion
 }
 

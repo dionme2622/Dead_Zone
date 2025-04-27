@@ -48,7 +48,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		{
 			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).meshName);
 
-			materials.push_back(material);
+			materials.push_back(material->Clone());
 		}
 
 		// Collider 
@@ -79,13 +79,15 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 	{
 		shared_ptr<GameObject> gameObject = make_shared<GameObject>();
 		gameObject->SetName(info.objName);									// Object 이름 설정
-		gameObject->AddComponent(info.transform);
+		auto newT = std::make_shared<Transform>(*info.transform);
+		gameObject->AddComponent(newT);
+		//gameObject->AddComponent(info.transform);
 		if (info.mesh != nullptr)
 		{
 			gameObject->AddComponent(make_shared<MeshRenderer>());
 			gameObject->GetMeshRenderer()->SetMesh(info.mesh);
 			for (uint32 i = 0; i < info.materials.size(); i++)
-				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
+				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i]->Clone(), i);
 
 
 			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
@@ -121,9 +123,9 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 			}
 			if (info.mesh->hasAnimation())				// Mesh가 애니메이션을 가지고 있다면?
 			{
-				shared_ptr<Animator> animator = make_shared<Animator>(GET_SINGLE(Resources)->LoadAnimatorController());
-				animator->SetBones(info.mesh->GetBones());
-				gameObject->AddComponent(animator);
+				//shared_ptr<Animator> animator = make_shared<Animator>(GET_SINGLE(Resources)->LoadAnimatorController());
+				//animator->SetBones(info.mesh->GetBones());
+				//gameObject->AddComponent(animator);
 				//gameObject->AddComponent(make_shared<TestAnimation>());
 			}
 		}

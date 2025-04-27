@@ -118,7 +118,7 @@ void PlayerScript::UpdateKeyInput()
 	}
 	 
 	// 5) Animator 에 전달
-	GetAnimator()->SetFloat("Speed", currentSpeed);
+	//GetAnimator()->SetFloat("Speed", currentSpeed);
 	printf("속도: %f\n", currentSpeed);
 	// 6) 위치 적용
 	GetTransform()->SetLocalPosition(newPos);

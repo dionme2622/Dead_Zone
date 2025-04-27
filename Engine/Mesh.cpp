@@ -256,10 +256,10 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 #pragma region AnimationClip
 	if (IsAnimMesh())
 	{	// Resources·Î AddÇÑ´Ù.
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
+		/*GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
 		GET_SINGLE(Resources)->AddAnimClip(L"Walk", _animClips[6]);
 		GET_SINGLE(Resources)->AddAnimClip(L"Run", _animClips[7]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Shoot", _animClips[11]);
+		GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Shoot", _animClips[11]);*/
 
 		/*GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
 		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
