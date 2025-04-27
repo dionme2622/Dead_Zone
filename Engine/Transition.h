@@ -59,7 +59,7 @@ public:
     }
 
     shared_ptr<AnimationState> GetTarget() const { return _target; }
-
+    vector<TransitionCondition> GetConditions() const { return _conditions; }
 private:
     shared_ptr<AnimationState>      _target;
     vector<TransitionCondition>     _conditions;

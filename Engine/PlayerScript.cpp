@@ -97,6 +97,12 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
 		GetWeaponManager()->EquipWeapon(2);
 
+	if (INPUT->GetButton(KEY_TYPE::LEFTCLICK))
+	{
+		// Shoot 애니메이션 트리거
+		GetAnimator()->SetTrigger("Shoot");
+	}
+
 	// 3) 실제 이동량 계산
 	Vec3 delta = newPos - oldPos;
 	// TODO : pos 값을 서버로 보낸다.

@@ -67,6 +67,16 @@ void Animator::EvaluateTransitions()
 			_nextState = t->GetTarget();
 			_inTransition = true;
 			_transitionTime = 0.0f;
+
+			// <-- 트리거 파라미터가 있다면 소비(Reset)하기
+			for (auto& cond : t->GetConditions())
+			{
+				if (_controller->GetParamDefs()[cond.paramIndex].type == ParameterType::Trigger)
+				{
+					_triggerParams[cond.paramIndex] = false;
+				}
+			}
+
 			return;
 		}
 	}

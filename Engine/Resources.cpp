@@ -281,21 +281,25 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorController()
 	controller->AddParameter(speedParam);
 
 	// 2) 파라미터 정의: Speed (float)
-	AnimatorParameter speedParam2;
-	speedParam2.name = "Speed2";
-	speedParam2.type = ParameterType::Float;
-	speedParam2.defaultValue = 0.2f;
-	controller->AddParameter(speedParam2);
+	AnimatorParameter shootParam;
+	shootParam.name = "Shoot";
+	shootParam.type = ParameterType::Trigger;
+	shootParam.defaultValue = 0.0f;
+	controller->AddParameter(shootParam);
 
 	// 3) 스테이트 생성 (이름, 클립, 클립 인덱스, 속도, loop)
 	auto idle = make_shared<AnimationState>(L"Idle", GetAnimClip(L"Idle"), 5, 1.0f, true);
 	auto walk = make_shared<AnimationState>(L"Walk", GetAnimClip(L"Walk"), 6, 1.0f, true);
 	auto run = make_shared<AnimationState>(L"Run", GetAnimClip(L"Run"), 7, 1.0f, true);
+	auto rifle_shoot = make_shared<AnimationState>(L"Rifle_Shoot", GetAnimClip(L"Rifle_Shoot"), 11, 1.0f, false);
 
 	controller->AddState(idle);
 	controller->AddState(walk);
 	controller->AddState(run);
+	controller->AddState(rifle_shoot);
+
 	int speedIdx = controller->GetParamIndex("Speed");
+	int shootIdx = controller->GetParamIndex("Shoot");
 
 	// 4) Idle → Walk 전이 추가 (Speed > 0.1)
 	{
@@ -344,6 +348,22 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorController()
 		);
 		run->AddTransition(t);
 	}
+	// 4) 클릭 시 Shoot 상태로 전이
+	for (auto baseState : { idle, walk, run })
+	{
+		auto t = make_shared<Transition>(rifle_shoot);
+		t->AddCondition(shootIdx, ConditionMode::Equals, 1.0f, /*exitTime=*/0.0f, /*fade=*/0.1f);
+		baseState->AddTransition(t);
+	}
+
+	// 5) Shoot 끝나면 Idle로 복귀 (exitTime=1.0f)
+	{
+		auto t = make_shared<Transition>(idle);
+		t->AddCondition(shootIdx, ConditionMode::Equals, 1.0f, /*exitTime=*/0.0f, /*fade=*/0.1f);
+		rifle_shoot->AddTransition(t);
+	}
+
+
 	// 6) Entry State 설정
 	controller->SetEntryState(L"Idle");
 
