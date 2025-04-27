@@ -11,6 +11,39 @@ class BaseCollider;
 class ParticleSystem;
 
 
+
+enum class STAGEAREA
+{
+	AREA1,
+	AREA2,
+	AREA3,
+	AREA4,
+	AREA5,
+	AREA6,
+	AREA7,
+	AREA8,
+	AREA9,
+	AREA10,
+	AREA11,
+	AREA12,
+	AREA13,
+	AREA14,
+	AREA15,
+	AREA16,
+	AREA17,
+	AREA18,
+	AREA19,
+	AREA20,
+	AREA21,
+	AREA22,
+	AREA23,
+	AREA24,
+	AREA25,
+	FLAG_NONE
+};
+
+
+
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
 public:
@@ -44,6 +77,9 @@ public:
 	void SetStatic(bool flag) { _static = flag; }
 	bool IsStatic() { return _static; }
 
+	void SetStageArea(STAGEAREA stageArea) { _stageArea = stageArea; }
+	STAGEAREA GetArea() { return _stageArea; }
+
 private:
 	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
 	vector<shared_ptr<MonoBehaviour>> _scripts;
@@ -51,5 +87,8 @@ private:
 	bool _checkFrustum = true;
 	uint8 _layerIndex = 0;
 	bool _static = true;
+
+
+	STAGEAREA _stageArea = STAGEAREA::FLAG_NONE;
 };
 

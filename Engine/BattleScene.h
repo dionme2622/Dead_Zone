@@ -3,6 +3,9 @@
 #include "Player.h"
 
 
+
+
+
 class BattleScene : public Scene
 {
 public:
@@ -14,10 +17,22 @@ public:
 	virtual void FinalUpdate();
 
 
+
 public:
+
 	void CreateZombie();
 
+	void SetObjectArea();
+	void UpdatePlayerAreas();
+
 	void CheckCollisions();
+
+
+	vector<STAGEAREA> GetAdjacentAreas(STAGEAREA playerArea);
+
+	STAGEAREA CalculateObjectArea(const Vec3& position);
+
+	
 
 	static bool isPlayerGrounded;
 private:
@@ -35,7 +50,7 @@ private:
 private:
 	vector<vector<shared_ptr<GameObject>>> _zombies;
 
-
+	std::unordered_map<STAGEAREA, std::vector<std::shared_ptr<GameObject>>> _areaObjects;
 
 };
 

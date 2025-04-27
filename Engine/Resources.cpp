@@ -317,7 +317,7 @@ void Resources::CreateDefaultShader()
 		ShaderInfo info =
 		{
 			SHADER_TYPE::DEFERRED,
-			RASTERIZER_TYPE::CULL_NONE
+			RASTERIZER_TYPE::CULL_BACK
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
@@ -661,10 +661,10 @@ void Resources::CreateDefaultMaterial()
 		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"SSAO");
 		shared_ptr<Material> material = make_shared<Material>();
 		material->SetShader(shader);
-		/*material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
+		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
 		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"NormalTarget"));
-		material->SetTexture(2, GET_SINGLE(Resources)->Get<Texture>(L"SSAONoiseTexture"));*/
-		//material->SetVec2(0, resolution);
+		material->SetTexture(2, GET_SINGLE(Resources)->Get<Texture>(L"SSAONoiseTexture"));
+		material->SetVec2(0, resolution);
 		Add<Material>(L"SSAO", material);
 	}
 #endif

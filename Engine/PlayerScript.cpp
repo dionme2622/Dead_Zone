@@ -12,7 +12,7 @@
 #include "BattleScene.h"
 
 PlayerScript::PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform) :
-	_hwnd(hwnd), _speed(300.0f), _jumpVelocity(10.0f), _currentVelocity(0.0f), 
+	_hwnd(hwnd), _speed(20.0f), _jumpVelocity(10.0f), _currentVelocity(0.0f), 
 	_gravity(-9.8f), _isGrounded(true), _pitch(0.0f), _yaw(0.0f), _mouseMove(false), 
 	_cameraTransform(playerTransform)
 {
