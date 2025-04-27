@@ -336,7 +336,7 @@ void BattleScene::Update()
 	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
 
 	Scene::Update();
-	//CheckCollisions();
+	CheckCollisions();
 
 	/*if (GET_SINGLE(KeyInput)->GetButtonDown(KEY_TYPE::TAB))
 		CreateZombie();*/
