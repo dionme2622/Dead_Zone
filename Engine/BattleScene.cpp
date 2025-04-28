@@ -222,19 +222,18 @@ void BattleScene::LoadScene()
 
 #pragma region Character
 	{
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < 10; ++i)
 		{
-			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_AssaultRifle01.bin"); // MeshData* meshData
+			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
 
 			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate();
 			for (auto& gameObject : gameObjects)
 			{
 				gameObject->SetCheckFrustum(true);
 				gameObject->SetStatic(true);
-				gameObject->GetTransform()->GetLocalMatrix();
 				AddGameObject(gameObject);
 			}
-				gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(20.0f, 0.0f, 0.0f));
+				gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 0.0f, 0.0f));
 				//gameObjects[0]->GetTransform()->SetLocalRotation(Vec3(0.f, 0.0f, 0.0f));
 		}
 	}

@@ -40,7 +40,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		}
 
 		// Transform
-		shared_ptr<Transform> transform = make_shared<Transform>(*loader.GetMesh(i).transform);
+		shared_ptr<Transform> transform = loader.GetMesh(i).transform;
 
 		// Material
 		vector<shared_ptr<Material>> materials;

@@ -35,6 +35,10 @@ VS_OUT VS_Main(VS_IN input)
 {
     VS_OUT output = (VS_OUT) 0;
 
+    row_major matrix rightHandMatrix = g_mat_bone[15]; // 오른손 뼈
+    row_major matrix characterWorldMatrix = g_mat_0;
+    row_major matrix weaponOffsetMatrix = g_matWorld;
+    
     if (g_int_0 == 1)           // Instancing이 적용되었는가?
     {
         if (g_int_1 == 1)       // Skinning이 적용되었는가?
@@ -56,9 +60,7 @@ VS_OUT VS_Main(VS_IN input)
         if (g_int_1 == 1)
             Skinning(input.pos, input.normal, input.tangent, input.weight, input.indices);
         
-        row_major matrix rightHandMatrix = g_mat_bone[15]; // 오른손 뼈
-        row_major matrix characterWorldMatrix = g_mat_0;
-        row_major matrix weaponOffsetMatrix = g_matWorld;
+
         
         if (g_int_2 == 1)
         {  
