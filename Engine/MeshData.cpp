@@ -40,7 +40,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		}
 
 		// Transform
-		shared_ptr<Transform> transform = loader.GetMesh(i).transform;
+		shared_ptr<Transform> transform = make_shared<Transform>(*loader.GetMesh(i).transform);
 
 		// Material
 		vector<shared_ptr<Material>> materials;
@@ -48,7 +48,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		{
 			shared_ptr<Material> material = GET_SINGLE(Resources)->Get<Material>(loader.GetMesh(i).meshName);
 
-			materials.push_back(material->Clone());
+			materials.push_back(material);
 		}
 
 		// Collider 
@@ -79,15 +79,15 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 	{
 		shared_ptr<GameObject> gameObject = make_shared<GameObject>();
 		gameObject->SetName(info.objName);									// Object 이름 설정
-		auto newT = std::make_shared<Transform>(*info.transform);
-		gameObject->AddComponent(newT);
-		//gameObject->AddComponent(info.transform);
+		//shared_ptr<Transform> newT = make_shared<Transform>(*info.transform);
+		//gameObject->AddComponent(newT);
+		gameObject->AddComponent(info.transform);
 		if (info.mesh != nullptr)
 		{
 			gameObject->AddComponent(make_shared<MeshRenderer>());
 			gameObject->GetMeshRenderer()->SetMesh(info.mesh);
 			for (uint32 i = 0; i < info.materials.size(); i++)
-				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i]->Clone(), i);
+				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
 
 
 			// TODO : AABB 바운딩 박스 데이터 넘겨야 함

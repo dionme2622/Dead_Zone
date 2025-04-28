@@ -222,21 +222,20 @@ void BattleScene::LoadScene()
 
 #pragma region Character
 	{
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
-			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
+			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_AssaultRifle01.bin"); // MeshData* meshData
 
 			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate();
 			for (auto& gameObject : gameObjects)
 			{
 				gameObject->SetCheckFrustum(true);
 				gameObject->SetStatic(true);
-				//gameObject->SetTransform();  gameObject->GetTransform();
+				gameObject->GetTransform()->GetLocalMatrix();
 				AddGameObject(gameObject);
 			}
-			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 0.0f, 0.0f));
-			gameObjects[23]->GetTransform()->GetLocalMatrix();
-			_player.push_back(gameObjects[23]);
+				gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(20.0f, 0.0f, 0.0f));
+				//gameObjects[0]->GetTransform()->SetLocalRotation(Vec3(0.f, 0.0f, 0.0f));
 		}
 	}
 
@@ -244,76 +243,76 @@ void BattleScene::LoadScene()
 
 
 #pragma region Map
-	{
-		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo.bin"); // MeshData* meshData
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(true);
+	//		gameObject->SetStatic(true);
+	//		AddGameObject(gameObject);
+	//	}
 
-		shared_ptr<GameObject> rootObject = gameObjects[0];
+	//	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	}
+	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	//}
 
-	{
-		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\BldDemo.bin"); // MeshData* meshData
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(true);
+	//		gameObject->SetStatic(true);
+	//		AddGameObject(gameObject);
+	//	}
 
-		shared_ptr<GameObject> rootObject = gameObjects[0];
+	//	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-		//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	}
+	//	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	//}
 
-	{
-		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(true);
+	//		gameObject->SetStatic(true);
+	//		AddGameObject(gameObject);
+	//	}
 
-		shared_ptr<GameObject> rootObject = gameObjects[0];
+	//	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-		//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	}
+	//	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	//}
 
-	{
-		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\VehDemo.bin"); // MeshData* meshData
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\VehDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(true);
+	//		gameObject->SetStatic(true);
+	//		AddGameObject(gameObject);
+	//	}
 
-		shared_ptr<GameObject> rootObject = gameObjects[0];
+	//	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-		//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
-		rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	}
+	//	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.0, 0.f, 0.f));
+	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
+	//}
 #pragma endregion
 }
 

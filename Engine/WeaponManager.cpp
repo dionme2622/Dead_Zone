@@ -41,24 +41,24 @@ void WeaponManager::FinalUpdate()
 
 void WeaponManager::AddWeapon()
 {
-	shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_AssaultRifle01.bin"); // MeshData* meshData
-	vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
+	//shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_AssaultRifle01.bin"); // MeshData* meshData
+	//vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
 
-	for (auto& gameObject : gameObjects)
-	{
-		shared_ptr<Weapon> weapon = make_shared<Weapon>();
-		gameObject->SetCheckFrustum(false);
-		gameObject->SetStatic(true);
-		gameObject->AddComponent(weapon);
-		gameObject->GetMeshRenderer()->SetRender(false);
-		GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
-	}
-	shared_ptr<GameObject> rootObject = gameObjects[0];
+	//for (auto& gameObject : gameObjects)
+	//{
+	//	shared_ptr<Weapon> weapon = make_shared<Weapon>();
+	//	gameObject->SetCheckFrustum(false);
+	//	gameObject->SetStatic(true);
+	//	gameObject->AddComponent(weapon);
+	//	gameObject->GetMeshRenderer()->SetRender(false);
+	//	GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
+	//}
+	//shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	rootObject->GetTransform()->SetLocalPosition(Vec3(0.2412, -0.033, 0.017));
-	rootObject->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 86.f));
+	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.2412, -0.033, 0.017));
+	//rootObject->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 86.f));
 
-	_weaponInventory.push_back(gameObjects);
+	//_weaponInventory.push_back(gameObjects);
 
 
 
