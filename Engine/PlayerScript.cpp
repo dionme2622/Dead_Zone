@@ -89,13 +89,19 @@ void PlayerScript::UpdateKeyInput()
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::KEY_1))
+	{
 		GetWeaponManager()->EquipWeapon(0);
+	}
 	
 	if (INPUT->GetButton(KEY_TYPE::KEY_2))
+	{
 		GetWeaponManager()->EquipWeapon(1);
+	}
 	
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
+	{	
 		GetWeaponManager()->EquipWeapon(2);
+	}
 
 	if (INPUT->GetButton(KEY_TYPE::LEFTCLICK))
 	{

@@ -41,24 +41,24 @@ void WeaponManager::FinalUpdate()
 
 void WeaponManager::AddWeapon()
 {
-	//shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_AssaultRifle01.bin"); // MeshData* meshData
-	//vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
+	shared_ptr<MeshData> Rifle = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_AssaultRifle01.bin"); // MeshData* meshData
+	vector<shared_ptr<GameObject>> gameObjects = Rifle->Instantiate();
 
-	//for (auto& gameObject : gameObjects)
-	//{
-	//	shared_ptr<Weapon> weapon = make_shared<Weapon>();
-	//	gameObject->SetCheckFrustum(false);
-	//	gameObject->SetStatic(true);
-	//	gameObject->AddComponent(weapon);
-	//	gameObject->GetMeshRenderer()->SetRender(false);
-	//	GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
-	//}
-	//shared_ptr<GameObject> rootObject = gameObjects[0];
+	for (auto& gameObject : gameObjects)
+	{
+		shared_ptr<Weapon> weapon = make_shared<Weapon>();
+		gameObject->SetCheckFrustum(false);
+		gameObject->SetStatic(true);
+		gameObject->AddComponent(weapon);
+		gameObject->GetMeshRenderer()->SetRender(false);
+		GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
+	}
+	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	//rootObject->GetTransform()->SetLocalPosition(Vec3(0.2412, -0.033, 0.017));
-	//rootObject->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 86.f));
+	rootObject->GetTransform()->SetLocalPosition(Vec3(0.2412, -0.033, 0.017));
+	rootObject->GetTransform()->SetLocalRotation(Vec3(0.0, 90.0f, 86.f));
 
-	//_weaponInventory.push_back(gameObjects);
+	_weaponInventory.push_back(gameObjects);
 
 
 
@@ -80,23 +80,23 @@ void WeaponManager::AddWeapon()
 
 	_weaponInventory.push_back(SMG);
 
-	shared_ptr<MeshData> Bat_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_baseballBat.bin"); // MeshData* meshData
-	vector<shared_ptr<GameObject>> Bat = Bat_data->Instantiate();
+	//shared_ptr<MeshData> Bat_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_baseballBat.bin"); // MeshData* meshData
+	//vector<shared_ptr<GameObject>> Bat = Bat_data->Instantiate();
 
-	for (auto& gameObject : Bat)
-	{
-		shared_ptr<Weapon> weapon = make_shared<Weapon>();
-		gameObject->SetCheckFrustum(false);
-		gameObject->SetStatic(true);
-		gameObject->AddComponent(weapon);
-		gameObject->GetMeshRenderer()->SetRender(false);
-		GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
-	}
+	//for (auto& gameObject : Bat)
+	//{
+	//	shared_ptr<Weapon> weapon = make_shared<Weapon>();
+	//	gameObject->SetCheckFrustum(false);
+	//	gameObject->SetStatic(true);
+	//	gameObject->AddComponent(weapon);
+	//	gameObject->GetMeshRenderer()->SetRender(false);
+	//	GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(gameObject);
+	//}
 
-	Bat[0]->GetTransform()->SetLocalPosition(Vec3(0.1242781, -0.0314697, 0.24));
-	Bat[0]->GetTransform()->SetLocalRotation(Vec3(0.0, 0.0f, 0.f));
+	//Bat[0]->GetTransform()->SetLocalPosition(Vec3(0.1242781, -0.0314697, 0.24));
+	//Bat[0]->GetTransform()->SetLocalRotation(Vec3(0.0, 0.0f, 0.f));
 
-	_weaponInventory.push_back(Bat);
+	//_weaponInventory.push_back(Bat);
 	
 
 
@@ -111,6 +111,9 @@ void WeaponManager::AddWeapon()
 
 void WeaponManager::EquipWeapon(int index)
 {
+	if (index > GetInventorySize() - 1)					// 바꾸려는 무기의 Index가 인벤토리 Size보다 작다면 중단한다.
+		return;
+
 	for (auto& weapon : _currentWeapon)				// 이전 무기는 장착 해제한다.
 	{
 		weapon->GetWeapon()->SetisEquipped(false);

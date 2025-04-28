@@ -19,6 +19,8 @@ public:
 	void AddWeapon();
 
 	void EquipWeapon(int index);
+
+	int GetInventorySize() { return _weaponInventory.size(); }
 private:
 	Matrix									_characterWorldMat;		// 캐릭터의 World Matrix
 
