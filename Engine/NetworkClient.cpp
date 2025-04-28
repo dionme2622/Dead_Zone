@@ -7,7 +7,7 @@ std::atomic<bool> running{ true };
 bool g_receivedMyInfo = false;
 stoc_packet_player_info g_myInfo;
 
-std::unordered_map<long long, std::tuple<float, float, float>> g_otherPlayerPositions;
+std::unordered_map<long long, std::tuple<float, float, float>> g_otherPlayerPositions;      // <int, Vec3>
 std::mutex g_posMutex;
 
 bool ConnectAndLogin()
