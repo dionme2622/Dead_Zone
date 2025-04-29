@@ -46,11 +46,11 @@ VS_OUT VS_Main(VS_IN input)
         if (g_int_1 == 1)       // Skinning이 적용되었는가?
             Skinning(input.pos, input.normal, input.tangent, input.weight, input.indices);
         
-        if (g_int_2 == 1)       // 무기인가?
+        if (g_int_2 == 1)
         {
-            weaponOffsetMatrix = input.matWorld;
+            weaponOffsetMatrix = g_matWorld;
             row_major matrix finalMat = mul(mul(weaponOffsetMatrix, rightHandMatrix), characterWorldMatrix);
-            row_major matrix weaponWVP = mul(mul(finalMat, input.matView), input.matProjection);
+            row_major matrix weaponWVP = mul(mul(finalMat, g_matView), g_matProjection);
             output.pos = mul(float4(input.pos, 1.f), weaponWVP);
         }
        else
