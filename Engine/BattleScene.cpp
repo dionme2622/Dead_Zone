@@ -117,7 +117,7 @@ void BattleScene::LoadScene()
 
 	shared_ptr<GameObject> player2 = FemaleHero[23];
 	for (auto& gameObject : FemaleHero)
-	{
+	{	
 		//gameObject->SetName(L"FemaleSoldier");
 		gameObject->SetCheckFrustum(true);
 		gameObject->SetStatic(true);
@@ -223,20 +223,20 @@ void BattleScene::LoadScene()
 
 #pragma region Character
 	{
-		//for (int i = 0; i < 10; ++i)
-		//{
-		//	shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
+		for (int i = 0; i < 10; ++i)
+		{
+			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Wep_RevolverA.bin"); // MeshData* meshData
 
-		//	vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate();
-		//	for (auto& gameObject : gameObjects)
-		//	{
-		//		gameObject->SetCheckFrustum(true);
-		//		gameObject->SetStatic(true);
-		//		AddGameObject(gameObject);
-		//	}
-		//		gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 0.0f, 0.0f));
-		//		//gameObjects[0]->GetTransform()->SetLocalRotation(Vec3(0.f, 0.0f, 0.0f));
-		//}
+			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate();
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetCheckFrustum(true);
+				gameObject->SetStatic(true);
+				AddGameObject(gameObject);
+			}
+				gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 0.0f, 0.0f));
+				//gameObjects[0]->GetTransform()->SetLocalRotation(Vec3(0.f, 0.0f, 0.0f));
+		}
 	}
 
 #pragma endregion

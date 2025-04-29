@@ -109,6 +109,7 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)			// Instancing 
 		if (GetWeaponManager())
 		{
 			GetWeaponManager()->PushData();
+
 		}
 		if (GetWeapon())
 		{
