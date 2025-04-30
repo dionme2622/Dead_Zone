@@ -30,11 +30,8 @@ void BoxCollider::FinalUpdate()
 	_boundingBox.Center = GetGameObject()->GetTransform()->GetWorldPosition() + _center;
 	_boundingBox.Extents = _extents;
 
-	// Transform의 월드 회전 정보를 가져와 Orientation 업데이트
 	Matrix worldMatrix = GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
 	XMVECTOR rotationQuaternion = XMQuaternionRotationMatrix(XMLoadFloat4x4(&worldMatrix));
-
-	// Orientation 업데이트
 	XMStoreFloat4(&_boundingBox.Orientation, rotationQuaternion);
 }
 

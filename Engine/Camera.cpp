@@ -56,19 +56,10 @@ void Camera::SortGameObject()
 
 	_vecForward.clear();
 	_vecDeferred.clear();
-	_vecParticle.clear();
+	//_vecParticle.clear();
 
 	for (auto& gameObject : gameObjects)
 	{
-
-		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
-			continue;
-		}
-
-		if (IsCulled(gameObject->GetLayerIndex())) {
-			continue;
-		}
-
 		if (gameObject->GetCheckFrustum())
 		{
 			shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
@@ -90,6 +81,16 @@ void Camera::SortGameObject()
 			}
 		}
 
+		if (gameObject->GetMeshRenderer() == nullptr/* && gameObject->GetParticleSystem() == nullptr*/) {
+			continue;
+		}
+
+		if (IsCulled(gameObject->GetLayerIndex())) {
+			continue;
+		}
+
+		
+
 		if (gameObject->GetMeshRenderer())
 		{
 			SHADER_TYPE shaderType = gameObject->GetMeshRenderer()->GetMaterial()->GetShader()->GetShaderType();
@@ -103,10 +104,10 @@ void Camera::SortGameObject()
 				break;
 			}
 		}
-		else
+		/*else
 		{
 			_vecParticle.emplace_back(gameObject);
-		}
+		}*/
 	}
 }
 
@@ -145,7 +146,7 @@ void Camera::SortShadowObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 100) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ)/* + 100*/) == false)
 				{
 					continue;
 				}

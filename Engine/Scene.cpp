@@ -152,7 +152,7 @@ void Scene::RenderSSAO()
 	Matrix viewProj = mainCamera->GetViewMatrix() * mainCamera->GetProjectionMatrix();
 	material->SetMatrix(1, viewProj);
 
-	Matrix projInv = mainCamera->GetProjectionMatrix().Invert();
+	Matrix projInv = mainCamera->GetProjectionMatrix();
 	material->SetMatrix(2, projInv);
 
 	Vec2 resolution = Vec2(WINDOW.width, WINDOW.height);

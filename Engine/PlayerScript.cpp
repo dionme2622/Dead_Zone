@@ -84,12 +84,12 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::SPACE))
 		pos += GetTransform()->GetUp() * adjustedSpeed * DELTA_TIME;
 
-	if (BattleScene::isPlayerGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
+	/*if (BattleScene::isPlayerGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
 	{
 		_currentVelocity = _jumpVelocity;
 		pos.y += _currentVelocity * DELTA_TIME;
 		BattleScene::isPlayerGrounded = false;
-	}
+	}*/
 
 	GetTransform()->SetLocalPosition(pos);
 }

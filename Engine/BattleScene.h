@@ -50,7 +50,7 @@ private:
 private:
 	vector<vector<shared_ptr<GameObject>>> _zombies;
 
-	std::unordered_map<STAGEAREA, std::vector<std::shared_ptr<GameObject>>> _areaObjects;
+	unordered_map<STAGEAREA, vector<shared_ptr<GameObject>>> _areaObjects;
 
 };
 
