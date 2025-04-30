@@ -4,6 +4,9 @@
 #include "Material.h"
 #include "Transform.h"
 #include "Resources.h"
+#include <bullet3/btBulletDynamicsCommon.h>
+
+
 
 BinaryLoader::BinaryLoader()
 {
