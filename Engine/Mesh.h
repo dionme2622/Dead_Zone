@@ -48,13 +48,13 @@ public:
 	void Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexbuffer);
 	void Render(uint32 instanceCount = 1, uint32 idx = 0, bool isRender = true);
 	void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0, bool isRender = true);
-	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class BinaryLoader& loader);
+	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class BinaryLoader& loader, int type);
 
 
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);
 	void CreateIndexBuffer(const vector<uint32>& buffer);
-	void CreateBonesAndAnimations(class BinaryLoader& loader);
+	void CreateBonesAndAnimations(class BinaryLoader& loader, int type);
 
 
 public:

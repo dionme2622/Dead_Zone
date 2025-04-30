@@ -51,7 +51,7 @@ void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx, bool isRende
 	}
 }
 
-shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLoader& loader)
+shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLoader& loader, int type)
 {
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
 	if (!meshInfo->vertices.empty())
@@ -75,7 +75,7 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 
 	if (meshInfo->hasAnimation)
 	{
-		mesh->CreateBonesAndAnimations(loader);
+		mesh->CreateBonesAndAnimations(loader, type);
 		mesh->_hasAnimation = true;
 	}
 
@@ -151,7 +151,7 @@ void Mesh::CreateIndexBuffer(const vector<uint32>& buffer)
 	_vecIndexInfo.push_back(info);
 }
 
-void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
+void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader, int type)
 {
 #pragma region AnimClip
 	uint32 frameCount = 0;
@@ -255,11 +255,21 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 
 #pragma region AnimationClip
 	if (IsAnimMesh())
-	{	// Resources로 Add한다.
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Walk", _animClips[6]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Run", _animClips[7]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Shoot", _animClips[11]);
+	{	
+		// Resources로 Add한다.
+		switch (type)
+		{
+		case PLAYER:
+			GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Walk", _animClips[6]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Run", _animClips[7]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Shoot", _animClips[11]);
+			break;
+		case ZOMBIE:
+			GET_SINGLE(Resources)->AddAnimClip(L"Zombie_Idle", _animClips[0]);
+			break;
+		}
+		
 
 		/*GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
 		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);

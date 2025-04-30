@@ -29,8 +29,10 @@ public:
 	shared_ptr<Mesh> LoadRectangleMesh();
 	shared_ptr<Mesh> LoadCubeMesh();
 	shared_ptr<Mesh> LoadSphereMesh();
-	shared_ptr<class MeshData> LoadModelFromBinary(const wstring& path);
-	shared_ptr<class AnimatorController> LoadAnimatorController();			// Animation Controller를 생성한다.
+	shared_ptr<class MeshData> LoadModelFromBinary(const wstring& path, int type = OBJECT);
+	shared_ptr<class AnimatorController> LoadAnimatorPlayerController();			// Animation Controller를 생성한다.
+	shared_ptr<class AnimatorController> LoadAnimatorZombieController();			// Animation Controller를 생성한다.
+
 	//void LoadSceneFromBinary(const wstring& path);
 
 	shared_ptr<Texture> CreateTexture(const wstring& name, DXGI_FORMAT format, uint64 width, uint64 height,

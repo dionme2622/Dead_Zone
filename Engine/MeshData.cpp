@@ -18,7 +18,7 @@ MeshData::~MeshData()
 {
 }
 
-shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
+shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path, int type)
 {
 	BinaryLoader loader;
 	loader.LoadModelFromBinary(path);
@@ -32,7 +32,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		// Mesh
 		if (!loader.GetMesh(i).vertices.empty())
 		{
-			shared_ptr<Mesh> mesh = Mesh::CreateFromBinary(&loader.GetMesh(i), loader);
+			shared_ptr<Mesh> mesh = Mesh::CreateFromBinary(&loader.GetMesh(i), loader, type);
 			mesh->SetName(loader.GetMesh(i).meshName);
 			GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
 
@@ -71,7 +71,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 }
 
 
-vector<shared_ptr<GameObject>> MeshData::Instantiate()
+vector<shared_ptr<GameObject>> MeshData::Instantiate(int type)
 {
 	vector<shared_ptr<GameObject>> v;
 
@@ -123,9 +123,23 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 			}
 			if (info.mesh->hasAnimation())				// Mesh가 애니메이션을 가지고 있다면?
 			{
-				shared_ptr<Animator> animator = make_shared<Animator>(GET_SINGLE(Resources)->LoadAnimatorController());
-				animator->SetBones(info.mesh->GetBones());
-				gameObject->AddComponent(animator);
+				shared_ptr<Animator> animator = nullptr;
+				switch (type)
+				{
+				case PLAYER:
+					animator = make_shared<Animator>(GET_SINGLE(Resources)->LoadAnimatorPlayerController());
+					animator->SetBones(info.mesh->GetBones());
+					gameObject->AddComponent(animator);
+					break;
+				case ZOMBIE:
+					animator = make_shared<Animator>(GET_SINGLE(Resources)->LoadAnimatorZombieController());
+					animator->SetBones(info.mesh->GetBones());
+					gameObject->AddComponent(animator);
+					break;
+				default:
+					break;
+				}
+				
 			}
 		}
 		v.push_back(gameObject);

@@ -14,14 +14,10 @@ Weapon::Weapon() : Component(COMPONENT_TYPE::WEAPON)
 
 Weapon::~Weapon()
 {
+
 }
 
 
-
-void Weapon::SetWeaponObject(shared_ptr<GameObject> weaponObject)
-{
-	_weaponObject = weaponObject;
-}
 
 void Weapon::PushData()
 {

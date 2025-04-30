@@ -44,7 +44,7 @@ void PlayerScript::LateUpdate()
 		// 2) 원격 플레이어: 네트워크 상태를 받아서 Transform에 적용
 		// TODO : 여기서 다른 플레이어 객체들의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
 		// EX) 서버로 부터 자기 ID에 맞는 객체의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
-		GetTransform()->SetLocalPosition(Vec3(0.f, 50.f + 10 * DELTA_TIME, 0.f));		// 임시
+		//GetTransform()->SetLocalPosition(Vec3(0.f, 10 * DELTA_TIME, 0.f));		// 임시
 
 		
 		/*auto state = NetworkManager::Get()->GetPlayerState(_playerId);
@@ -170,7 +170,7 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 
 	_yaw += deltaX * sensitivity;
 
-	rotation.x = _pitch * 50;
+	rotation.x = _pitch * 0;
 	rotation.y = _yaw * 50;
 	rotation.z = 0.0;
 
@@ -178,7 +178,7 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 }
 
 void PlayerScript::UpdatePlayerOnTerrain()
-{
+{	
 	Vec3 pos = GetTransform()->GetLocalPosition();
 	float terrainHeight = -130.f;  // 수정해야됨
 

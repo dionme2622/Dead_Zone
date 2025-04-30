@@ -249,7 +249,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 	return mesh;
 }
 
-shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
+shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path, int type)
 {
 	wstring key = path;
 
@@ -261,14 +261,14 @@ shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
 	const string& spath = ws2s(path);
 	const char* Filepath = spath.c_str();
 
-	shared_ptr<MeshData> meshData = MeshData::LoadModelFromBinary(Filepath);
+	shared_ptr<MeshData> meshData = MeshData::LoadModelFromBinary(Filepath, type);
 	meshData->SetName(key);
 	Add(key, meshData);
 
 	return meshData;
 }
 
-shared_ptr<AnimatorController> Resources::LoadAnimatorController()
+shared_ptr<AnimatorController> Resources::LoadAnimatorPlayerController()
 {
 	// 1) Controller 생성
 	auto controller = make_shared<AnimatorController>();
@@ -367,6 +367,21 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorController()
 	// 6) Entry State 설정
 	controller->SetEntryState(L"Idle");
 
+	return controller;
+}
+
+shared_ptr<class AnimatorController> Resources::LoadAnimatorZombieController()
+{
+	// 1) Controller 생성
+	auto controller = make_shared<AnimatorController>();
+
+	// 3) 스테이트 생성 (이름, 클립, 클립 인덱스, 속도, loop)
+	auto idle = make_shared<AnimationState>(L"Zombie_Idle", GetAnimClip(L"Zombie_Idle"), 0, 1.0f, true);
+
+
+	controller->AddState(idle);
+	// 6) Entry State 설정
+	controller->SetEntryState(L"Zombie_Idle");
 	return controller;
 }
 
