@@ -13,7 +13,7 @@ Transform::~Transform()
 
 }
 
-void Transform::FinalUpdate()
+void Transform::Update()
 {
 	_matPrevWorld = _matWorld;
 
@@ -37,7 +37,6 @@ void Transform::FinalUpdate()
 	{
 		_matWorld *= parent->GetLocalToWorldMatrix();
 	}
-
 }
 
 Matrix Transform::GetToRootTransform()
@@ -116,7 +115,7 @@ void Transform::LookAt(const Vec3& dir)
 
 bool Transform::CloseEnough(const float& a, const float& b, const float& epsilon)
 {
-	return (epsilon > std::abs(a - b));
+	return (epsilon > abs(a - b));
 }
 
 Vec3 Transform::DecomposeRotationMatrix(const Matrix& rotation)
@@ -153,7 +152,7 @@ Vec3 Transform::DecomposeRotationMatrix(const Matrix& rotation)
 		float z1 = atan2f(v[0].y / cos(y1), v[0].x / cos(y1));
 		float z2 = atan2f(v[0].y / cos(y2), v[0].x / cos(y2));
 
-		if ((std::abs(x1) + std::abs(y1) + std::abs(z1)) <= (std::abs(x2) + std::abs(y2) + std::abs(z2)))
+		if ((abs(x1) + abs(y1) + abs(z1)) <= (abs(x2) + abs(y2) + abs(z2)))
 		{
 			ret = Vec3{ x1, y1, z1 };
 		}
@@ -164,4 +163,16 @@ Vec3 Transform::DecomposeRotationMatrix(const Matrix& rotation)
 	}
 
 	return ret;
+}
+
+shared_ptr<Transform> Transform::Clone()
+{
+	shared_ptr<Transform> transform = make_shared<Transform>();
+
+	transform->SetLocalPosition(GetLocalPosition());
+	transform->SetLocalRotation(GetLocalRotation());
+	transform->SetLocalScale(GetLocalScale());
+	//transform->SetParent(GetParent());
+
+	return transform;
 }

@@ -30,8 +30,9 @@ struct KeyFrameInfo
 	Vec4	translate;
 };
 
-struct AnimClipInfo
+class AnimClipInfo
 {
+public:
 	wstring							animName;
 	double							duration;
 	int32							frameCount;
@@ -47,22 +48,23 @@ public:
 	void Init(const vector<Vertex>& vertexBuffer, const vector<uint32>& indexbuffer);
 	void Render(uint32 instanceCount = 1, uint32 idx = 0, bool isRender = true);
 	void Render(shared_ptr<class InstancingBuffer>& buffer, uint32 idx = 0, bool isRender = true);
-	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class BinaryLoader& loader);
+	static shared_ptr<Mesh> CreateFromBinary(const struct BinaryMeshInfo* meshInfo, class BinaryLoader& loader, int type);
 
 
 private:
 	void CreateVertexBuffer(const vector<Vertex>& buffer);
 	void CreateIndexBuffer(const vector<uint32>& buffer);
-	void CreateBonesAndAnimations(class BinaryLoader& loader);
+	void CreateBonesAndAnimations(class BinaryLoader& loader, int type);
 
 
 public:
-	uint32 GetSubsetCount() { return static_cast<uint32>(_vecIndexInfo.size()); }
-	const vector<BoneInfo>* GetBones() { return &_bones; }
-	uint32						GetBoneCount() { return static_cast<uint32>(_bones.size()); }
-	const vector<AnimClipInfo>* GetAnimClip() { return &_animClips; }
+	uint32 GetSubsetCount()			{ return static_cast<uint32>(_vecIndexInfo.size()); }
+	const vector<BoneInfo>*			GetBones() { return &_bones; }
+	uint32							GetBoneCount() { return static_cast<uint32>(_bones.size()); }
+	//const vector<AnimClipInfo>*		GetAnimClip() { return &_animClips; }
 
 	bool							IsAnimMesh() { return !_animClips.empty(); }
+	bool							hasAnimation() { return _hasAnimation; }
 	shared_ptr<StructuredBuffer>	GetBoneFrameDataBuffer(int32 index = 0) { return _frameBuffer[index]; } // 전체 본 프레임 정보
 	shared_ptr<StructuredBuffer>	GetBoneOffsetBuffer() { return  _offsetBuffer; }
 private:
@@ -73,7 +75,7 @@ private:
 	vector<IndexBufferInfo>				 _vecIndexInfo;
 										 
 	// Animation						 
-	vector<AnimClipInfo>				 _animClips;
+	vector<shared_ptr<AnimClipInfo>>	 _animClips;
 	vector<BoneInfo>					 _bones;
 
 	shared_ptr<StructuredBuffer>		 _offsetBuffer; // 각 뼈의 offset 행렬
@@ -83,5 +85,7 @@ private:
 
 	shared_ptr<StructuredBuffer>		_boneFinalMatrix;  // 특정 프레임의 최종 행렬
 
+public:
+	bool								_hasAnimation = false;		// SkinMesh 객체인가?
 };
 

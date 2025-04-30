@@ -21,11 +21,12 @@ public:
 
 	static bool isPlayerGrounded;
 private:
-	shared_ptr<GameObject>		_playerCamera;
-	shared_ptr<GameObject>		_uiCamera;
+	//shared_ptr<Player>			_player;
+	shared_ptr<GameObject>			_playerCamera;
+	shared_ptr<GameObject>			_uiCamera;
 
+	vector<shared_ptr<GameObject>>	_player;
 	shared_ptr<GameObject>		_mainLight;
-	shared_ptr<GameObject>		_player;
 	HWND _hwnd;
 
 

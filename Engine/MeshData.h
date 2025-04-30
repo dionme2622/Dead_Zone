@@ -1,6 +1,11 @@
 #pragma once
 #include "Object.h"
 
+//enum
+//{
+//	OBJECT = 0, PLAYER = 1, ZOMBIE = 2
+//};
+
 class Mesh;
 class Material;
 class GameObject;
@@ -26,8 +31,8 @@ public:
 	
 	vector<MeshRenderInfo> GetMeshRenderInfo() { return _meshRenders; };
 
-	static shared_ptr<MeshData> LoadModelFromBinary(const char* path);
-	vector<shared_ptr<GameObject>> Instantiate();
+	static shared_ptr<MeshData> LoadModelFromBinary(const char* path, int type);
+	vector<shared_ptr<GameObject>> Instantiate(int type = OBJECT);
 
 private:
 	vector<MeshRenderInfo> _meshRenders;

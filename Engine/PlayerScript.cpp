@@ -12,12 +12,20 @@
 #include "BattleScene.h"
 #include "WeaponManager.h"
 #include "Weapon.h"
+#include "Animator.h"
 
-PlayerScript::PlayerScript(HWND hwnd, shared_ptr<Transform> playerTransform) :
-	_hwnd(hwnd), _speed(30.0f), _jumpVelocity(10.0f), _currentVelocity(0.0f), 
-	_gravity(-9.8f), _isGrounded(true), _pitch(0.0f), _yaw(0.0f), _mouseMove(false), 
-	_cameraTransform(playerTransform)
+PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 {
+	_hwnd = hwnd;
+	_isLocal = isLocal;
+	_playerId = playerId;
+	// Player에 대한 정보 초기화 단계
+
+	_speed = 5.0f;
+	_jumpVelocity = 500.0f;
+	_currentVelocity = 0.0f;
+	_gravity = 9.8f;
+	_isGrounded = true;
 }
 
 PlayerScript::~PlayerScript()
@@ -26,22 +34,28 @@ PlayerScript::~PlayerScript()
 
 void PlayerScript::LateUpdate()
 {
-	UpdatePlayerInput();
+	
 
 	//UpdatePlayerOnTerrain();
 
-	Vec3 playerPosition = GetTransform()->GetLocalPosition();
-	Vec3 cameraPosition = playerPosition;
-	_cameraTransform->SetLocalPosition(cameraPosition);
-
-	// 디버깅용
+	if (_isLocal)
 	{
-		Vec3 pos = _cameraTransform->GetLocalPosition();
-		pos += GetTransform()->GetUp() * 3;
-		pos -= GetTransform()->GetLook() * 10.f;
-		_cameraTransform->SetLocalPosition(pos);
+		// 1) 로컬 입력 읽어서 내 캐릭터 움직임 계산 → 클라이언트 예측
+		UpdatePlayerInput();
+	}
+	else
+	{
+		// 2) 원격 플레이어: 네트워크 상태를 받아서 Transform에 적용
+		// TODO : 여기서 다른 플레이어 객체들의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
+		// EX) 서버로 부터 자기 ID에 맞는 객체의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
+		//GetTransform()->SetLocalPosition(Vec3(0.f, 10 * DELTA_TIME, 0.f));		// 임시
+
+		
+		/*auto state = NetworkManager::Get()->GetPlayerState(_playerId);
+		ApplyNetworkState(state.position, state.rotationEuler, state.equippedWeapon);*/
 	}
 }
+
 
 
 void PlayerScript::UpdatePlayerInput()
@@ -53,6 +67,11 @@ void PlayerScript::UpdatePlayerInput()
 
 void PlayerScript::UpdateKeyInput()
 {
+	// 1) 이전 위치 저장
+	Vec3 oldPos = GetTransform()->GetLocalPosition();
+	Vec3 newPos = oldPos;
+	
+	// 2) 입력에 따라 newPos 변경	
 	Vec3 pos = GetTransform()->GetLocalPosition();
 	Vec3 scale = GetTransform()->GetLocalScale();
 
@@ -69,44 +88,67 @@ void PlayerScript::UpdateKeyInput()
 	flatRightVector.Normalize();
 
 	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += flatLookVector * adjustedSpeed * DELTA_TIME;
-
+		newPos += GetTransform()->GetLook() * _speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= flatLookVector * adjustedSpeed * DELTA_TIME;
-
+		newPos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= flatRightVector * adjustedSpeed * DELTA_TIME;
-
+		newPos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += flatRightVector * adjustedSpeed * DELTA_TIME;
-
+		newPos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+	if (INPUT->GetButton(KEY_TYPE::Q))
+		newPos += GetTransform()->GetLook() * _speed * 2 * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::CTRL))
-		pos -= GetTransform()->GetUp() * adjustedSpeed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::SPACE))
-		pos += GetTransform()->GetUp() * adjustedSpeed * DELTA_TIME;
+		newPos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
 
 	if (BattleScene::isPlayerGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
 	{
 		_currentVelocity = _jumpVelocity;
-		pos.y += _currentVelocity * DELTA_TIME;
-		BattleScene::isPlayerGrounded = false;
+		newPos.y += _currentVelocity * DELTA_TIME;
+		_isGrounded = false;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::KEY_1))
+	{
 		GetWeaponManager()->EquipWeapon(0);
+	}
 	
 	if (INPUT->GetButton(KEY_TYPE::KEY_2))
+	{
 		GetWeaponManager()->EquipWeapon(1);
+	}
 	
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
+	{	
 		GetWeaponManager()->EquipWeapon(2);
+	}
 
 	if (INPUT->GetButton(KEY_TYPE::LEFTCLICK))
+	{
+		// Shoot 애니메이션 트리거
+		GetAnimator()->SetTrigger("Shoot");
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
+	}
 
+	// 3) 실제 이동량 계산
+	Vec3 delta = newPos - oldPos;
+	// TODO : pos 값을 서버로 보낸다.
 
-	GetTransform()->SetLocalPosition(pos);
+	// 4) 초당 속도로 변환
+	float currentSpeed = 0.0f;
+	if (delta.LengthSquared() > 0.0f)   // >0 이면
+	{
+		float dist = delta.Length();    // 이동 거리
+		currentSpeed = dist / DELTA_TIME;
+		// (만약 애니메이터가 0~1 사이 값을 기대하면
+		//  currentSpeed /= _speed; // maxSpeed 로 정규화)
+	}
+	 
+	// 5) Animator 에 전달
+	GetAnimator()->SetFloat("Speed", currentSpeed);
+	printf("속도: %f\n", currentSpeed);
+	// 6) 위치 적용
+	GetTransform()->SetLocalPosition(newPos);
+
 }
 
 
@@ -166,7 +208,7 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 }
 
 void PlayerScript::UpdatePlayerOnTerrain()
-{
+{	
 	Vec3 pos = GetTransform()->GetLocalPosition();
 
 

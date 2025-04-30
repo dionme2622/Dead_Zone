@@ -106,6 +106,16 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)			// Instancing 
 			material->SetInt(1, 1);
 		}
 
+		if (GetWeaponManager())
+		{
+			GetWeaponManager()->PushData();
+
+		}
+		if (GetWeapon())
+		{
+			GetWeapon()->PushData();
+		}
+
 		material->PushGraphicsData();
 		_mesh->Render(buffer, i, _isRender);
 	}

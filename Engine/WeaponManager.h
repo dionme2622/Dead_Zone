@@ -20,6 +20,8 @@ public:
 
 	void EquipWeapon(int index);
 
+	int GetInventorySize() { return _weaponInventory.size(); }
+
 	vector<shared_ptr<GameObject>> GetCurrentWeapon() {	return _currentWeapon; }
 private:
 	Matrix									_characterWorldMat;		// 캐릭터의 World Matrix

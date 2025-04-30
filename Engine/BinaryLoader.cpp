@@ -467,7 +467,7 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 
 				for (int i = 0; i < nSkinningBones; ++i) {
 					char name[64] = {};
-					_bones[i] = std::make_shared<BinaryBoneInfo>();
+					_bones[i] = make_shared<BinaryBoneInfo>();
 					::ReadStringFromFile(pInFile, name);
 					string sboneName(name);
 					_bones[i]->boneName = s2ws(sboneName);

@@ -3,8 +3,6 @@
 #include "Engine.h"
 #include "SceneManager.h"
 #include "KeyInput.h"
-
-
 void Game::Init(const WindowInfo& info)
 {
 	GEngine->Init(info);

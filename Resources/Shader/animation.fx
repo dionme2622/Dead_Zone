@@ -43,9 +43,6 @@ void CS_Main(int3 threadIdx : SV_DispatchThreadID)
     float4 scale = lerp(g_bone_frame[idx].scale, g_bone_frame[nextIdx].scale, ratio);
     float4 rotation = QuaternionSlerp(g_bone_frame[idx].rotation, g_bone_frame[nextIdx].rotation, ratio);
     float4 translation = lerp(g_bone_frame[idx].translation, g_bone_frame[nextIdx].translation, ratio);
-
-    //matrix g_matBone = MatrixAffineTransformation(scale, quaternionZero, rotation, translation); // Animation KeyFrame의 bone 행렬
-
     
     g_matBone[threadIdx.x] = MatrixAffineTransformation(scale, quaternionZero, rotation, translation); // Animation KeyFrame의 bone 행렬
     

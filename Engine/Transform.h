@@ -7,6 +7,7 @@ public:
 	Transform();
 	virtual ~Transform();
 
+	virtual void Update() override;
 	virtual void FinalUpdate() override;
 	Matrix GetToRootTransform();
 	Matrix GetLocalMatrix();
@@ -35,8 +36,10 @@ public:
 	void SetLocalMatrix(Matrix& matrix) { _matLocal = matrix;}
 	void LookAt(const Vec3& dir);
 
-	static bool CloseEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon());
+	static bool CloseEnough(const float& a, const float& b, const float& epsilon = numeric_limits<float>::epsilon());
 	static Vec3 DecomposeRotationMatrix(const Matrix& rotation);
+
+	shared_ptr<Transform> Clone();
 
 public:
 	void SetParent(shared_ptr<Transform> parent) { _parent = parent; }
