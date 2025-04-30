@@ -60,9 +60,6 @@ void BattleScene::LoadScene()
 	//	AddGameObject(_playerCamera);
 	//}
 
-
-
-
 #pragma region SkyBox
 		{
 			shared_ptr<GameObject> skybox = make_shared<GameObject>();
@@ -100,7 +97,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : FemaleSoldier)
 		{
 			//gameObject->SetName(L"FemaleSoldier");
-			gameObject->SetCheckFrustum(true);
+			gameObject->SetCheckFrustum(false);
 			gameObject->SetStatic(true);
 			gameObject->GetTransform()->FinalUpdate();
 			AddGameObject(gameObject);
