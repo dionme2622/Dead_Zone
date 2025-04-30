@@ -33,3 +33,6 @@
 /Output
 /Client/x64
 /.vs
+/Server/Server/x64
+/Server/.vs
+/Server/x64
