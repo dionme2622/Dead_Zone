@@ -193,18 +193,18 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 	_yaw += deltaX * sensitivity;
 
 	// 플레이어는 Yaw 회전만 적용 (Pitch는 제외)
-	Vec3 rotation = Vec3(0.0f, _yaw * 50, 0.0f); // Pitch는 0으로 유지
+	Vec3 rotation = Vec3(0, _yaw * 50, 0.0f); // Pitch는 0으로 유지
 	GetTransform()->SetLocalRotation(rotation);
 	
 	// 디버그용
-	{
+	/*{
 		Vec3 rotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); 
 		GetTransform()->SetLocalRotation(rotation);
-	}
+	}*/
 
 	// 카메라는 Pitch와 Yaw 모두 적용
-	Vec3 cameraRotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); // Pitch와 Yaw 적용
-	_cameraTransform->SetLocalRotation(cameraRotation);
+	//Vec3 cameraRotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); // Pitch와 Yaw 적용
+	//_cameraTransform->SetLocalRotation(cameraRotation);
 }
 
 void PlayerScript::UpdatePlayerOnTerrain()
