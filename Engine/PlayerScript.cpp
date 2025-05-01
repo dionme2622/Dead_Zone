@@ -18,7 +18,7 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 	_playerId = playerId;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 20.0f;
+	_speed = 50.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
@@ -108,14 +108,6 @@ void PlayerScript::UpdateKeyInput()
 		dir *= _speed;
 	}
 
-
-	if (_isGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
-	{
-		_currentVelocity = _jumpVelocity;
-		newPos.y += _currentVelocity * DELTA_TIME;
-		_isGrounded = false;
-	}
-
 	if (INPUT->GetButton(KEY_TYPE::KEY_1))
 	{
 		GetWeaponManager()->EquipWeapon(0);
@@ -154,7 +146,7 @@ void PlayerScript::UpdateKeyInput()
 	 
 	// 5) Animator 에 전달
 	GetAnimator()->SetFloat("Speed", currentSpeed);
-	printf("속도: %f\n", currentSpeed);
+	//printf("속도: %f\n", currentSpeed);
 
 	// 5) 최종 속도 세팅 (Y 속도는 점프/중력 유지)
 	body->setLinearVelocity(btVector3(dir.x, yVel, dir.z));
@@ -220,7 +212,7 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 
 	_yaw += deltaX * sensitivity;
 
-	rotation.x = _pitch * 0;
+	rotation.x = _pitch * 50;
 	rotation.y = _yaw * 50;
 	rotation.z = 0.0;
 

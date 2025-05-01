@@ -58,10 +58,10 @@ void RigidBody::FinalUpdate() {
     Vec3 p(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
     GetTransform()->SetLocalPosition(p);
 
-    std::cout
+    /*std::cout
         << "[CapsuleCollider] Position: ("
         << p.x << ", "
         << p.y << ", "
-        << p.z << ")\n";
+        << p.z << ")\n";*/
 }
 
