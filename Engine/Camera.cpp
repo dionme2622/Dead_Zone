@@ -46,11 +46,6 @@ void Camera::SortGameObject()
 	S_MatView = _matView;
 	S_MatProjection = _matProjection;
 
-	/*if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
-		S_MainMatView = _matView;
-		S_MainMatProjection = _matProjection;
-	}*/
-
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	const vector<shared_ptr<GameObject>>& gameObjects = scene->GetGameObjects();
 
@@ -83,7 +78,7 @@ void Camera::SortGameObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 50) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ)) == false)
 				{
 					continue;
 				}
@@ -145,7 +140,7 @@ void Camera::SortShadowObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 100) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ)) == false)
 				{
 					continue;
 				}

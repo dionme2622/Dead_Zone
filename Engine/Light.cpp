@@ -4,7 +4,6 @@
 #include "Engine.h"
 #include "Resources.h"
 #include "Camera.h"
-#include "Transform.h"
 #include "Texture.h"
 #include "SceneManager.h"
 
@@ -23,20 +22,18 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
-	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
+	// 섀도우 카메라의 위치를 빛의 위치로 설정
+	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetWorldPosition());
 
-	_lightInfo.position = GetTransform()->GetWorldPosition();
+	// 섀도우 카메라의 방향을 빛의 방향으로 설정
+	Vec3 lightDirection = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z); // 빛의 방향
+	lightDirection.Normalize();
+	_shadowCamera->GetTransform()->LookAt(GetTransform()->GetWorldPosition() - lightDirection);
 
-	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
-	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 없음
-
+	// 섀도우 카메라의 스케일 설정
 	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
 
-	// 빛의 방향에 맞춰 카메라가 아래를 향하도록 설정
-	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(
-		Vec3(_lightInfo.direction.x + 45, 0, 0));
-
+	// 섀도우 카메라 업데이트
 	_shadowCamera->FinalUpdate();
 }
 
