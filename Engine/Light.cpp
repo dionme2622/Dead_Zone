@@ -33,7 +33,7 @@ void Light::FinalUpdate()
 
 	// 빛의 방향에 맞춰 카메라가 아래를 향하도록 설정
 	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(
-		Vec3(_lightInfo.direction.x + 45, 0, 0));
+		Vec3(_lightInfo.direction.x - 45, 0, 0));
 
 	_shadowCamera->FinalUpdate();
 }

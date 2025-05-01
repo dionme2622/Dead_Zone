@@ -212,7 +212,7 @@ void BattleScene::LoadScene()
 	{
 		_mainLight = make_shared<GameObject>();
 		_mainLight->AddComponent(make_shared<Transform>());
-		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 90, 60));
+		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 90, 100));
 		_mainLight->AddComponent(make_shared<Light>());
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);

@@ -29,7 +29,6 @@ void Transform::Update()
 
 	_matLocal = matScale * matRotation * matTranslation;
 
-
 	_matWorld = _matLocal;
 
 	shared_ptr<Transform> parent = GetParent().lock();
