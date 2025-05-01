@@ -185,6 +185,7 @@ void PlayerScript::UpdateMouseInput()
 		ClientToScreen(_hwnd, &screenCenter);
 		SetCursorPos(screenCenter.x, screenCenter.y);
 	}
+}
 
 bool PlayerScript::IsGrounded(btRigidBody* body, btDiscreteDynamicsWorld* world)
 {
