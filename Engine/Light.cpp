@@ -21,15 +21,19 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
+	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
+
+	_lightInfo.position = GetTransform()->GetWorldPosition();
+
 	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
-	Vec3 lightDirection = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
-	lightDirection.Normalize();
-	Vec3 targetPos = GetTransform()->GetLocalPosition() - lightDirection; // 빛이 비추는 방향
-	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 초기화
-	_shadowCamera->GetTransform()->LookAt(targetPos);
+	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 없음
 
 	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
+
+	// 빛의 방향에 맞춰 카메라가 아래를 향하도록 설정
+	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(
+		Vec3(_lightInfo.direction.x + 45, 0, 0));
 
 	_shadowCamera->FinalUpdate();
 }

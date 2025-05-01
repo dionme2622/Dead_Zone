@@ -97,7 +97,6 @@ void Scene::RenderShadow()
 
 void Scene::RenderDeferred()
 {
-
 	// Deferred OMSet
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->OMSetRenderTargets();
 
