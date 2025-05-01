@@ -102,7 +102,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(20.f, 100.f, 0.f));
+	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 150.f, 0.f));
 	Vec3 pos1 = player1->GetTransform()->GetLocalPosition();
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
@@ -131,7 +131,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 00.f, 0.f));
+	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
 	Vec3 pos2 = player2->GetTransform()->GetLocalPosition();
 	player2->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 持失
 	player2->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<CapsuleCollider>(player2->GetCollider()), pos2, false));			// Rigid Body 持失
@@ -207,9 +207,9 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<GameObject> light = make_shared<GameObject>();
 		light->AddComponent(make_shared<Transform>());
-		light->GetTransform()->SetLocalPosition(Vec3(0, 100.f, 0));
+		light->GetTransform()->SetLocalPosition(Vec3(0, 1000.f, 0));
 		light->AddComponent(make_shared<Light>());
-		light->GetLight()->SetLightDirection(Vec3(0, 1.f, 0.f));
+		light->GetLight()->SetLightDirection(Vec3(0, -1.f, 0.f));
 		light->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		light->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		light->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));

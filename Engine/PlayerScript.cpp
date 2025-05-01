@@ -18,7 +18,7 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 	_playerId = playerId;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 50.0f;
+	_speed = 10.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
