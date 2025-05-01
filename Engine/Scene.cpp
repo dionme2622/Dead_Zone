@@ -53,10 +53,9 @@ void Scene::Render()
 
 	ClearRTV();
 
-	RenderDeferred();
-
 	RenderShadow();
 
+	RenderDeferred();
 
 	RenderLights();
 
@@ -112,13 +111,6 @@ void Scene::RenderDeferred()
 
 void Scene::RenderLights()
 {
-	shared_ptr<Camera> mainCamera = _cameras[0];
-	Camera::S_MatView = mainCamera->GetViewMatrix();
-	Camera::S_MatProjection = mainCamera->GetProjectionMatrix();
-
-	Camera::S_MainMatView = mainCamera->GetViewMatrix();
-	Camera::S_MainMatProjection = mainCamera->GetProjectionMatrix();
-
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->OMSetRenderTargets();
 
 	// 광원을 그린다.
