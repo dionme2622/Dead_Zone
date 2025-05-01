@@ -13,7 +13,8 @@
 #include "WeaponManager.h"
 #include "Weapon.h"
 #include "Animator.h"
-
+#include "RigidBody.h"
+#include "PhysicsSystem.h"
 PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 {
 	_hwnd = hwnd;
@@ -21,7 +22,7 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 	_playerId = playerId;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 5.0f;
+	_speed = 10.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
@@ -67,44 +68,48 @@ void PlayerScript::UpdatePlayerInput()
 
 void PlayerScript::UpdateKeyInput()
 {
+	// 1) RigidBody & 현재 Y 속도
+	auto body = GetRigidBody()->GetBody();
+	btVector3 vel = body->getLinearVelocity();
+	float     yVel = vel.getY();
+
 	// 1) 이전 위치 저장
 	Vec3 oldPos = GetTransform()->GetLocalPosition();
 	Vec3 newPos = oldPos;
 	
 	// 2) 입력에 따라 newPos 변경	
-	Vec3 pos = GetTransform()->GetLocalPosition();
-	Vec3 scale = GetTransform()->GetLocalScale();
+	//if (INPUT->GetButton(KEY_TYPE::W))
+	//	newPos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::S))
+	//	newPos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::A))
+	//	newPos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::D))
+	//	newPos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::Q))
+	//	newPos += GetTransform()->GetLook() * _speed * 2 * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::CTRL))
+	//	newPos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
 
-	float adjustedSpeed = _speed / scale.x; // 스케일에 따라 속도를 조정
+	// 2) WASD 입력에 따른 방향(dir) 계산
+	Vec3 dir(0, 0, 0);
+	if (INPUT->GetButton(KEY_TYPE::W)) dir += GetTransform()->GetLook();
+	if (INPUT->GetButton(KEY_TYPE::S)) dir -= GetTransform()->GetLook();
+	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight();
+	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight();
 
-	// 룩 벡터를 가져오고, Y 성분을 제거하여 수평 방향만 유지
-	Vec3 lookVector = GetTransform()->GetLook();
-	Vec3 flatLookVector = Vec3(lookVector.x, 0.0f, lookVector.z); // Y 성분을 0으로 설정
-	flatLookVector.Normalize(); // 정규화하여 방향만 유지
-
-	// 오른쪽 벡터도 수평 방향으로 유지
-	Vec3 rightVector = GetTransform()->GetRight();
-	Vec3 flatRightVector = Vec3(rightVector.x, 0.0f, rightVector.z);
-	flatRightVector.Normalize();
-
-	if (INPUT->GetButton(KEY_TYPE::W))
-		newPos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::S))
-		newPos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::A))
-		newPos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::D))
-		newPos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::Q))
-		newPos += GetTransform()->GetLook() * _speed * 2 * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::CTRL))
-		newPos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
-
-	if (BattleScene::isPlayerGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
+	// 3) 땅에 붙어 있을 때만 점프
+	if (IsGrounded(body.get(), GET_SINGLE(PhysicsSystem)->GetDynamicsWorld())
+		&& INPUT->GetButtonDown(KEY_TYPE::SPACE))
 	{
-		_currentVelocity = _jumpVelocity;
-		newPos.y += _currentVelocity * DELTA_TIME;
-		_isGrounded = false;
+		yVel = _jumpVelocity;   // 예: 8.0f
+	}
+	// 4) 수평 방향 속도 설정
+	const float EPS = 1e-6f;
+	if (dir.LengthSquared() > EPS)
+	{
+		dir.Normalize();
+		dir *= _speed;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::KEY_1))
@@ -129,6 +134,7 @@ void PlayerScript::UpdateKeyInput()
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
 	}
 
+
 	// 3) 실제 이동량 계산
 	Vec3 delta = newPos - oldPos;
 	// TODO : pos 값을 서버로 보낸다.
@@ -145,10 +151,11 @@ void PlayerScript::UpdateKeyInput()
 	 
 	// 5) Animator 에 전달
 	GetAnimator()->SetFloat("Speed", currentSpeed);
-	printf("속도: %f\n", currentSpeed);
-	// 6) 위치 적용
-	GetTransform()->SetLocalPosition(newPos);
+	//printf("속도: %f\n", currentSpeed);
 
+	// 5) 최종 속도 세팅 (Y 속도는 점프/중력 유지)
+	body->setLinearVelocity(btVector3(dir.x, yVel, dir.z));
+	//GetTransform()->SetLocalPosition(newPos);
 }
 
 
@@ -178,6 +185,24 @@ void PlayerScript::UpdateMouseInput()
 		ClientToScreen(_hwnd, &screenCenter);
 		SetCursorPos(screenCenter.x, screenCenter.y);
 	}
+
+bool PlayerScript::IsGrounded(btRigidBody* body, btDiscreteDynamicsWorld* world)
+{
+	// 1) 리지드바디 현재 위치
+	btTransform trans;
+	body->getMotionState()->getWorldTransform(trans);
+	btVector3 origin = trans.getOrigin();
+
+	// 2) 레이 시작점과 끝점 설정 (Y축 아래로 e.g. 0.1m 만큼)
+	btVector3 from = origin;
+	btVector3 to = origin - btVector3(0, /*down*/ 0.12f, 0);
+
+	// 3) 레이캐스트 콜백
+	btCollisionWorld::ClosestRayResultCallback rayCB(from, to);
+	world->rayTest(from, to, rayCB);
+
+	// 4) 땅에 닿았으면 fraction < 1.0
+	return rayCB.hasHit() && rayCB.m_closestHitFraction < 1.0f;
 }
 
 
@@ -192,19 +217,11 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 	// Y축 회전 (Yaw, 좌우) - 캐릭터와 카메라 모두에 적용
 	_yaw += deltaX * sensitivity;
 
-	// 플레이어는 Yaw 회전만 적용 (Pitch는 제외)
-	Vec3 rotation = Vec3(0, _yaw * 50, 0.0f); // Pitch는 0으로 유지
-	GetTransform()->SetLocalRotation(rotation);
-	
-	// 디버그용
-	/*{
-		Vec3 rotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); 
-		GetTransform()->SetLocalRotation(rotation);
-	}*/
+	rotation.x = _pitch * 50;
+	rotation.y = _yaw * 50;
+	rotation.z = 0.0;
 
-	// 카메라는 Pitch와 Yaw 모두 적용
-	//Vec3 cameraRotation = Vec3(_pitch * 50, _yaw * 50, 0.0f); // Pitch와 Yaw 적용
-	//_cameraTransform->SetLocalRotation(cameraRotation);
+	GetTransform()->SetLocalRotation(rotation);
 }
 
 void PlayerScript::UpdatePlayerOnTerrain()

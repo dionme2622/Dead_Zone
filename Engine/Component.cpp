@@ -55,3 +55,8 @@ shared_ptr<PlayerStats> Component::GetPlayerStats()
 {
 	return _gameObject.lock()->GetPlayerStats();
 }
+
+shared_ptr<RigidBody> Component::GetRigidBody()
+{
+	return _gameObject.lock()->GetRigidBody();
+}

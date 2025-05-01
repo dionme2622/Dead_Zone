@@ -203,6 +203,11 @@
     <ClInclude Include="AnimationState.h" />
     <ClInclude Include="AnimatorParameter.h" />
     <ClInclude Include="Transition.h" />
+    <ClInclude Include="CapsuleCollider.h">
+      <Filter>Object\Component\Colider</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="PhysicsSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -365,6 +370,11 @@
     <ClCompile Include="AnimatorController.cpp" />
     <ClCompile Include="AnimationState.cpp" />
     <ClCompile Include="Transition.cpp" />
+    <ClCompile Include="CapsuleCollider.cpp">
+      <Filter>Object\Component\Colider</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="PhysicsSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

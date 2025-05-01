@@ -8,10 +8,12 @@
 #include "ParticleSystem.h"
 #include "Animator.h"
 #include "BaseCollider.h"
+#include "CapsuleCollider.h"
 #include "WeaponManager.h"
 #include "Weapon.h"
 #include "Bullet.h"
 #include "PlayerStats.h"
+#include "RigidBody.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
@@ -137,6 +139,12 @@ shared_ptr<PlayerStats> GameObject::GetPlayerStats()
 	return static_pointer_cast<PlayerStats>(component);
 }
 
+shared_ptr<RigidBody> GameObject::GetRigidBody()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::RIGIDBODY);
+	return static_pointer_cast<RigidBody>(component);
+}
+
 shared_ptr<Camera> GameObject::GetCamera()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::CAMERA);
@@ -153,6 +161,12 @@ shared_ptr<BaseCollider> GameObject::GetCollider()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::COLLIDER);
 	return static_pointer_cast<BaseCollider>(component);
+}
+
+shared_ptr<CapsuleCollider> GameObject::GetCapsuleCollider()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::COLLIDER);
+	return static_pointer_cast<CapsuleCollider>(component);
 }
 
 shared_ptr<ParticleSystem> GameObject::GetParticleSystem()

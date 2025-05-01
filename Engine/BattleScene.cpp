@@ -3,6 +3,7 @@
 #include "Material.h"
 #include "GameObject.h"
 #include "MeshRenderer.h"
+#include "Timer.h"
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
@@ -19,7 +20,9 @@
 #include "PlayerStats.h"
 #include "StructuredBuffer.h"
 #include <bullet3/btBulletDynamicsCommon.h>
-
+#include "CapsuleCollider.h"
+#include "RigidBody.h"
+#include "PhysicsSystem.h"
 // TEST
 #include "KeyInput.h"
 
@@ -37,29 +40,6 @@ BattleScene::BattleScene()
 
 void BattleScene::LoadScene()
 {
-	unique_ptr<btDiscreteDynamicsWorld> dynamicsWorld;
-
-	// 1) 충돌 구성
-	auto config = std::make_unique<btDefaultCollisionConfiguration>();
-	auto dispatcher = std::make_unique<btCollisionDispatcher>(config.get());
-
-	// 2) 광역 단계 (Broadphase)
-	auto broadphase = std::make_unique<btDbvtBroadphase>();
-
-	// 3) 제약 해석기 (Solver)
-	auto solver = std::make_unique<btSequentialImpulseConstraintSolver>();
-
-	// 4) 월드 생성
-	dynamicsWorld = std::make_unique<btDiscreteDynamicsWorld>(
-		dispatcher.get(),
-		broadphase.get(),
-		solver.get(),
-		config.get());
-
-	// 5) 중력 설정 (예: 아래 방향 Y=-9.8)
-	dynamicsWorld->setGravity(btVector3(0, -9.8f, 0));
-
-
 	int _myID = 1;
 	int _theirID = 0;
 #pragma region LayerMask
@@ -73,15 +53,16 @@ void BattleScene::LoadScene()
 	//	_playerCamera->SetName(L"Debug_Camera");
 	//	_playerCamera->AddComponent(make_shared<Transform>());
 	//	_playerCamera->AddComponent(make_shared<Camera>());
-	//	//_playerCamera->AddComponent(make_shared<PlayerScript>(_hwnd));
+	//	_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
 
-	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 0.0f, 100.f));
+	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
 	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 	//	_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
 	//	uint8 layerIndex = LayerNameToIndex(L"UI");
 	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 	//	AddGameObject(_playerCamera);
 	//}
+#pragma endregion
 
 #pragma region SkyBox
 	{
@@ -126,11 +107,14 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
-	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
+	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 150.f, 0.f));
+	Vec3 pos1 = player1->GetTransform()->GetLocalPosition();
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
-
+	player1->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 생성
+	player1->AddComponent(make_shared<RigidBody>(500.0f, dynamic_pointer_cast<CapsuleCollider>(player1->GetCollider()), pos1, false));			// Rigid Body 생성
+	player1->GetRigidBody()->OnEnable();
+	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
 	_player.push_back(player1);
 #pragma endregion
 
@@ -152,9 +136,13 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
-	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
-	////player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
+	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
+	Vec3 pos2 = player2->GetTransform()->GetLocalPosition();
+	player2->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 생성
+	player2->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<CapsuleCollider>(player2->GetCollider()), pos2, false));			// Rigid Body 생성
+	player2->GetRigidBody()->OnEnable();
+	//player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
+	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 
 	_player.push_back(player2);
 
@@ -434,20 +422,62 @@ void BattleScene::Update()
 		_mainLight->GetTransform()->SetLocalPosition(rotatedPos);
 	}
 }
+#pragma region Map
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\EnvDemo.bin"); // MeshData* meshData
 
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			//gameObject->AddComponent(make_shared<BoxCollider>(Vec3(0.f,0.f,0.f),Vec3(100.f,5.f,100.f)));
+			//gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalPosition(), false));
+			// Rigid Body 생성
+			//gameObject->GetRigidBody()->OnEnable();
+			AddGameObject(gameObject);
+		}
+
+
+	}
+
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
+
+	}
 void BattleScene::FinalUpdate()
 {
 	Scene::FinalUpdate();
 }
 
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
 // 축에 투영하는 헬퍼 함수
 void ProjectBoxOntoAxis(const BoundingOrientedBox& box, const Vec3& axis, float& min_, float& max_)
 {
 	Vec3 corners[8];
 	box.GetCorners(corners);
 
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 	min_ = max_ = corners[0].Dot(axis);
 
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
+	}
 	for (int i = 1; i < 8; i++)
 	{
 		float projection = corners[i].Dot(axis);
@@ -456,6 +486,8 @@ void ProjectBoxOntoAxis(const BoundingOrientedBox& box, const Vec3& axis, float&
 	}
 }
 
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Wall.bin"); // MeshData* meshData
 // 겹침 정도 계산 헬퍼 함수
 float GetOverlap(float minA, float maxA, float minB, float maxB)
 {
@@ -465,6 +497,13 @@ float GetOverlap(float minA, float maxA, float minB, float maxB)
 }
 
 
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(false);
+	//		gameObject->SetStatic(true);
+	//		AddGameObject(gameObject);
+	//	}
+	//}
 
 void BattleScene::CheckCollisions()
 {
@@ -474,6 +513,8 @@ void BattleScene::CheckCollisions()
 	shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(_player[0]->GetCollider());
 	BoundingOrientedBox playerBox = playerCollider->GetBoundingBox();
 
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Wall2.bin"); // MeshData* meshData
 	Vec3 totalMTV = Vec3(0, 0, 0); // 모든 MTV를 합산
 	bool hasCollision = false;
 

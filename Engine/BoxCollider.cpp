@@ -4,20 +4,12 @@
 #include "Transform.h"
 #include "Resources.h"
 #include "Mesh.h"
+#include "PhysicsSystem.h"
 
-BoxCollider::BoxCollider() : BaseCollider(ColliderType::Box)
+BoxCollider::BoxCollider(const Vec3& center, const Vec3& extents) : BaseCollider(ColliderType::Box), _center(center), _extents(extents)
 {
-	_boundingBox.Center = _center;
-	_boundingBox.Extents = _extents;
+	_shape = make_shared<btBoxShape>(btVector3(extents.x, extents.y, extents.z));
 }	
-
-BoxCollider::BoxCollider(Vec3 center, Vec3 extents) : BaseCollider(ColliderType::Box), _center(center), _extents(extents)
-{
-	_boundingBox.Center = _center;
-	_boundingBox.Extents = _extents;
-
-	
-}
 
 BoxCollider::~BoxCollider()
 {
@@ -26,22 +18,24 @@ BoxCollider::~BoxCollider()
 
 void BoxCollider::FinalUpdate()
 {
-	// TODO : 바운딩 박스가 오브젝트를 따라다녀야 한다.
-	_boundingBox.Center = GetGameObject()->GetTransform()->GetWorldPosition() + _center;
-	_boundingBox.Extents = _extents;
-
-	// Transform의 월드 회전 정보를 가져와 Orientation 업데이트
-	Matrix worldMatrix = GetGameObject()->GetTransform()->GetLocalToWorldMatrix();
-	XMVECTOR rotationQuaternion = XMQuaternionRotationMatrix(XMLoadFloat4x4(&worldMatrix));
-
-	// Orientation 업데이트
-	XMStoreFloat4(&_boundingBox.Orientation, rotationQuaternion);
+	auto world = GetTransform()->GetLocalToWorldMatrix();
+	// Center offset
+	Matrix matTranslate = XMMatrixTranslation(_center.x, _center.y, _center.z);
 }
 
-bool BoxCollider::Intersects(Vec4 rayOrigin, Vec4 rayDir, OUT float& distance)
-{
-	return _boundingBox.Intersects(rayOrigin, rayDir, OUT distance);
+bool BoxCollider::Intersects(const Vec4& rayOrigin, const Vec4& rayDir, float& outDistance) {
+	auto world = GET_SINGLE(PhysicsSystem)->GetCollisionWorld();
+	btVector3 from(rayOrigin.x, rayOrigin.y, rayOrigin.z);
+	btVector3 to(rayOrigin.x + rayDir.x, rayOrigin.y + rayDir.y, rayOrigin.z + rayDir.z);
+	btCollisionWorld::ClosestRayResultCallback callback(from, to);
+	world->rayTest(from, to, callback);
+	if (callback.hasHit()) {
+		outDistance = callback.m_closestHitFraction;
+		return true;
+	}
+	return false;
 }
+
 
 
 

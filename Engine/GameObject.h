@@ -8,6 +8,7 @@ class Camera;
 class Light;
 class MonoBehaviour;
 class BaseCollider;
+class CapsuleCollider;
 class ParticleSystem;
 class WeaponManager;
 class Weapon;
@@ -35,10 +36,12 @@ public:
 	shared_ptr<Weapon> GetWeapon();
 	shared_ptr<Bullet> GetBullet();
 	shared_ptr<PlayerStats> GetPlayerStats();
+	shared_ptr<RigidBody> GetRigidBody();
 
 	shared_ptr<Camera> GetCamera();
 	shared_ptr<Light> GetLight();
 	shared_ptr<BaseCollider> GetCollider();
+	shared_ptr<CapsuleCollider> GetCapsuleCollider();
 	shared_ptr<ParticleSystem> GetParticleSystem();
 
 	void AddComponent(shared_ptr<Component> component);
