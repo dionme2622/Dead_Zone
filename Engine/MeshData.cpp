@@ -9,7 +9,8 @@
 #include "Animator.h"
 #include "TestAnimation.h"
 #include "BoxCollider.h"
-
+#include "RigidBody.h"
+#include "Transform.h"
 MeshData::MeshData() : Object(OBJECT_TYPE::MESH_DATA)
 {
 }
@@ -95,6 +96,8 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate(int type)
 			{
 				shared_ptr<BoxCollider> collider = info.boxCollider;
 				gameObject->AddComponent(collider);
+				gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalPosition(), false));
+				gameObject->GetRigidBody()->OnEnable();
 
 #ifdef _DEBUG_COLLIDER
 				shared_ptr<Mesh> mesh = gameObject->GetCollider()->GetColliderMesh();

@@ -26,6 +26,6 @@ public:
 	Vec3				_extents	= { 1.f, 1.f, 1.f };
 
 	shared_ptr<btBoxShape>			_shape;
-	
+	shared_ptr<btCompoundShape>		_compound;
 };
 

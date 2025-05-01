@@ -5,7 +5,7 @@
 
 enum class ColliderType
 {
-	Box, Sphere, Capsule
+	Box, Sphere, Capsule, MESH
 };
 
 class BaseCollider : public Component

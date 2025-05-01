@@ -262,42 +262,39 @@ void BattleScene::LoadScene()
 		{
 			gameObject->SetCheckFrustum(true);
 			gameObject->SetStatic(true);
-			//gameObject->AddComponent(make_shared<BoxCollider>(Vec3(0.f,0.f,0.f),Vec3(100.f,5.f,100.f)));
-			//gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalPosition(), false));
 			// Rigid Body »ý¼º
-			//gameObject->GetRigidBody()->OnEnable();
 			AddGameObject(gameObject);
 		}
 
 
 	}
 
-	{
-		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(true);
+	//		gameObject->SetStatic(true);
+	//		AddGameObject(gameObject);
+	//	}
 
-	}
+	//}
 
-	{
-		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
-	}
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(true);
+	//		gameObject->SetStatic(true);
+	//		AddGameObject(gameObject);
+	//	}
+	//}
 
 	//{
 	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Wall.bin"); // MeshData* meshData

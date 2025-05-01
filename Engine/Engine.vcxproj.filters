@@ -205,6 +205,9 @@
     </ClInclude>
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="PhysicsSystem.h" />
+    <ClInclude Include="MeshCollider.h">
+      <Filter>Object\Component\Colider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -369,6 +372,9 @@
     </ClCompile>
     <ClCompile Include="RigidBody.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>Object\Component\Colider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

@@ -8,7 +8,15 @@
 
 BoxCollider::BoxCollider(const Vec3& center, const Vec3& extents) : BaseCollider(ColliderType::Box), _center(center), _extents(extents)
 {
-	_shape = make_shared<btBoxShape>(btVector3(extents.x, extents.y, extents.z));
+	// 1) 단순 박스 정의 (half-extents)
+	_shape = std::make_shared<btBoxShape>(btVector3(_extents.x, _extents.y, _extents.z));
+
+	// 2) CompoundShape으로 로컬 오프셋 적용
+	_compound = std::make_shared<btCompoundShape>();
+	btTransform localTrans;
+	localTrans.setIdentity();
+	localTrans.setOrigin(btVector3(_center.x, _center.y, _center.z));
+	_compound->addChildShape(localTrans, _shape.get());
 }	
 
 BoxCollider::~BoxCollider()
