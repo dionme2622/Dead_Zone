@@ -48,20 +48,20 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region DebugCamera
-	{
-		_playerCamera = make_shared<GameObject>();
-		_playerCamera->SetName(L"Debug_Camera");
-		_playerCamera->AddComponent(make_shared<Transform>());
-		_playerCamera->AddComponent(make_shared<Camera>());
-		_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
+	//{
+	//	_playerCamera = make_shared<GameObject>();
+	//	_playerCamera->SetName(L"Debug_Camera");
+	//	_playerCamera->AddComponent(make_shared<Transform>());
+	//	_playerCamera->AddComponent(make_shared<Camera>());
+	//	_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
 
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
-		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-		_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
-		uint8 layerIndex = LayerNameToIndex(L"UI");
-		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
-		AddGameObject(_playerCamera);
-	}
+	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
+	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+	//	_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
+	//	uint8 layerIndex = LayerNameToIndex(L"UI");
+	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
+	//	AddGameObject(_playerCamera);
+	//}
 #pragma endregion
 
 #pragma region SkyBox
@@ -356,6 +356,7 @@ void BattleScene::Update()
 
 
 	Scene::Update();
+	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
 	//CheckCollisions();
 
 	/*if (GET_SINGLE(KeyInput)->GetButtonDown(KEY_TYPE::TAB))
