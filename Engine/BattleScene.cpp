@@ -410,7 +410,7 @@ void BattleScene::Update()
 		rotatedPos += center;
 		_mainLight->GetTransform()->SetLocalPosition(rotatedPos);
 	}
-
+	cout << _mainLight->GetTransform()->GetLocalPosition().x << endl;
 }
 
 void BattleScene::FinalUpdate()
