@@ -3,6 +3,7 @@
 #include "Material.h"
 #include "GameObject.h"
 #include "MeshRenderer.h"
+#include "Timer.h"
 #include "Transform.h"
 #include "Camera.h"
 #include "Light.h"
@@ -19,7 +20,9 @@
 #include "PlayerStats.h"
 #include "StructuredBuffer.h"
 #include <bullet3/btBulletDynamicsCommon.h>
-
+#include "CapsuleCollider.h"
+#include "RigidBody.h"
+#include "PhysicsSystem.h"
 // TEST
 #include "KeyInput.h"
 BattleScene::BattleScene()
@@ -30,29 +33,6 @@ BattleScene::BattleScene()
 
 void BattleScene::LoadScene()
 {
-	unique_ptr<btDiscreteDynamicsWorld> dynamicsWorld;
-
-	// 1) 面倒 备己
-	auto config = std::make_unique<btDefaultCollisionConfiguration>();
-	auto dispatcher = std::make_unique<btCollisionDispatcher>(config.get());
-
-	// 2) 堡开 窜拌 (Broadphase)
-	auto broadphase = std::make_unique<btDbvtBroadphase>();
-
-	// 3) 力距 秦籍扁 (Solver)
-	auto solver = std::make_unique<btSequentialImpulseConstraintSolver>();
-
-	// 4) 岿靛 积己
-	dynamicsWorld = std::make_unique<btDiscreteDynamicsWorld>(
-		dispatcher.get(),
-		broadphase.get(),
-		solver.get(),
-		config.get());
-
-	// 5) 吝仿 汲沥 (抗: 酒贰 规氢 Y=-9.8)
-	dynamicsWorld->setGravity(btVector3(0, -9.8f, 0));
-
-
 	int _myID = 1;
 	int _theirID = 0;
 #pragma region LayerMask
@@ -122,11 +102,14 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
-	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
+	player1->GetTransform()->SetLocalPosition(Vec3(50.f, 100.f, 0.f));
+	Vec3 pos1 = player1->GetTransform()->GetLocalPosition();
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
-
+	player1->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 积己
+	player1->AddComponent(make_shared<RigidBody>(500.0f, dynamic_pointer_cast<CapsuleCollider>(player1->GetCollider()), pos1, false));			// Rigid Body 积己
+	player1->GetRigidBody()->OnEnable();
+	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
 	_player.push_back(player1);
 #pragma endregion
 
@@ -148,8 +131,12 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player2->GetTransform()->SetLocalPosition(Vec3(5.f, 0.f, 0.f));
-	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
+	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 00.f, 0.f));
+	Vec3 pos2 = player2->GetTransform()->GetLocalPosition();
+	player2->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 积己
+	player2->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<CapsuleCollider>(player2->GetCollider()), pos2, false));			// Rigid Body 积己
+	player2->GetRigidBody()->OnEnable();
+	//player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
 	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 
 	_player.push_back(player2);
@@ -266,22 +253,24 @@ void BattleScene::LoadScene()
 
 
 #pragma region Map
-	//{
-	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo.bin"); // MeshData* meshData
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\EnvDemo.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			gameObject->AddComponent(make_shared<BoxCollider>(Vec3(0.f,0.f,0.f),Vec3(100.f,5.f,100.f)));
+			gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalPosition(), false));
+			// Rigid Body 积己
+			gameObject->GetRigidBody()->OnEnable();
+			AddGameObject(gameObject);
+		}
 
-	//	shared_ptr<GameObject> rootObject = gameObjects[0];
 
-	//	rootObject->GetTransform()->SetLocalScale(Vec3(1.f, 1.f, 1.f));
-	//}
+	}
 
 	//{
 	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\BldDemo.bin"); // MeshData* meshData
@@ -361,10 +350,11 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	/*Vec3 pos = _player[1]->GetTransform()->GetLocalPosition();
-	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
+	Vec3 pos = _player[0]->GetTransform()->GetLocalPosition();
+	printf("%f %f %f\n", pos.x, pos.y, pos.z);
 
 
 
 	Scene::Update();
+	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
 }

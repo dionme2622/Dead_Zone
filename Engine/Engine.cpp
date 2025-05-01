@@ -10,7 +10,7 @@
 #include "Light.h"
 #include "Resources.h"
 #include "InstancingManager.h"
-
+#include "PhysicsSystem.h"
 void Engine::Init(const WindowInfo& info)
 {
 	_window = info;
@@ -38,6 +38,7 @@ void Engine::Init(const WindowInfo& info)
 	GET_SINGLE(KeyInput)->Init(_window.hwnd);
 	GET_SINGLE(Timer)->Init();
 	GET_SINGLE(Resources)->Init();
+	GET_SINGLE(PhysicsSystem)->Init();
 }
 
 void Engine::Update()

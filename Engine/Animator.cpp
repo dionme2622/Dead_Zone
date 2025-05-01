@@ -9,7 +9,7 @@
 #include "AnimatorController.h"
 #include "AnimationState.h"
 #include "KeyInput.h"
-
+#include "PhysicsSystem.h"
 Animator::Animator(shared_ptr<AnimatorController> controller) : Component(COMPONENT_TYPE::ANIMATOR), _controller(controller)
 {
 	// 컨트롤러에 정의된 파라미터 개수만큼 벡터 초기화

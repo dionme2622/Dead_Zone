@@ -9,7 +9,8 @@
 #include "Engine.h"
 #include "WeaponManager.h"
 #include "Animator.h"
-
+#include "RigidBody.h"
+#include "PhysicsSystem.h"
 PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 {
 	_hwnd = hwnd;
@@ -17,7 +18,7 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 	_playerId = playerId;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 5.0f;
+	_speed = 20.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
@@ -63,23 +64,50 @@ void PlayerScript::UpdatePlayerInput()
 
 void PlayerScript::UpdateKeyInput()
 {
+	// 1) RigidBody & 현재 Y 속도
+	auto body = GetRigidBody()->GetBody();
+	btVector3 vel = body->getLinearVelocity();
+	float     yVel = vel.getY();
+
 	// 1) 이전 위치 저장
 	Vec3 oldPos = GetTransform()->GetLocalPosition();
 	Vec3 newPos = oldPos;
 	
 	// 2) 입력에 따라 newPos 변경	
-	if (INPUT->GetButton(KEY_TYPE::W))
-		newPos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::S))
-		newPos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::A))
-		newPos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::D))
-		newPos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::Q))
-		newPos += GetTransform()->GetLook() * _speed * 2 * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::CTRL))
-		newPos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::W))
+	//	newPos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::S))
+	//	newPos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::A))
+	//	newPos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::D))
+	//	newPos += GetTransform()->GetRight() * _speed * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::Q))
+	//	newPos += GetTransform()->GetLook() * _speed * 2 * DELTA_TIME;
+	//if (INPUT->GetButton(KEY_TYPE::CTRL))
+	//	newPos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
+
+	// 2) WASD 입력에 따른 방향(dir) 계산
+	Vec3 dir(0, 0, 0);
+	if (INPUT->GetButton(KEY_TYPE::W)) dir += GetTransform()->GetLook();
+	if (INPUT->GetButton(KEY_TYPE::S)) dir -= GetTransform()->GetLook();
+	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight();
+	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight();
+
+	// 3) 땅에 붙어 있을 때만 점프
+	if (IsGrounded(body.get(), GET_SINGLE(PhysicsSystem)->GetDynamicsWorld())
+		&& INPUT->GetButtonDown(KEY_TYPE::SPACE))
+	{
+		yVel = _jumpVelocity;   // 예: 8.0f
+	}
+	// 4) 수평 방향 속도 설정
+	const float EPS = 1e-6f;
+	if (dir.LengthSquared() > EPS)
+	{
+		dir.Normalize();
+		dir *= _speed;
+	}
+
 
 	if (_isGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
 	{
@@ -109,6 +137,7 @@ void PlayerScript::UpdateKeyInput()
 		GetAnimator()->SetTrigger("Shoot");
 	}
 
+
 	// 3) 실제 이동량 계산
 	Vec3 delta = newPos - oldPos;
 	// TODO : pos 값을 서버로 보낸다.
@@ -126,8 +155,10 @@ void PlayerScript::UpdateKeyInput()
 	// 5) Animator 에 전달
 	GetAnimator()->SetFloat("Speed", currentSpeed);
 	printf("속도: %f\n", currentSpeed);
-	// 6) 위치 적용
-	GetTransform()->SetLocalPosition(newPos);
+
+	// 5) 최종 속도 세팅 (Y 속도는 점프/중력 유지)
+	body->setLinearVelocity(btVector3(dir.x, yVel, dir.z));
+	//GetTransform()->SetLocalPosition(newPos);
 }
 
 
@@ -159,6 +190,25 @@ void PlayerScript::UpdateMouseInput()
 
 	}
 
+}
+
+bool PlayerScript::IsGrounded(btRigidBody* body, btDiscreteDynamicsWorld* world)
+{
+	// 1) 리지드바디 현재 위치
+	btTransform trans;
+	body->getMotionState()->getWorldTransform(trans);
+	btVector3 origin = trans.getOrigin();
+
+	// 2) 레이 시작점과 끝점 설정 (Y축 아래로 e.g. 0.1m 만큼)
+	btVector3 from = origin;
+	btVector3 to = origin - btVector3(0, /*down*/ 0.12f, 0);
+
+	// 3) 레이캐스트 콜백
+	btCollisionWorld::ClosestRayResultCallback rayCB(from, to);
+	world->rayTest(from, to, rayCB);
+
+	// 4) 땅에 닿았으면 fraction < 1.0
+	return rayCB.hasHit() && rayCB.m_closestHitFraction < 1.0f;
 }
 
 

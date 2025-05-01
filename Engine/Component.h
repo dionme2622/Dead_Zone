@@ -9,6 +9,7 @@ enum class COMPONENT_TYPE : uint8
 	LIGHT,
 	PARTICLE_SYSTEM,
 	COLLIDER,
+	RIGIDBODY,
 	ANIMATOR,
 	WEAPONMANAGER,
 	WEAPON,
@@ -31,6 +32,7 @@ class BaseCollider;
 class WeaponManager;
 class Weapon;
 class PlayerStats;
+class RigidBody;
 
 class Component : public Object
 {
@@ -57,6 +59,7 @@ public:
 	shared_ptr<WeaponManager> GetWeaponManager();
 	shared_ptr<Weapon> GetWeapon();
 	shared_ptr<PlayerStats> GetPlayerStats();
+	shared_ptr<RigidBody> GetRigidBody();
 
 private:
 	friend class GameObject;
