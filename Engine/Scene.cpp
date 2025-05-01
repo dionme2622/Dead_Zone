@@ -53,9 +53,10 @@ void Scene::Render()
 
 	ClearRTV();
 
+	RenderDeferred();
+
 	RenderShadow();
 
-	RenderDeferred();
 
 	RenderLights();
 

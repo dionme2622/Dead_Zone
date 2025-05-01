@@ -20,12 +20,10 @@ public:
 	void SetRadius(float radius) { _radius = radius; };
 	void SetHeight(float height) { _height = height; };
 
-
 private:
 	float		_radius = 0.5f;
 	float		_height = 1.0f;
 
 	shared_ptr<btCapsuleShape>		_shape;
-
 };
 

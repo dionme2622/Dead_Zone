@@ -13,7 +13,6 @@ Light::Light() : Component(COMPONENT_TYPE::LIGHT)
 	_shadowCamera->AddComponent(make_shared<Transform>());
 	_shadowCamera->AddComponent(make_shared<Camera>());
 	_shadowCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
-
 }
 
 Light::~Light()
@@ -22,18 +21,16 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
-	// 섀도우 카메라의 위치를 빛의 위치로 설정
-	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetWorldPosition());
+	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
-	// 섀도우 카메라의 방향을 빛의 방향으로 설정
-	Vec3 lightDirection = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z); // 빛의 방향
+	Vec3 lightDirection = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
 	lightDirection.Normalize();
-	_shadowCamera->GetTransform()->LookAt(GetTransform()->GetWorldPosition() - lightDirection);
+	Vec3 targetPos = GetTransform()->GetLocalPosition() - lightDirection; // 빛이 비추는 방향
+	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 초기화
+	_shadowCamera->GetTransform()->LookAt(targetPos);
 
-	// 섀도우 카메라의 스케일 설정
 	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
 
-	// 섀도우 카메라 업데이트
 	_shadowCamera->FinalUpdate();
 }
 

@@ -375,7 +375,7 @@ void BattleScene::Update()
 	if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::DOWN))
 	{
 		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
-		Pos.z -= 5.f;
+		Pos.y -= 50.f;
 		_mainLight->GetTransform()->SetLocalPosition(Pos);
 	}
 
