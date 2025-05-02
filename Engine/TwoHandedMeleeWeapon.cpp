@@ -3,7 +3,6 @@
 
 void TwoHandedMeleeWeapon::Attack()
 {
-	cout << "ÈÖµÎ¸£±â" << endl;
 }
 
 void TwoHandedMeleeWeapon::Reload()

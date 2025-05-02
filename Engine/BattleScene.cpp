@@ -212,7 +212,7 @@ void BattleScene::LoadScene()
 	{
 		_mainLight = make_shared<GameObject>();
 		_mainLight->AddComponent(make_shared<Transform>());
-		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 90, 100));
+		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 100, 90));
 		_mainLight->AddComponent(make_shared<Light>());
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
@@ -364,53 +364,52 @@ void BattleScene::Update()
 		CreateZombie();*/
 
 
-	//if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::UP))
-	//{
-	//	Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
-	//	Pos.z += 5.f;
-	//	_mainLight->GetTransform()->SetLocalPosition(Pos);
-	//}
+	if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::UP))
+	{
+		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
+		Pos.z += 5.f;
+		_mainLight->GetTransform()->SetLocalPosition(Pos);
+	}
 
 
-	//if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::DOWN))
-	//{
-	//	Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
-	//	Pos.y -= 50.f;
-	//	_mainLight->GetTransform()->SetLocalPosition(Pos);
-	//}
+	if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::DOWN))
+	{
+		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
+		Pos.y -= 50.f;
+		_mainLight->GetTransform()->SetLocalPosition(Pos);
+	}
 
 
-	//if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::LEFT))
-	//{
-	//	Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
-	//	Pos.x -= 5.f;
-	//	_mainLight->GetTransform()->SetLocalPosition(Pos);
-	//}
+	if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::LEFT))
+	{
+		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
+		Pos.x -= 5.f;
+		_mainLight->GetTransform()->SetLocalPosition(Pos);
+	}
 
 
-	//if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::RIGHT))
-	//{
-	//	Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
-	//	Pos.x += 5.f;
-	//	_mainLight->GetTransform()->SetLocalPosition(Pos);
-	//}
+	if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::RIGHT))
+	{
+		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
+		Pos.x += 5.f;
+		_mainLight->GetTransform()->SetLocalPosition(Pos);
+	}
 
 
-	//{
-	//	Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
-	//	float angle = XMConvertToRadians(10.0f); // 10도 회전 예시
-	//	Vec3 center = Vec3(0.f, Pos.y, 0.f);
-	//	Vec3 relativePos = Pos - center;
-	//	float cosTheta = cos(angle);
-	//	float sinTheta = sin(angle);
-	//	Vec3 rotatedPos;
-	//	rotatedPos.x = relativePos.x * cosTheta - relativePos.z * sinTheta;
-	//	rotatedPos.y = relativePos.y; // y축은 그대로 유지
-	//	rotatedPos.z = relativePos.x * sinTheta + relativePos.z * cosTheta;
-	//	rotatedPos += center;
-	//	_mainLight->GetTransform()->SetLocalPosition(rotatedPos);
-	//}
-	//cout << _mainLight->GetTransform()->GetLocalPosition().x << endl;
+	{
+		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
+		float angle = XMConvertToRadians(10.0f); // 10도 회전 예시
+		Vec3 center = Vec3(0.f, Pos.y, 0.f);
+		Vec3 relativePos = Pos - center;
+		float cosTheta = cos(angle);
+		float sinTheta = sin(angle);
+		Vec3 rotatedPos;
+		rotatedPos.x = relativePos.x * cosTheta - relativePos.z * sinTheta;
+		rotatedPos.y = relativePos.y; // y축은 그대로 유지
+		rotatedPos.z = relativePos.x * sinTheta + relativePos.z * cosTheta;
+		rotatedPos += center;
+		_mainLight->GetTransform()->SetLocalPosition(rotatedPos);
+	}
 }
 
 void BattleScene::FinalUpdate()

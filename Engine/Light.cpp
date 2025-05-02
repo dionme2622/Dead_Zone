@@ -6,6 +6,7 @@
 #include "Camera.h"
 #include "Texture.h"
 #include "SceneManager.h"
+#include "KeyInput.h"
 
 Light::Light() : Component(COMPONENT_TYPE::LIGHT)
 {
@@ -28,12 +29,8 @@ void Light::FinalUpdate()
 	// 빛의 방향으로 섀도우 카메라 설정
 	Vec3 lightDir = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
 	lightDir.Normalize();
-	_shadowCamera->GetTransform()->LookAt(_shadowCamera->GetTransform()->GetLocalPosition() + lightDir);
 
-
-	// Transform의 전방 벡터 확인
-	Vec3 look = _shadowCamera->GetTransform()->GetLook();
-	cout << "Shadow Camera look: " << look.x << ", " << look.y << ", " << look.z << endl;
+	_shadowCamera->GetCamera()->GetTransform()->LookAt(lightDir);
 
 	_shadowCamera->FinalUpdate();
 }
@@ -51,15 +48,7 @@ void Light::Render()
 		_lightMaterial->SetTexture(2, shadowTex);
 
 		Matrix matVP = _shadowCamera->GetCamera()->GetViewMatrix() * _shadowCamera->GetCamera()->GetProjectionMatrix();
-		// 뷰매트릭스의 회전 출력
-		/*cout << "View Matrix: " << 
-			_shadowCamera->GetCamera()->GetViewMatrix()._31 << ", " << 
-			_shadowCamera->GetCamera()->GetViewMatrix()._32 << ", " <<
-			_shadowCamera->GetCamera()->GetViewMatrix()._33 << ", " 
-			<< endl;*/
-		
 
-		
 		_lightMaterial->SetMatrix(0, matVP);
 	}
 	else
@@ -102,8 +91,8 @@ void Light::SetLightType(LIGHT_TYPE type)
 		_shadowCamera->GetCamera()->SetScale(1.f);
 		_shadowCamera->GetCamera()->SetNear(0.01);
 		_shadowCamera->GetCamera()->SetFar(200);
-		_shadowCamera->GetCamera()->SetWidth(500);
-		_shadowCamera->GetCamera()->SetHeight(500);
+		_shadowCamera->GetCamera()->SetWidth(200);
+		_shadowCamera->GetCamera()->SetHeight(200);
 
 		break;
 	case LIGHT_TYPE::POINT_LIGHT:

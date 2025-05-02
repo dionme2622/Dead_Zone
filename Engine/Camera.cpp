@@ -35,9 +35,13 @@ void Camera::FinalUpdate()
 
 	if (_type == PROJECTION_TYPE::PERSPECTIVE)
 		_matProjection = ::XMMatrixPerspectiveFovLH(_fov, _width / _height, _near, _far);
-	else
+	else {
 		_matProjection = ::XMMatrixOrthographicLH(_width * _scale, _height * _scale, _near, _far);
 
+		_matView._31 = 0;
+		_matView._32 = -0.5;
+		_matView._33 = 0.5;
+	}
 	_frustum.FinalUpdate();
 }
 
@@ -78,7 +82,7 @@ void Camera::SortGameObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ)) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 20) == false)
 				{
 					continue;
 				}
@@ -140,7 +144,7 @@ void Camera::SortShadowObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ)) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 20) == false)
 				{
 					continue;
 				}
