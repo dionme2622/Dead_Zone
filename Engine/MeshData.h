@@ -11,6 +11,7 @@ class Material;
 class GameObject;
 class Transform;
 class BoxCollider;
+class MeshCollider;
 
 struct MeshRenderInfo
 {
@@ -19,6 +20,7 @@ struct MeshRenderInfo
 	vector<shared_ptr<Material>>	materials;
 	shared_ptr<Transform>			transform;
 	shared_ptr<BoxCollider>			boxCollider;
+	shared_ptr<MeshCollider>		meshCollider;
 };
 
 class MeshData : public Object

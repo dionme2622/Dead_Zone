@@ -11,6 +11,8 @@
 #include "BoxCollider.h"
 #include "RigidBody.h"
 #include "Transform.h"
+#include "MeshCollider.h"
+
 MeshData::MeshData() : Object(OBJECT_TYPE::MESH_DATA)
 {
 }
@@ -37,7 +39,9 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path, int type)
 			mesh->SetName(loader.GetMesh(i).meshName);
 			GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
 
+			shared_ptr<MeshCollider> meshCollider = make_shared<MeshCollider>(loader.GetMesh(i).btvertices, loader.GetMesh(i).indices[0], false);
 			info.mesh = GET_SINGLE(Resources)->Get<Mesh>(mesh->GetName());
+			info.meshCollider = meshCollider;
 		}
 
 		// Transform
@@ -95,9 +99,9 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate(int type)
 			if (info.boxCollider != nullptr)
 			{
 				shared_ptr<BoxCollider> collider = info.boxCollider;
-				gameObject->AddComponent(collider);
-				gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalPosition(), false));
-				gameObject->GetRigidBody()->OnEnable();
+				//gameObject->AddComponent(collider);
+				//gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalPosition(), false));
+				//gameObject->GetRigidBody()->OnEnable();
 
 #ifdef _DEBUG_COLLIDER
 				shared_ptr<Mesh> mesh = gameObject->GetCollider()->GetColliderMesh();
@@ -123,6 +127,14 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate(int type)
 					
 				}
 #endif
+			}
+			if (info.meshCollider != nullptr)
+			{
+				shared_ptr<MeshCollider> collider = info.meshCollider;
+				gameObject->AddComponent(collider);
+				gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<MeshCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalPosition(), false));
+				//gameObject->GetRigidBody()->OnEnable();
+
 			}
 			if (info.mesh->hasAnimation())				// Mesh가 애니메이션을 가지고 있다면?
 			{

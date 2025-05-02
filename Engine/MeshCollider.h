@@ -4,7 +4,7 @@
 class MeshCollider : public BaseCollider {
 public:
     /// vertices: 월드로컬 공간에서의 정점, indices: 삼각형 인덱스 리스트
-    MeshCollider(const std::vector<btVector3>& vertices, const std::vector<int>& indices, bool isDynamic = false);
+    MeshCollider(const vector<btVector3>& vertices, const vector<uint32>& indices, bool isDynamic = false);
     ~MeshCollider();
 
     virtual void FinalUpdate() override;
@@ -18,6 +18,6 @@ private:
     std::shared_ptr<btTriangleMesh>        _triMesh;
     std::shared_ptr<btCollisionShape>      _shape;
     std::vector<btVector3>                 _verts;
-    std::vector<int>                       _inds;
+    std::vector<uint32>                       _inds;
 };
 

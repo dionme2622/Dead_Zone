@@ -102,7 +102,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 150.f, 0.f));
+	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 20.f, 0.f));
 	Vec3 pos1 = player1->GetTransform()->GetLocalPosition();
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
@@ -131,11 +131,11 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
+	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 	Vec3 pos2 = player2->GetTransform()->GetLocalPosition();
-	player2->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 持失
-	player2->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<CapsuleCollider>(player2->GetCollider()), pos2, false));			// Rigid Body 持失
-	player2->GetRigidBody()->OnEnable();
+	//player2->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 持失
+	//player2->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<CapsuleCollider>(player2->GetCollider()), pos2, false));			// Rigid Body 持失
+	//player2->GetRigidBody()->OnEnable();
 	//player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
 	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 
@@ -230,6 +230,28 @@ void BattleScene::LoadScene()
 		AddGameObject(particle);*/
 	}
 #pragma endregion
+
+	shared_ptr<GameObject> obj = make_shared<GameObject>();
+	obj->AddComponent(make_shared<Transform>());
+	//obj->GetTransform()->SetLocalScale(Vec3(1.f, 5.f, 5.f));
+	obj->GetTransform()->SetLocalPosition(Vec3(0, 0.f, 0.f));
+	obj->SetStatic(true);
+	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+	{
+		shared_ptr<Mesh> sphereMesh = GET_SINGLE(Resources)->LoadCubeMesh();
+		meshRenderer->SetMesh(sphereMesh);
+	}
+	{
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Deferred"));
+		meshRenderer->SetMaterial(material);
+	}
+	obj->AddComponent(meshRenderer);
+	obj->AddComponent(make_shared<BoxCollider>(Vec3(0,0,0), Vec3(5,5,5)));										// Capsule Collider 持失
+	obj->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(obj->GetCollider()), Vec3(0,0,0), false));			// Rigid Body 持失
+	obj->GetRigidBody()->OnEnable();
+	AddGameObject(obj);
+
 
 #pragma region Character
 	{

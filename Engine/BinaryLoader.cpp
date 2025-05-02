@@ -5,7 +5,7 @@
 #include "Transform.h"
 #include "Resources.h"
 #include <bullet3/btBulletDynamicsCommon.h>
-
+#include "PhysicsSystem.h"
 
 
 BinaryLoader::BinaryLoader()
@@ -147,6 +147,7 @@ void BinaryLoader::LoadMeshFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 	UINT nReads = (UINT)::fread(&vertexCount, sizeof(int), 1, pInFile);
 
 	meshes.vertices.resize(vertexCount);
+	meshes.btvertices.resize(vertexCount);
 	::ReadStringFromFile(pInFile, pstrToken);			// Mesh의 이름 저장
 	string name(pstrToken);
 	meshes.meshName = s2ws(pstrToken);
@@ -175,6 +176,8 @@ void BinaryLoader::LoadMeshFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 					meshes.vertices[i].pos.x = static_cast<float>(m_pxmf3Positions[i].x);
 					meshes.vertices[i].pos.y = static_cast<float>(m_pxmf3Positions[i].y);
 					meshes.vertices[i].pos.z = static_cast<float>(m_pxmf3Positions[i].z);
+
+					meshes.btvertices[i] = ToBt(meshes.vertices[i].pos);
 				}
 
 				delete[] m_pxmf3Positions;

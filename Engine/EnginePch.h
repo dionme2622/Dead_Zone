@@ -53,7 +53,7 @@ using namespace Microsoft::WRL;
 #endif
 
 //#define _DEBUG_COLLIDER
-#define _INSTANCING_MODE
+//#define _INSTANCING_MODE
 extern bool _WIRE_FRAME_MODE;
 
 // °¢Á¾ typedef
@@ -195,6 +195,9 @@ string ws2s(const wstring& s);
 int ReadIntegerFromFile(FILE* pInFile);
 float ReadFloatFromFile(FILE* pInFile);
 BYTE ReadStringFromFile(FILE* pInFile, char* pstrToken);
+
+
+
 
 extern unique_ptr<class Engine> GEngine;
 

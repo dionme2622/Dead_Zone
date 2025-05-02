@@ -2,7 +2,7 @@
 #include "MeshCollider.h"
 #include "PhysicsSystem.h"
 
-MeshCollider::MeshCollider(const std::vector<btVector3>& vertices, const std::vector<int>& indices, bool isDynamic)
+MeshCollider::MeshCollider(const std::vector<btVector3>& vertices, const std::vector<uint32>& indices, bool isDynamic)
     : BaseCollider(ColliderType::MESH)
     , _isDynamic(isDynamic)
     , _verts(vertices)
