@@ -21,19 +21,19 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
-	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
-
-	_lightInfo.position = GetTransform()->GetWorldPosition();
-
+	_lightInfo.position = GetTransform()->GetLocalPosition();
 	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
-	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 없음
-
 	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
 
-	// 빛의 방향에 맞춰 카메라가 아래를 향하도록 설정
-	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(
-		Vec3(_lightInfo.direction.x - 45, 0, 0));
+	// 빛의 방향으로 섀도우 카메라 설정
+	Vec3 lightDir = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
+	lightDir.Normalize();
+	_shadowCamera->GetTransform()->LookAt(_shadowCamera->GetTransform()->GetLocalPosition() + lightDir);
+
+
+	// Transform의 전방 벡터 확인
+	Vec3 look = _shadowCamera->GetTransform()->GetLook();
+	cout << "Shadow Camera look: " << look.x << ", " << look.y << ", " << look.z << endl;
 
 	_shadowCamera->FinalUpdate();
 }
@@ -51,7 +51,15 @@ void Light::Render()
 		_lightMaterial->SetTexture(2, shadowTex);
 
 		Matrix matVP = _shadowCamera->GetCamera()->GetViewMatrix() * _shadowCamera->GetCamera()->GetProjectionMatrix();
+		// 뷰매트릭스의 회전 출력
+		/*cout << "View Matrix: " << 
+			_shadowCamera->GetCamera()->GetViewMatrix()._31 << ", " << 
+			_shadowCamera->GetCamera()->GetViewMatrix()._32 << ", " <<
+			_shadowCamera->GetCamera()->GetViewMatrix()._33 << ", " 
+			<< endl;*/
+		
 
+		
 		_lightMaterial->SetMatrix(0, matVP);
 	}
 	else
@@ -64,7 +72,6 @@ void Light::Render()
 	_lightMaterial->PushGraphicsData();
 
 	_volumeMesh->Render();
-
 }
 
 void Light::RenderShadow()

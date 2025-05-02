@@ -43,7 +43,7 @@ void Scene::FinalUpdate()
 {
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-		if(gameObject) gameObject->FinalUpdate();
+		gameObject->FinalUpdate();
 	}
 }
 

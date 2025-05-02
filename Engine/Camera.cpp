@@ -41,6 +41,7 @@ void Camera::FinalUpdate()
 	_frustum.FinalUpdate();
 }
 
+
 void Camera::SortGameObject()
 {
 	S_MatView = _matView;
@@ -55,7 +56,6 @@ void Camera::SortGameObject()
 
 	for (auto& gameObject : gameObjects)
 	{
-
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
 			continue;
 		}

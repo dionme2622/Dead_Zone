@@ -15,7 +15,7 @@ Transform::~Transform()
 
 void Transform::Update()
 {
-	_matPrevWorld = _matWorld;
+	//_matPrevWorld = _matWorld;
 
 	float radX = _localRotation.x * (XM_PI / 180.0f);
 	float radY = _localRotation.y * (XM_PI / 180.0f);
