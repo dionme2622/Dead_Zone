@@ -22,17 +22,26 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
-	_lightInfo.position = GetTransform()->GetLocalPosition();
+	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
+
+	_lightInfo.position = GetTransform()->GetWorldPosition();
+
 	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
+	_shadowCamera->GetCamera()->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
-	// 빛의 방향으로 섀도우 카메라 설정
-	Vec3 lightDir = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
-	lightDir.Normalize();
+	//_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 없음
 
-	_shadowCamera->GetCamera()->GetTransform()->LookAt(lightDir);
+	// 빛의 방향에 맞춰 카메라가 아래를 향하도록 설정
+	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(
+		Vec3(_lightInfo.direction.x + 45, 0, 0));
+
+	_shadowCamera->GetTransform()->SetLocalRotation(
+		Vec3(_lightInfo.direction.x + 45, 0, 0));
 
 	_shadowCamera->FinalUpdate();
+
+	
+
 }
 
 void Light::Render()
@@ -65,6 +74,8 @@ void Light::Render()
 
 void Light::RenderShadow()
 {
+	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
 	_shadowCamera->GetCamera()->SortShadowObject();
 	_shadowCamera->GetCamera()->Render_Shadow();
 }

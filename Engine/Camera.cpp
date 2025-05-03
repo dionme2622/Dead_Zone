@@ -38,9 +38,9 @@ void Camera::FinalUpdate()
 	else {
 		_matProjection = ::XMMatrixOrthographicLH(_width * _scale, _height * _scale, _near, _far);
 
-		_matView._31 = 0;
-		_matView._32 = -0.5;
-		_matView._33 = 0.5;
+		//_matView._31 = 0;
+		//_matView._32 = -0.5;
+		//_matView._33 = 0.5;
 	}
 	_frustum.FinalUpdate();
 }
