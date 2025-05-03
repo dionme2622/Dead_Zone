@@ -304,10 +304,34 @@ void BattleScene::Update()
 	UpdatePlayerAreas();
 	CheckCollisions();
 
-
-
-	cout << _player->GetGameObjects()[0]->GetTransform()->GetLocalPosition().x << ","
-		<< _player->GetGameObjects()[0]->GetTransform()->GetLocalPosition().z << endl;
+	// 라이트 위치 변환(디버깅)
+	if (INPUT->GetButton(KEY_TYPE::UP))
+	{
+		Vec3 position = _mainLight->GetTransform()->GetLocalPosition();
+		position.z += 10.f;
+		_mainLight->GetTransform()->SetLocalPosition(position);
+	}
+	// 라이트 위치 변환(디버깅)
+	if (INPUT->GetButton(KEY_TYPE::LEFT))
+	{
+		Vec3 position = _mainLight->GetTransform()->GetLocalPosition();
+		position.x -= 10.f;
+		_mainLight->GetTransform()->SetLocalPosition(position);
+	}
+	// 라이트 위치 변환(디버깅)
+	if (INPUT->GetButton(KEY_TYPE::DOWN))
+	{
+		Vec3 position = _mainLight->GetTransform()->GetLocalPosition();
+		position.z -= 10.f;
+		_mainLight->GetTransform()->SetLocalPosition(position);
+	}
+	// 라이트 위치 변환(디버깅)
+	if (INPUT->GetButton(KEY_TYPE::RIGHT))
+	{
+		Vec3 position = _mainLight->GetTransform()->GetLocalPosition();
+		position.x += 10.f;
+		_mainLight->GetTransform()->SetLocalPosition(position);
+	}
 }
 
 void BattleScene::FinalUpdate()
