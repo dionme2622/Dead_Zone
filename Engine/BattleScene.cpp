@@ -214,7 +214,7 @@ void BattleScene::LoadScene()
 		_mainLight->AddComponent(make_shared<Transform>());
 		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 100, 90));
 		_mainLight->AddComponent(make_shared<Light>());
-		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
+		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1, -0.5f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		_mainLight->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
 		_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));

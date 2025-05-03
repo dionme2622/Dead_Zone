@@ -8,12 +8,16 @@
 #include "SceneManager.h"
 #include "KeyInput.h"
 
+
+#define MATDEBUG _shadowCamera->GetCamera()->GetTransform()->GetLocalMatrix()
+
 Light::Light() : Component(COMPONENT_TYPE::LIGHT)
 {
 	_shadowCamera = make_shared<GameObject>();
 	_shadowCamera->AddComponent(make_shared<Transform>());
 	_shadowCamera->AddComponent(make_shared<Camera>());
 	_shadowCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
+	_shadowCamera->GetTransform()->debug = true;
 }
 
 Light::~Light()
@@ -22,33 +26,38 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
+	/*cout << MATDEBUG._11 << " " << MATDEBUG._12 << " " << MATDEBUG._13 << " " << MATDEBUG._14 << endl;
+	cout << MATDEBUG._21 << " " << MATDEBUG._22 << " " << MATDEBUG._23 << " " << MATDEBUG._24 << endl;
+	cout << MATDEBUG._31 << " " << MATDEBUG._32 << " " << MATDEBUG._33 << " " << MATDEBUG._34 << endl;
+	cout << MATDEBUG._41 << " " << MATDEBUG._42 << " " << MATDEBUG._43 << " " << MATDEBUG._44 << endl;
+	cout << endl;*/
+
+
+	_shadowCamera->GetCamera()->GetTransform()->GetLocalMatrix();
+
 	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
 
 	_lightInfo.position = GetTransform()->GetWorldPosition();
 
 	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-	_shadowCamera->GetCamera()->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
-	//_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 없음
+	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 없음
+
+	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
 
 	// 빛의 방향에 맞춰 카메라가 아래를 향하도록 설정
-	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(
-		Vec3(_lightInfo.direction.x + 45, 0, 0));
-
-	_shadowCamera->GetTransform()->SetLocalRotation(
-		Vec3(_lightInfo.direction.x + 45, 0, 0));
+	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(Vec3(45, 0, 0));
 
 	_shadowCamera->FinalUpdate();
 
-	
+	_shadowCamera->GetCamera()->GetTransform()->FinalUpdate();
+	//_shadowCamera->GetTransform()->GetLocalMatrix();
 
 }
 
 void Light::Render()
 {
-	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
 	assert(_lightIndex >= 0);
-
 	GetTransform()->PushData();
 
 	if (static_cast<LIGHT_TYPE>(_lightInfo.lightType) == LIGHT_TYPE::DIRECTIONAL_LIGHT)
@@ -74,8 +83,6 @@ void Light::Render()
 
 void Light::RenderShadow()
 {
-	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
-
 	_shadowCamera->GetCamera()->SortShadowObject();
 	_shadowCamera->GetCamera()->Render_Shadow();
 }

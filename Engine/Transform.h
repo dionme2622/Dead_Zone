@@ -56,5 +56,12 @@ private:
 	Matrix _matPrevWorld = {};
 
 	weak_ptr<Transform> _parent;
+
+
+
+
+	// µð¹ö±×
+public:
+	bool debug = false;
 };
 
