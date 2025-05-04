@@ -8,16 +8,18 @@
 
 BoxCollider::BoxCollider(const Vec3& center, const Vec3& extents) : BaseCollider(ColliderType::Box), _center(center), _extents(extents)
 {
-	// 1) 단순 박스 정의 (half-extents)
-	_shape = std::make_shared<btBoxShape>(btVector3(_extents.x, _extents.y, _extents.z));
+	// 1) 로컬 박스 모양 정의 (half-extents)
+	_shape = std::make_unique<btBoxShape>(
+		btVector3(_extents.x, _extents.y, _extents.z));
 
-	// 2) CompoundShape으로 로컬 오프셋 적용
-	_compound = std::make_shared<btCompoundShape>();
+	// 2) CompoundShape으로 로컬 오프셋(center) 적용
+	_compound = std::make_unique<btCompoundShape>();
 	btTransform localTrans;
 	localTrans.setIdentity();
-	localTrans.setOrigin(btVector3(_center.x, _center.y, _center.z));
+	localTrans.setOrigin(
+		btVector3(_center.x, _center.y, _center.z));
 	_compound->addChildShape(localTrans, _shape.get());
-}	
+}		
 
 BoxCollider::~BoxCollider()
 {
@@ -26,9 +28,14 @@ BoxCollider::~BoxCollider()
 
 void BoxCollider::FinalUpdate()
 {
-	auto world = GetTransform()->GetLocalToWorldMatrix();
-	// Center offset
-	Matrix matTranslate = XMMatrixTranslation(_center.x, _center.y, _center.z);
+	auto wm = GetTransform()->GetLocalToWorldMatrix();
+	auto trans = Matrix::CreateTranslation(_center.x, _center.y, _center.z);
+	GET_SINGLE(DebugRenderer)
+		->AddBox(
+			{ _center, _extents }, // 로컬 바운딩 정보
+			wm,                 // 스케일·회전·위치 모두 포함
+			{ 0,1,0,1 }            // 컬러
+		);
 }
 
 bool BoxCollider::Intersects(const Vec4& rayOrigin, const Vec4& rayDir, float& outDistance) {

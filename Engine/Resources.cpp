@@ -663,7 +663,10 @@ void Resources::CreateDefaultShader()
 		ShaderInfo info =
 		{
 			SHADER_TYPE::FORWARD,
-			RASTERIZER_TYPE::WIREFRAME
+			RASTERIZER_TYPE::WIREFRAME,
+			DEPTH_STENCIL_TYPE::LESS,
+			BLEND_TYPE::DEFAULT,
+			D3D_PRIMITIVE_TOPOLOGY_LINELIST
 		};
 
 		ShaderArg arg =

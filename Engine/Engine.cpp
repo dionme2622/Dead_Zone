@@ -11,6 +11,7 @@
 #include "Resources.h"
 #include "InstancingManager.h"
 #include "PhysicsSystem.h"
+#include "DebugRenderer.h"
 void Engine::Init(const WindowInfo& info)
 {
 	_window = info;
@@ -39,6 +40,7 @@ void Engine::Init(const WindowInfo& info)
 	GET_SINGLE(Timer)->Init();
 	GET_SINGLE(Resources)->Init();
 	GET_SINGLE(PhysicsSystem)->Init();
+	GET_SINGLE(DebugRenderer)->Init(DEVICE, 10000);
 }
 
 void Engine::Update()

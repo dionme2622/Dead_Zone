@@ -17,8 +17,7 @@ CapsuleCollider::~CapsuleCollider()
 
 void CapsuleCollider::FinalUpdate()
 {
-
-	
+    GET_SINGLE(DebugRenderer)->AddCapsule(_radius, _height, GetTransform()->GetLocalToWorldMatrix(), {1,0,0,1});
 }
 
 bool CapsuleCollider::Intersects(const Vec4& rayOrigin, const Vec4& rayDir, float& outDistance) {

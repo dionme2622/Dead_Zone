@@ -12,7 +12,7 @@
 #include "InstancingManager.h"
 #include "BaseCollider.h"
 #include "BoxCollider.h"
-
+#include "DebugRenderer.h"
 Matrix Camera::S_MatView;
 Matrix Camera::S_MatProjection;
 
@@ -197,11 +197,9 @@ void Camera::Render_Forward()
 		gameObject->GetParticleSystem()->Render();
 	}
 
-	// Bounding Box ±×¸®±â
-	/*for (auto& gameObject : _vecForward)
-	{
-		gameObject->GetCollider()->Render();
-	}*/
+	/*GET_SINGLE(DebugRenderer)->Flush();
+	GET_SINGLE(DebugRenderer)->Clear();*/
+
 }
 
 

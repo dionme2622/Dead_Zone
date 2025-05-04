@@ -20,6 +20,8 @@ private:
 	vector<shared_ptr<GameObject>>	_player;
 	HWND _hwnd;
 
+
+	// DEBUG
 public:
 
 };

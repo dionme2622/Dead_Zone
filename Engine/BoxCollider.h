@@ -4,14 +4,14 @@
 class BoxCollider : public BaseCollider
 {
 public:
-	BoxCollider(const Vec3& center = { 0,0,0 }, const Vec3& extents = { 1,1,1 });
+	BoxCollider(const Vec3& center = { 0,0,0 }, const Vec3& extents = { 0.5, 0.5,0.5});
 	virtual ~BoxCollider();
 
 
 	virtual void FinalUpdate() override;
 	virtual bool Intersects(const Vec4& rayOrigin, const Vec4& rayDir, float& outDistance) override;
 
-	virtual btCollisionShape* GetShape() const { return _shape.get(); }
+	virtual btCollisionShape* GetShape() const { return _compound.get(); }
 
 public:
 	virtual shared_ptr<Mesh> GetColliderMesh() override;
@@ -23,7 +23,7 @@ public:
 
 public:
 	Vec3				_center		= { 0.f, 0.f, 0.f };
-	Vec3				_extents	= { 1.f, 1.f, 1.f };
+	Vec3				_extents	= { 0.5, 0.5, 0.5 };
 
 	shared_ptr<btBoxShape>			_shape;
 	shared_ptr<btCompoundShape>		_compound;

@@ -2,6 +2,7 @@
 #include "Component.h"
 #include "Mesh.h"
 #include "bullet3/btBulletDynamicsCommon.h"
+#include "DebugRenderer.h"
 
 enum class ColliderType
 {
