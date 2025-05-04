@@ -35,7 +35,7 @@ void Scene::LateUpdate()
 {
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-		gameObject->LateUpdate();
+		if(gameObject) gameObject->LateUpdate();
 	}
 }
 
@@ -43,7 +43,7 @@ void Scene::FinalUpdate()
 {
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-		if(gameObject)gameObject->FinalUpdate();
+		if(gameObject) gameObject->FinalUpdate();
 	}
 }
 

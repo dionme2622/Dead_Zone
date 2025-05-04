@@ -9,6 +9,16 @@ void OneHandedMeleeWeapon::Reload()
 {
 }
 
-void OneHandedMeleeWeapon::DeleteBullet()
+void OneHandedMeleeWeapon::SetBulletPosition()
 {
 }
+
+void OneHandedMeleeWeapon::SetBulletDirection()
+{
+}
+
+void OneHandedMeleeWeapon::Update()
+{
+}
+
+

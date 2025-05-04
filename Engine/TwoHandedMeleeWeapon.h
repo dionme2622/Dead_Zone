@@ -10,6 +10,8 @@ public:
 public:
 	virtual void Attack();
 	virtual void Reload();
-	virtual void DeleteBullet();
+	virtual void SetBulletPosition();
+	virtual void SetBulletDirection();
+	virtual void Update(); // 추가: 무기 상태 업데이트
 };
 

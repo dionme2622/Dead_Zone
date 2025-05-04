@@ -26,9 +26,9 @@ public:
 public:
 	virtual void Attack() = 0;
 	virtual void Reload() = 0;
-	virtual void DeleteBullet() = 0;
-
-
+	virtual void SetBulletPosition() = 0;
+	virtual void SetBulletDirection() = 0;
+	virtual void Update() = 0;
 public:
 	virtual void FinalUpdate() override;
 

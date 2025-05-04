@@ -3,8 +3,10 @@
 #include "PhysicsSystem.h"
 #include "Transform.h"
 
-RigidBody::RigidBody(float mass, shared_ptr<BaseCollider> collider, Vec3 pos, bool isKinematic)
+
+RigidBody::RigidBody(shared_ptr<GameObject> gameObject, float mass, shared_ptr<BaseCollider> collider, Vec3 pos, bool isKinematic)
     : Component(COMPONENT_TYPE::RIGIDBODY)
+    , _weakGameObject(gameObject)
     , _mass(mass)
     , _isKinematic(isKinematic)
     , _collider(collider)
@@ -12,7 +14,7 @@ RigidBody::RigidBody(float mass, shared_ptr<BaseCollider> collider, Vec3 pos, bo
     // Get initial transform
     btTransform start;
     start.setIdentity();
- 
+    
     start.setOrigin(btVector3(pos.x, pos.y, pos.z));
     _motionState = make_shared<btDefaultMotionState>(start);
 
@@ -31,6 +33,12 @@ RigidBody::RigidBody(float mass, shared_ptr<BaseCollider> collider, Vec3 pos, bo
         inertia
     );
     _body = make_shared<btRigidBody>(info);
+
+    // 사용자 데이터로 GameObject 설정
+    if (auto lockedGameObject = _weakGameObject.lock())
+    {
+        _body->setUserPointer(lockedGameObject.get());
+    }
 
     // TODO : 키네마틱을 사용하는 가?
     if (_isKinematic) {
@@ -58,10 +66,5 @@ void RigidBody::FinalUpdate() {
     Vec3 p(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
     GetTransform()->SetLocalPosition(p);
 
-    /*std::cout
-        << "[CapsuleCollider] Position: ("
-        << p.x << ", "
-        << p.y << ", "
-        << p.z << ")\n";*/
 }
 

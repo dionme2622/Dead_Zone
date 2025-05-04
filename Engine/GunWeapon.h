@@ -1,29 +1,27 @@
 #pragma once
 #include "Weapon.h"
 #include "Camera.h"
+#include "PhysicsSystem.h"
 
 class GunWeapon : public Weapon
 {
 public:
-	GunWeapon();
-	virtual ~GunWeapon() {};
+    GunWeapon();
+    ~GunWeapon() = default;
 
-public:
-	virtual void Attack();
-	virtual void Reload();
-	virtual void DeleteBullet();
-
-
-public:
-	void SetBulletPosition();
-	void SetBulletDirection();
-
+    virtual void Attack();
+    virtual void Reload();
+    virtual void SetBulletPosition();
+    virtual void SetBulletDirection();
+    virtual void Update(); // 추가: 무기 상태 업데이트
 
 private:
-	vector<shared_ptr<GameObject>> _bulletObjects;
-	const Vec3					   _muzzleOffset = { 0, 1, 2 };	// 임시 총구 위치
+    btVector3 m_bulletPosition; // 레이 시작점
+    btVector3 m_bulletDirection; // 레이 방향
+    float m_range; // 레이 사거리
+    bool m_isReloading; // 재장전 상태
+    float m_reloadTime; // 재장전 시간
+    float m_reloadTimer; // 재장전 타이머
 
-
-	weak_ptr<Camera>			   _camera;
+    void RemoveHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld);
 };
-

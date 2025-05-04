@@ -9,6 +9,14 @@ void TwoHandedMeleeWeapon::Reload()
 {
 }
 
-void TwoHandedMeleeWeapon::DeleteBullet()
+void TwoHandedMeleeWeapon::SetBulletPosition()
+{
+}
+
+void TwoHandedMeleeWeapon::SetBulletDirection()
+{
+}
+
+void TwoHandedMeleeWeapon::Update()
 {
 }

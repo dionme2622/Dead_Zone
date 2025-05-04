@@ -17,7 +17,7 @@ void PhysicsSystem::Init() {
         _solver.get(),
         _collisionConfig.get());
     // 5) 중력 설정 (예: 아래 방향 Y=-9.8)
-    _dynamicsWorld->setGravity(btVector3(0, -9.8f, 0));
+    _dynamicsWorld->setGravity(btVector3(0, 0.f, 0));
 }
 
 void PhysicsSystem::Shutdown() {

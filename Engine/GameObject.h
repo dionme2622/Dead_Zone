@@ -45,6 +45,7 @@ public:
 	shared_ptr<ParticleSystem> GetParticleSystem();
 
 	void AddComponent(shared_ptr<Component> component);
+	void RemoveAllComponent();
 
 	void SetCheckFrustum(bool checkFrustum) { _checkFrustum = checkFrustum; }
 	bool GetCheckFrustum() { return _checkFrustum; }
@@ -58,7 +59,7 @@ public:
 private:
 	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
 	vector<shared_ptr<MonoBehaviour>> _scripts;
-
+	
 	bool _checkFrustum = true;
 	uint8 _layerIndex = 0;
 	bool _static = true;
