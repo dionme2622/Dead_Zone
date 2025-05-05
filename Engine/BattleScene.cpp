@@ -27,7 +27,7 @@
 #include "KeyInput.h"
 
 
-
+// ¾Ä´ÂÁß
 
 bool BattleScene::isPlayerGrounded = false;
 
