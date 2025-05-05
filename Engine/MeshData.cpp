@@ -100,7 +100,7 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate(int type)
 			{
 				shared_ptr<BoxCollider> collider = info.boxCollider;
 				gameObject->AddComponent(collider);
-				gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix(), false));
+				gameObject->AddComponent(make_shared<RigidBody>(gameObject, 0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix(), false));
 				gameObject->GetRigidBody()->OnEnable();
 			}
 			if (info.meshCollider != nullptr)

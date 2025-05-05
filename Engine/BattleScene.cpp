@@ -91,7 +91,7 @@ void BattleScene::LoadScene()
 	}
 #pragma endregion
 
-	
+
 
 #pragma region Player1
 	_theirID = 1;
@@ -111,13 +111,11 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(15, 100.f, 0));
-	Vec3 pos1 = player1->GetTransform()->GetLocalPosition();
+	player1->GetTransform()->SetLocalPosition(Vec3(15, 200.f, 0));
 	Matrix mat = player1->GetTransform()->GetLocalMatrix();
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
 	player1->AddComponent(make_shared<CharacterController>(0.5, 1.0, 0.3f));
-	player1->GetRigidBody()->OnDisable();
 	player1->GetCharacterController()->OnEnable();
 	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player1->GetCharacterController()));								// Add Player Controller
 	_player.push_back(player1);
@@ -305,14 +303,10 @@ void BattleScene::LoadScene()
 		{
 			gameObject->SetCheckFrustum(true);
 			gameObject->SetStatic(false);
-			//gameObject->AddComponent(make_shared<BoxCollider>(Vec3(0.f,0.f,0.f),Vec3(100.f,5.f,100.f)));
-			//gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalPosition(), false));
-			// Rigid Body 생성
-			//gameObject->GetRigidBody()->OnEnable();
 			AddGameObject(gameObject);
 		}
 	}
-		
+
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
@@ -320,6 +314,10 @@ void BattleScene::LoadScene()
 
 		for (auto& gameObject : gameObjects)
 		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(false);
+			AddGameObject(gameObject);
+		}
 	}
 
 	{
@@ -334,25 +332,22 @@ void BattleScene::LoadScene()
 			AddGameObject(gameObject);
 		}
 	}
-			AddGameObject(gameObject);
-		}
 
-		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SkyDome.bin"); // MeshData* meshData
+	//{
+	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SkyDome.bin"); // MeshData* meshData
 
+	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-	{
-		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\PropDemo.bin"); // MeshData* meshData
+	//	for (auto& gameObject : gameObjects)
+	//	{
+	//		gameObject->SetCheckFrustum(true);
+	//		gameObject->SetStatic(false);
+	//		AddGameObject(gameObject);
+	//	}
+	//}
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
-
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(false);
-			AddGameObject(gameObject);
-
-#pragma endregion
 }
+#pragma endregion
 
 
 
@@ -364,13 +359,15 @@ void BattleScene::Update()
 
 
 	Scene::Update();
+	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
+
 	//CheckCollisions();
 
 	/*if (GET_SINGLE(KeyInput)->GetButtonDown(KEY_TYPE::TAB))
 		CreateZombie();*/
 
 
-	if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::UP))
+	/*if (GET_SINGLE(KeyInput)->GetButton(KEY_TYPE::UP))
 	{
 		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
 		Pos.z += 5.f;
@@ -399,7 +396,7 @@ void BattleScene::Update()
 		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
 		Pos.x += 5.f;
 		_mainLight->GetTransform()->SetLocalPosition(Pos);
-	}
+	}*/
 
 
 	//{
@@ -422,13 +419,9 @@ void BattleScene::Update()
 	direction.Normalize();
 
 	_mainLight->GetLight()->SetLightDirection(Vec3(direction));
+
 }
 
-void BattleScene::FinalUpdate()
-{
-	Scene::FinalUpdate();
-	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
-}
 
 	
 // 축에 투영하는 헬퍼 함수
@@ -579,15 +572,6 @@ void BattleScene::CheckCollisions()
 
 
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
-
-		for (auto& gameObject : gameObjects)
-		{
-			gameObject->SetCheckFrustum(false);
-			gameObject->SetStatic(true);
-			AddGameObject(gameObject);
-		}
-	}
 
 
 	//	if (totalMTV.y > 0.01f) // MTV가 아래에서 위로 (즉, 플레이어가 위에서 떨어졌다는 뜻)
@@ -613,11 +597,5 @@ void BattleScene::CheckCollisions()
 
 void BattleScene::CreateZombie()
 {
-	//Vec3 pos = _player[0]->GetTransform()->GetLocalPosition();
-	//printf("%f %f %f\n", pos.x, pos.y, pos.z);
-
-
-
-	Scene::Update();
-	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
+	
 }
