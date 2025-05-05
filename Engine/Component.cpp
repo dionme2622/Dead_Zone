@@ -61,3 +61,7 @@ shared_ptr<RigidBody> Component::GetRigidBody()
 	return _gameObject.lock()->GetRigidBody();
 }
 
+shared_ptr<CharacterController> Component::GetCharacterController()
+{
+	return _gameObject.lock()->GetCharacterController();
+}

@@ -2,10 +2,11 @@
 #include "Component.h"
 #include "Mesh.h"
 #include "bullet3/btBulletDynamicsCommon.h"
+#include "DebugRenderer.h"
 
 enum class ColliderType
 {
-	Box, Sphere, Capsule
+	Box, Sphere, Capsule, MESH
 };
 
 class BaseCollider : public Component

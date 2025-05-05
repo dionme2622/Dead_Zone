@@ -10,6 +10,7 @@ enum class COMPONENT_TYPE : uint8
 	PARTICLE_SYSTEM,
 	COLLIDER,
 	RIGIDBODY,
+	CHARACTER_CONTROLLER,
 	COLLISION_OBJECT,
 	ANIMATOR,
 	WEAPONMANAGER,
@@ -17,6 +18,7 @@ enum class COMPONENT_TYPE : uint8
 	BULLET,
 	// ...
 	PLAYERSTATS,
+	// ...
 	MONO_BEHAVIOUR,			// 반드시 END 전에 위치해야한다.
 	END,
 };
@@ -36,6 +38,7 @@ class Weapon;
 class Bullet;
 class PlayerStats;
 class RigidBody;
+class CharacterController;
 
 class Component : public Object
 {
@@ -64,6 +67,7 @@ public:
 	shared_ptr<Bullet> GetBullet();
 	shared_ptr<PlayerStats> GetPlayerStats();
 	shared_ptr<RigidBody> GetRigidBody();
+	shared_ptr<CharacterController> GetCharacterController();
 
 private:
 	friend class GameObject;

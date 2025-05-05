@@ -2,10 +2,11 @@
 #include "MonoBehaviour.h"
 #include <bullet3\btBulletDynamicsCommon.h>
 
+class CharacterController;
 class PlayerScript : public MonoBehaviour
 {
 public:
-	PlayerScript(HWND hwnd, bool isLocal, int playerId);
+	PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<CharacterController> controller);
 	virtual ~PlayerScript();
 
 	virtual void LateUpdate() override;
@@ -35,7 +36,7 @@ private:
 	float _currentVelocity; // 현재 수직 속도
 	float _gravity;         // 중력 가속도
 	bool _isGrounded;       // 땅에 닿아있는지 여부
-
+	shared_ptr<CharacterController> _controller;
 
 private:
 	float sensitivity = 0.001f;

@@ -11,6 +11,9 @@ public:
 	virtual void FinalUpdate() override;
 	Matrix GetToRootTransform();
 	Matrix GetLocalMatrix();
+	Matrix GetLocalMatrix2();
+	void SetNo(bool no) { _no = no; }
+	bool _no = false;
 	void PushData();
 
 public:

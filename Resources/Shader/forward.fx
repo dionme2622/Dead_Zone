@@ -149,7 +149,7 @@ VS_COLLIDER_OUT VS_Collider(VS_COLLIDER_IN input)
 
 float4 PS_Collider(VS_COLLIDER_OUT input) : SV_Target
 {
-    float4 color = float4(1.f, 0.f, 0.f, 1.f);
+    float4 color = float4(0.f, 1.f, 0.f, 1.f);
 
     return color;
 }

@@ -32,3 +32,10 @@ private:
     unique_ptr<btDiscreteDynamicsWorld>              _dynamicsWorld;
 };
 
+inline btVector3 ToBt(const Vec3& v) {
+    return btVector3(v.x, v.y, v.z);
+}
+
+inline Vec3 FromBt(const btVector3& v) {
+    return Vec3(v.getX(), v.getY(), v.getZ());
+}
