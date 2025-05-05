@@ -17,7 +17,7 @@ void Transform::Update()
 {
 	//_matPrevWorld = _matWorld;
 
-	float radX = _localRotation.x * (XM_PI / 180.0f);
+	/*float radX = _localRotation.x * (XM_PI / 180.0f);
 	float radY = _localRotation.y * (XM_PI / 180.0f);
 	float radZ = _localRotation.z * (XM_PI / 180.0f);
 
@@ -35,7 +35,7 @@ void Transform::Update()
 	if (parent != nullptr)
 	{
 		_matWorld *= parent->GetLocalToWorldMatrix();
-	}
+	}*/
 }
 
 void Transform::FinalUpdate()
@@ -54,10 +54,13 @@ void Transform::FinalUpdate()
 
 	_matWorld = _matLocal;
 
-	shared_ptr<Transform> parent = GetParent().lock();
-	if (parent != nullptr)
+	if (!_no)
 	{
-		_matWorld *= parent->GetLocalToWorldMatrix();
+		shared_ptr<Transform> parent = GetParent().lock();
+		if (parent != nullptr)
+		{
+			_matWorld *= parent->GetLocalToWorldMatrix();
+		}
 	}
 }
 
@@ -86,18 +89,40 @@ Matrix Transform::GetLocalMatrix()
 		* Matrix::CreateRotationY(radY);
 	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
 
-	_matLocal = matScale * matRotation * matTranslation;
+	Matrix matLocal = matScale * matRotation * matTranslation;
 
 
-	_matWorld = _matLocal;
+	Matrix matWorld = matLocal;
 
 	shared_ptr<Transform> parent = GetParent().lock();
 	if (parent != nullptr)
 	{
-		_matWorld *= parent->GetLocalToWorldMatrix();
+		matWorld *= parent->GetLocalMatrix();
 	}
 
-	return _matWorld;
+	return matWorld;
+}
+
+Matrix Transform::GetLocalMatrix2()
+{
+	float radX = _localRotation.x * (XM_PI / 180.0f);
+	float radY = _localRotation.y * (XM_PI / 180.0f);
+	float radZ = _localRotation.z * (XM_PI / 180.0f);
+
+	Matrix matScale = Matrix::CreateScale(_localScale);
+	Matrix matRotation = Matrix::CreateRotationZ(radZ)
+		* Matrix::CreateRotationX(radX)
+		* Matrix::CreateRotationY(radY);
+	Matrix matTranslation = Matrix::CreateTranslation(_localPosition);
+
+	Matrix matLocal = matScale * matRotation * matTranslation;
+
+
+	Matrix matWorld = matLocal;
+
+
+
+	return matWorld;
 }
 
 void Transform::PushData()

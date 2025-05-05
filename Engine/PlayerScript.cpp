@@ -15,19 +15,20 @@
 #include "Animator.h"
 #include "RigidBody.h"
 #include "PhysicsSystem.h"
-
-PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
+PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<CharacterController> controller)
 {
 	_hwnd = hwnd;
 	_isLocal = isLocal;
 	_playerId = playerId;
+	_controller = controller;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 10.0f;
+	_speed = 50.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
 	_isGrounded = true;
+
 }
 
 PlayerScript::~PlayerScript()
@@ -69,28 +70,10 @@ void PlayerScript::UpdatePlayerInput()
 
 void PlayerScript::UpdateKeyInput()
 {
-	// 1) RigidBody & 현재 Y 속도
-	auto body = GetRigidBody()->GetBody();
-	btVector3 vel = body->getLinearVelocity();
-	float     yVel = vel.getY();
 
 	// 1) 이전 위치 저장
 	Vec3 oldPos = GetTransform()->GetLocalPosition();
 	Vec3 newPos = oldPos;
-	
-	// 2) 입력에 따라 newPos 변경	
-	//if (INPUT->GetButton(KEY_TYPE::W))
-	//	newPos += GetTransform()->GetLook() * _speed * DELTA_TIME;
-	//if (INPUT->GetButton(KEY_TYPE::S))
-	//	newPos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
-	//if (INPUT->GetButton(KEY_TYPE::A))
-	//	newPos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-	//if (INPUT->GetButton(KEY_TYPE::D))
-	//	newPos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-	//if (INPUT->GetButton(KEY_TYPE::Q))
-	//	newPos += GetTransform()->GetLook() * _speed * 2 * DELTA_TIME;
-	//if (INPUT->GetButton(KEY_TYPE::CTRL))
-	//	newPos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
 
 	// 2) WASD 입력에 따른 방향(dir) 계산
 	Vec3 dir(0, 0, 0);
@@ -99,20 +82,14 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight() * DELTA_TIME;
 	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight() * DELTA_TIME;
 
-	// 3) 땅에 붙어 있을 때만 점프
-	if (IsGrounded(body.get(), GET_SINGLE(PhysicsSystem)->GetDynamicsWorld())
-		&& INPUT->GetButtonDown(KEY_TYPE::SPACE))
-	{
-		yVel = _jumpVelocity;   // 예: 8.0f
-	}
-	// 4) 수평 방향 속도 설정
-	const float EPS = 1e-6f;
-	if (dir.LengthSquared() > EPS)
-	{
-		dir.Normalize();
-		dir *= _speed;
-	}
+	_controller->Move(dir * _speed * DELTA_TIME);
 
+	// 3) 땅에 붙어 있을 때만 점프
+	if (INPUT->GetButtonDown(KEY_TYPE::SPACE) && _controller->IsOnGround())
+	{
+		_controller->Jump();
+	}
+	
 	if (INPUT->GetButton(KEY_TYPE::KEY_1))
 	{
 		GetWeaponManager()->EquipWeapon(0);
@@ -162,7 +139,7 @@ void PlayerScript::UpdateKeyInput()
 	//printf("속도: %f\n", currentSpeed);
 
 	// 5) 최종 속도 세팅 (Y 속도는 점프/중력 유지)
-	body->setLinearVelocity(btVector3(dir.x, yVel, dir.z));
+//	body->setLinearVelocity(btVector3(dir.x, yVel, dir.z));
 	//GetTransform()->SetLocalPosition(newPos);
 }
 

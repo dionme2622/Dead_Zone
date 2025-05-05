@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PhysicsSystem.h"
+#include <BulletCollision/CollisionDispatch/btGhostObject.h>
 
 
 void PhysicsSystem::Init() {
@@ -8,6 +9,8 @@ void PhysicsSystem::Init() {
     _dispatcher      = make_unique<btCollisionDispatcher>(_collisionConfig.get());
     // 2) 광역 단계 (Broadphase)
     _broadphase      = make_unique<btDbvtBroadphase>();
+    _broadphase->getOverlappingPairCache()
+        ->setInternalGhostPairCallback(new btGhostPairCallback());
     // 3) 제약 해석기 (Solver)
     _solver          = make_unique<btSequentialImpulseConstraintSolver>();
     // 4) 월드 생성

@@ -3,6 +3,7 @@
 class Mesh;
 class Material;
 class Transform;
+class btVector3;
 
 struct MaterialInfo
 {
@@ -26,6 +27,7 @@ struct BinaryMeshInfo
 	wstring								objName;
 	wstring								meshName;
 	vector<Vertex>						vertices;
+	vector<btVector3>					btvertices;
 	vector<vector<uint32>>				indices;
 	Vec3								AABBCenter;
 	Vec3								AABBExtents;

@@ -145,6 +145,12 @@ shared_ptr<RigidBody> GameObject::GetRigidBody()
 	return static_pointer_cast<RigidBody>(component);
 }
 
+shared_ptr<CharacterController> GameObject::GetCharacterController()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::CHARACTER_CONTROLLER);
+	return static_pointer_cast<CharacterController>(component);
+}
+
 shared_ptr<Camera> GameObject::GetCamera()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::CAMERA);

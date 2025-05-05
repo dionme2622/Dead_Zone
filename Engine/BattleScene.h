@@ -11,7 +11,6 @@ public:
 
 	virtual void LoadScene();
 	virtual void Update();
-	virtual void FinalUpdate();
 
 
 public:
