@@ -34,6 +34,7 @@ class WeaponManager;
 class Weapon;
 class PlayerStats;
 class RigidBody;
+class CharacterController;
 
 class Component : public Object
 {
@@ -61,6 +62,7 @@ public:
 	shared_ptr<Weapon> GetWeapon();
 	shared_ptr<PlayerStats> GetPlayerStats();
 	shared_ptr<RigidBody> GetRigidBody();
+	shared_ptr<CharacterController> GetCharacterController();
 
 private:
 	friend class GameObject;

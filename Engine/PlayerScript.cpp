@@ -11,11 +11,12 @@
 #include "Animator.h"
 #include "RigidBody.h"
 #include "PhysicsSystem.h"
-PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
+PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<CharacterController> controller)
 {
 	_hwnd = hwnd;
 	_isLocal = isLocal;
 	_playerId = playerId;
+	_controller = controller;
 	// Player에 대한 정보 초기화 단계
 
 	_speed = 50.0f;
@@ -23,6 +24,7 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
 	_isGrounded = true;
+
 }
 
 PlayerScript::~PlayerScript()
@@ -65,9 +67,9 @@ void PlayerScript::UpdatePlayerInput()
 void PlayerScript::UpdateKeyInput()
 {
 	// 1) RigidBody & 현재 Y 속도
-	auto body = GetRigidBody()->GetBody();
-	btVector3 vel = body->getLinearVelocity();
-	float     yVel = vel.getY();
+//	auto body = GetRigidBody()->GetBody();
+//	btVector3 vel = body->getLinearVelocity();
+//	float     yVel = vel.getY();
 
 	// 1) 이전 위치 저장
 	Vec3 oldPos = GetTransform()->GetLocalPosition();
@@ -94,12 +96,18 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight();
 	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight();
 
+	_controller->Move(dir * _speed * DELTA_TIME);
+
 	// 3) 땅에 붙어 있을 때만 점프
-	if (IsGrounded(body.get(), GET_SINGLE(PhysicsSystem)->GetDynamicsWorld())
-		&& INPUT->GetButtonDown(KEY_TYPE::SPACE))
+	if (INPUT->GetButtonDown(KEY_TYPE::SPACE) && _controller->IsOnGround())
 	{
-		yVel = _jumpVelocity;   // 예: 8.0f
+		_controller->Jump();
 	}
+	//if (IsGrounded(body.get(), GET_SINGLE(PhysicsSystem)->GetDynamicsWorld())
+	//	&& INPUT->GetButtonDown(KEY_TYPE::SPACE))
+	//{
+	//	yVel = _jumpVelocity;   // 예: 8.0f
+	//}
 	// 4) 수평 방향 속도 설정
 	const float EPS = 1e-6f;
 	if (dir.LengthSquared() > EPS)
@@ -149,7 +157,7 @@ void PlayerScript::UpdateKeyInput()
 	//printf("속도: %f\n", currentSpeed);
 
 	// 5) 최종 속도 세팅 (Y 속도는 점프/중력 유지)
-	body->setLinearVelocity(btVector3(dir.x, yVel, dir.z));
+//	body->setLinearVelocity(btVector3(dir.x, yVel, dir.z));
 	//GetTransform()->SetLocalPosition(newPos);
 }
 

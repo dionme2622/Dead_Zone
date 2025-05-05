@@ -46,6 +46,9 @@ public:
     virtual void OnDisable();
     virtual void FinalUpdate() override;
 
+    bool IsOnGround() const {
+        return _controller->onGround();
+    }
 private:
     float _radius, _height, _stepHeight;
 

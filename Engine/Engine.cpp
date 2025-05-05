@@ -40,7 +40,7 @@ void Engine::Init(const WindowInfo& info)
 	GET_SINGLE(Timer)->Init();
 	GET_SINGLE(Resources)->Init();
 	GET_SINGLE(PhysicsSystem)->Init();
-	GET_SINGLE(DebugRenderer)->Init(DEVICE, 10000);
+	GET_SINGLE(DebugRenderer)->Init(DEVICE, 100000);
 }
 
 void Engine::Update()

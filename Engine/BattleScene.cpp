@@ -107,14 +107,12 @@ void BattleScene::LoadScene()
 	player1->GetTransform()->SetLocalPosition(Vec3(15, 100.f, 0));
 	Vec3 pos1 = player1->GetTransform()->GetLocalPosition();
 	Matrix mat = player1->GetTransform()->GetLocalMatrix();
-	//player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
+	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
-	player1->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 持失
-	//player1->AddComponent(make_shared<BoxCollider>(Vec3(0,0,0),Vec3(1,1,1)));										// Capsule Collider 持失
-
-	player1->AddComponent(make_shared<RigidBody>(50.0f, dynamic_pointer_cast<CapsuleCollider>(player1->GetCollider()), mat, false));			// Rigid Body 持失
-	player1->GetRigidBody()->OnEnable();
-	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
+	player1->AddComponent(make_shared<CharacterController>(0.5, 1.0, 0.3f));
+	player1->GetRigidBody()->OnDisable();
+	player1->GetCharacterController()->OnEnable();
+	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player1->GetCharacterController()));								// Add Player Controller
 	_player.push_back(player1);
 #pragma endregion
 
@@ -285,18 +283,18 @@ void BattleScene::LoadScene()
 		}
 	}
 
-	//{
-	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\PropDemo.bin"); // MeshData* meshData
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\PropDemo.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
-	//}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
+	}
 
 
 	//{

@@ -35,6 +35,8 @@ public:
 	shared_ptr<Weapon> GetWeapon();
 	shared_ptr<PlayerStats> GetPlayerStats();
 	shared_ptr<RigidBody> GetRigidBody();
+	shared_ptr<CharacterController> GetCharacterController();
+
 
 	shared_ptr<Camera> GetCamera();
 	shared_ptr<Light> GetLight();
