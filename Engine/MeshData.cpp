@@ -98,10 +98,10 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate(int type)
 			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
 			if (info.boxCollider != nullptr)
 			{
-			/*	shared_ptr<BoxCollider> collider = info.boxCollider;
+				shared_ptr<BoxCollider> collider = info.boxCollider;
 				gameObject->AddComponent(collider);
 				gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix(), false));
-				gameObject->GetRigidBody()->OnEnable();*/
+				gameObject->GetRigidBody()->OnEnable();
 			}
 			if (info.meshCollider != nullptr)
 			{

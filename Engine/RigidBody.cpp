@@ -100,8 +100,8 @@ CharacterController::CharacterController(float radius, float height, float stepH
     );
 
     _controller->setGravity(btVector3(0, -9.8f, 0));      // 월드 단위 중력
-    _controller->setFallSpeed(55.0f);   // max fall speed
-    _controller->setJumpSpeed(8.0f);    // 원하는 점프 속도
+    _controller->setFallSpeed(100.0f);   // max fall speed
+    _controller->setJumpSpeed(20.0f);    // 원하는 점프 속도
 }
 CharacterController::~CharacterController()
 {
@@ -158,6 +158,18 @@ void CharacterController::FinalUpdate()
     btTransform btTrans = _ghost->getWorldTransform();
     btVector3 btPos = btTrans.getOrigin();
     Vec3 worldPos(btPos.x(), btPos.y(), btPos.z());
+
+    if (!_controller->onGround())
+    {
+        _controller->setGravity(btVector3(0, -50.f, 0));
+        _controller->setFallSpeed(150.0f);
+    }
+    else
+    {
+        // 땅에 닿으면 원래 값으로 복원
+        _controller->setGravity(btVector3(0, -9.8f, 0));
+        _controller->setFallSpeed(55.0f);
+    }
 
     GetTransform()->SetNo(true);
     GetTransform()->SetLocalPosition(worldPos);
