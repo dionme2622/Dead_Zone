@@ -22,7 +22,7 @@ GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 
 GameObject::~GameObject()
 {
-
+	RemoveAllComponent();
 }
 
 void GameObject::Awake()
@@ -188,4 +188,16 @@ void GameObject::AddComponent(shared_ptr<Component> component)
 	{
 		_scripts.push_back(dynamic_pointer_cast<MonoBehaviour>(component));
 	}
+}
+
+void GameObject::RemoveAllComponent()
+{
+	for (auto& component : _components)
+	{
+		if (component)
+		{
+			component = nullptr;
+		}
+	}
+	_scripts.clear();
 }

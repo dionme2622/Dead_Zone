@@ -40,14 +40,7 @@ void WeaponManager::PushData()
 
 void WeaponManager::FinalUpdate()
 {
-	for (auto& weaponGroup : _weaponInventory) {
-		for (auto& gameObject : weaponGroup) {
-			shared_ptr<Weapon> weapon = gameObject->GetWeapon();
-			if (weapon) {
-				weapon->DeleteBullet();
-			}
-		}
-	}
+	
 }
 
 void WeaponManager::AddWeapon()

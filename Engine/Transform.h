@@ -8,7 +8,7 @@ public:
 	virtual ~Transform();
 
 	virtual void Update() override;
-	//virtual void FinalUpdate() override;
+	virtual void FinalUpdate() override;
 	Matrix GetToRootTransform();
 	Matrix GetLocalMatrix();
 	void PushData();
@@ -56,5 +56,12 @@ private:
 	Matrix _matPrevWorld = {};
 
 	weak_ptr<Transform> _parent;
+
+
+
+
+	// µð¹ö±×
+public:
+	bool debug = false;
 };
 

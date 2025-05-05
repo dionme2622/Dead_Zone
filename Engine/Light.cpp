@@ -4,9 +4,10 @@
 #include "Engine.h"
 #include "Resources.h"
 #include "Camera.h"
-#include "Transform.h"
 #include "Texture.h"
 #include "SceneManager.h"
+#include "KeyInput.h"
+
 
 Light::Light() : Component(COMPONENT_TYPE::LIGHT)
 {
@@ -14,7 +15,7 @@ Light::Light() : Component(COMPONENT_TYPE::LIGHT)
 	_shadowCamera->AddComponent(make_shared<Transform>());
 	_shadowCamera->AddComponent(make_shared<Camera>());
 	_shadowCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
-
+	_shadowCamera->GetTransform()->debug = true;
 }
 
 Light::~Light()
@@ -23,28 +24,31 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
-	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
+	_shadowCamera->GetCamera()->GetTransform()->GetLocalMatrix();
 
 	_lightInfo.position = GetTransform()->GetWorldPosition();
 
 	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
-	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(0, 0, 0)); // 회전 없음
+	// 빛의 방향에 따라 그림자 카메라의 회전 설정
+	Vec3 lightDirection = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
+	lightDirection.Normalize();
+
+	// 빛의 방향을 기준으로 회전 값 계산
+	float pitch = atan2f(lightDirection.y, sqrtf(lightDirection.x * lightDirection.x + lightDirection.z * lightDirection.z));
+	float yaw = atan2f(lightDirection.x, lightDirection.z);
+
+	// 회전 값 적용
+	_shadowCamera->GetTransform()->SetLocalRotation(-Vec3(pitch * (180.0f / XM_PI), yaw * (180.0f / XM_PI), 0));
 
 	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
-
-	// 빛의 방향에 맞춰 카메라가 아래를 향하도록 설정
-	_shadowCamera->GetCamera()->GetTransform()->SetLocalRotation(
-		Vec3(_lightInfo.direction.x + 45, 0, 0));
 
 	_shadowCamera->FinalUpdate();
 }
 
 void Light::Render()
 {
-	Vec3 look = _shadowCamera->GetTransform()->GetLocalRotation();
 	assert(_lightIndex >= 0);
-
 	GetTransform()->PushData();
 
 	if (static_cast<LIGHT_TYPE>(_lightInfo.lightType) == LIGHT_TYPE::DIRECTIONAL_LIGHT)
@@ -66,7 +70,6 @@ void Light::Render()
 	_lightMaterial->PushGraphicsData();
 
 	_volumeMesh->Render();
-
 }
 
 void Light::RenderShadow()
@@ -80,7 +83,6 @@ void Light::SetLightDirection(Vec3 direction)
 	direction.Normalize();
 
 	_lightInfo.direction = direction;
-
 	GetTransform()->LookAt(direction);
 }
 
@@ -96,9 +98,9 @@ void Light::SetLightType(LIGHT_TYPE type)
 
 		_shadowCamera->GetCamera()->SetScale(1.f);
 		_shadowCamera->GetCamera()->SetNear(0.01);
-		_shadowCamera->GetCamera()->SetFar(200);
-		_shadowCamera->GetCamera()->SetWidth(500);
-		_shadowCamera->GetCamera()->SetHeight(500);
+		_shadowCamera->GetCamera()->SetFar(1000);
+		_shadowCamera->GetCamera()->SetWidth(2000);
+		_shadowCamera->GetCamera()->SetHeight(2000);
 
 		break;
 	case LIGHT_TYPE::POINT_LIGHT:

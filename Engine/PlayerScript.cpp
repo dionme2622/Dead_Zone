@@ -15,6 +15,7 @@
 #include "Animator.h"
 #include "RigidBody.h"
 #include "PhysicsSystem.h"
+
 PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 {
 	_hwnd = hwnd;
@@ -22,7 +23,7 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
 	_playerId = playerId;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 50.0f;
+	_speed = 10.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
@@ -93,10 +94,10 @@ void PlayerScript::UpdateKeyInput()
 
 	// 2) WASD 입력에 따른 방향(dir) 계산
 	Vec3 dir(0, 0, 0);
-	if (INPUT->GetButton(KEY_TYPE::W)) dir += GetTransform()->GetLook();
-	if (INPUT->GetButton(KEY_TYPE::S)) dir -= GetTransform()->GetLook();
-	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight();
-	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight();
+	if (INPUT->GetButton(KEY_TYPE::W)) dir += GetTransform()->GetLook() * DELTA_TIME;
+	if (INPUT->GetButton(KEY_TYPE::S)) dir -= GetTransform()->GetLook() * DELTA_TIME;
+	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight() * DELTA_TIME;
+	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight() * DELTA_TIME;
 
 	// 3) 땅에 붙어 있을 때만 점프
 	if (IsGrounded(body.get(), GET_SINGLE(PhysicsSystem)->GetDynamicsWorld())
@@ -131,7 +132,14 @@ void PlayerScript::UpdateKeyInput()
 	{
 		// Shoot 애니메이션 트리거
 		GetAnimator()->SetTrigger("Shoot");
+
+		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
+		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
+
+
+
+
 	}
 
 

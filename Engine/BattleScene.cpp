@@ -70,6 +70,8 @@ void BattleScene::LoadScene()
 		skybox->SetLayerIndex(LayerNameToIndex(L"Battle"));
 		skybox->AddComponent(make_shared<Transform>());
 		skybox->SetCheckFrustum(false);
+		skybox->SetStatic(true);
+
 		skybox->GetTransform()->SetLocalScale(Vec3(100.0f, 100.0f, 100.0f));
 		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
 		{
@@ -102,17 +104,17 @@ void BattleScene::LoadScene()
 	{
 		//gameObject->SetName(L"FemaleSoldier");
 		gameObject->SetCheckFrustum(false);
-		gameObject->SetStatic(true);
+		gameObject->SetStatic(false);
 		gameObject->GetTransform()->FinalUpdate();
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 80.f, 0.f));
+	player1->GetTransform()->SetLocalPosition(Vec3(20.f, 100.f, 0.f));
 	Vec3 pos1 = player1->GetTransform()->GetLocalPosition();
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
 	player1->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 생성
-	player1->AddComponent(make_shared<RigidBody>(80.0f, dynamic_pointer_cast<CapsuleCollider>(player1->GetCollider()), pos1, false));			// Rigid Body 생성
+	player1->AddComponent(make_shared<RigidBody>(player1, 80.0f, dynamic_pointer_cast<CapsuleCollider>(player1->GetCollider()), pos1, false));			// Rigid Body 생성
 	player1->GetRigidBody()->OnEnable();
 	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
 	_player.push_back(player1);
@@ -131,7 +133,7 @@ void BattleScene::LoadScene()
 	{
 		//gameObject->SetName(L"FemaleSoldier");
 		gameObject->SetCheckFrustum(false);
-		gameObject->SetStatic(true);
+		gameObject->SetStatic(false);
 		gameObject->GetTransform()->FinalUpdate();
 		AddGameObject(gameObject);
 	}
@@ -139,7 +141,7 @@ void BattleScene::LoadScene()
 	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
 	Vec3 pos2 = player2->GetTransform()->GetLocalPosition();
 	player2->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 생성
-	player2->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<CapsuleCollider>(player2->GetCollider()), pos2, false));			// Rigid Body 생성
+	player2->AddComponent(make_shared<RigidBody>(player2, 0.0f, dynamic_pointer_cast<CapsuleCollider>(player2->GetCollider()), pos2, false));			// Rigid Body 생성
 	player2->GetRigidBody()->OnEnable();
 	//player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
 	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
@@ -212,13 +214,13 @@ void BattleScene::LoadScene()
 	{
 		_mainLight = make_shared<GameObject>();
 		_mainLight->AddComponent(make_shared<Transform>());
-		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 90, 60));
+		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 150, 90));
 		_mainLight->AddComponent(make_shared<Light>());
-		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1, 0.f));
+		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, -0.1f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		_mainLight->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
-		_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));
-		_mainLight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));
+		_mainLight->GetLight()->SetAmbient(Vec3(0.2f, 0.2f, 0.2f));
+		_mainLight->GetLight()->SetSpecular(Vec3(0.2f, 0.2f, 0.2f));
 		AddGameObject(_mainLight);
 	}
 #pragma endregion
@@ -298,7 +300,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
+			gameObject->SetStatic(false);
 			AddGameObject(gameObject);
 		}
 	}
@@ -311,7 +313,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
+			gameObject->SetStatic(false);
 			AddGameObject(gameObject);
 		}
 	}
@@ -324,7 +326,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
+			gameObject->SetStatic(false);
 			AddGameObject(gameObject);
 		}
 	}
@@ -338,11 +340,13 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
+			gameObject->SetStatic(false);
 			AddGameObject(gameObject);
 		}
 
 	}
+
+
 #pragma endregion
 }
 
@@ -356,7 +360,6 @@ void BattleScene::Update()
 
 
 	Scene::Update();
-	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
 	//CheckCollisions();
 
 	/*if (GET_SINGLE(KeyInput)->GetButtonDown(KEY_TYPE::TAB))
@@ -395,26 +398,32 @@ void BattleScene::Update()
 	}
 
 
-	{
-		Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
-		float angle = XMConvertToRadians(10.0f); // 10도 회전 예시
-		Vec3 center = Vec3(0.f, Pos.y, 0.f);
-		Vec3 relativePos = Pos - center;
-		float cosTheta = cos(angle);
-		float sinTheta = sin(angle);
-		Vec3 rotatedPos;
-		rotatedPos.x = relativePos.x * cosTheta - relativePos.z * sinTheta;
-		rotatedPos.y = relativePos.y; // y축은 그대로 유지
-		rotatedPos.z = relativePos.x * sinTheta + relativePos.z * cosTheta;
-		rotatedPos += center;
-		_mainLight->GetTransform()->SetLocalPosition(rotatedPos);
-	}
+	//{
+	//	Vec3 Pos = _mainLight->GetTransform()->GetLocalPosition();
+	//	float angle = XMConvertToRadians(1.0f); // 10도 회전 예시
+	//	Vec3 center = Vec3(0.f, Pos.y, 0.f);
+	//	Vec3 relativePos = Pos - center;
+	//	float cosTheta = cos(angle);
+	//	float sinTheta = sin(angle);
+	//	Vec3 rotatedPos;
+	//	rotatedPos.x = relativePos.x * cosTheta - relativePos.z * sinTheta;
+	//	rotatedPos.y = relativePos.y; // y축은 그대로 유지
+	//	rotatedPos.z = relativePos.x * sinTheta + relativePos.z * cosTheta;
+	//	rotatedPos += center;
+	//	_mainLight->GetTransform()->SetLocalPosition(rotatedPos);
+	//}
 
+	// 라이트가 (0,0,0)을 계속 보도록 설정
+	Vec3 direction = Vec3(0.f, 0.f, 0.f) - _mainLight->GetTransform()->GetLocalPosition();
+	direction.Normalize();
+
+	_mainLight->GetLight()->SetLightDirection(Vec3(direction));
 }
 
 void BattleScene::FinalUpdate()
 {
 	Scene::FinalUpdate();
+	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
 }
 
 	

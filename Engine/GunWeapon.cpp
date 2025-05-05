@@ -3,90 +3,111 @@
 #include "SceneManager.h"
 #include "Transform.h"
 #include "Resources.h"
-#include "Texture.h"
 #include "Bullet.h"
+#include "Timer.h"
+#include "RigidBody.h"
+#include "PhysicsSystem.h"
 
+// Vector3를 btVector3로 변환하는 유틸리티 함수
+inline btVector3 ToBtVector3(const Vec3& vec)
+{
+    return btVector3(vec.x, vec.y, vec.z);
+}
 
 GunWeapon::GunWeapon()
+    : m_bulletPosition(btVector3(0, 0, 0))
+    , m_bulletDirection(btVector3(0, 0, -1))
+    , m_range(1000.0f)
+    , m_isReloading(false)
+    , m_reloadTime(2.0f)
+    , m_reloadTimer(0.0f)
 {
 }
 
 void GunWeapon::Attack()
 {
-	_bulletObjects.push_back(make_shared<GameObject>());
+    if (m_isReloading)
+        return; // 재장전 중에는 발사 불가
 
-	_bulletObjects.back()->SetLayerIndex(GET_SINGLE(SceneManager)->GetActiveScene()->LayerNameToIndex(L"Battle"));
-	_bulletObjects.back()->AddComponent(make_shared<Transform>());
-	_bulletObjects.back()->AddComponent(make_shared<Bullet>());
-	_bulletObjects.back()->GetTransform()->SetLocalScale(Vec3(0.2f, 0.2f, 0.2f));
-	_bulletObjects.back()->GetBullet()->SetIsFired(true);
-	SetBulletPosition();
-	SetBulletDirection();
-	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	{
-		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadCubeMesh();
-		meshRenderer->SetMesh(mesh);
-	}
-	{
-		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Deferred");
-		shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock", L"..\\Resources\\Texture\\Cliff_Rock_basecolor.png");
-		shared_ptr<Texture> texture2 = GET_SINGLE(Resources)->Load<Texture>(L"Cliff_Rock_Normal", L"..\\Resources\\Texture\\Cliff_Rock_normal.png");
-		shared_ptr<Material> material = make_shared<Material>();
-		material->SetShader(shader);
-		material->SetTexture(0, texture);
-		material->SetTexture(1, texture2);
-		meshRenderer->SetMaterial(material);
-	}
-	_bulletObjects.back()->AddComponent(meshRenderer);
+    auto* dynamicsWorld = GET_SINGLE(PhysicsSystem)->GetDynamicsWorld();
+    if (!dynamicsWorld)
+        return;
 
-	GET_SINGLE(SceneManager)->GetActiveScene()->AddGameObject(_bulletObjects.back());
+    // 발사 시작점과 끝점 계산
+    btVector3 from = m_bulletPosition;
+    btVector3 to = m_bulletPosition + m_bulletDirection * m_range;
 
+    // 레이캐스트 수행
+    btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
+    dynamicsWorld->rayTest(from, to, rayCallback);
 
+    // 충돌 처리
+    if (rayCallback.hasHit())
+    {
+        const btCollisionObject* hitObject = rayCallback.m_collisionObject;
+        RemoveHitObject(hitObject, dynamicsWorld);
+    }
 }
 
 void GunWeapon::Reload()
 {
+    if (!m_isReloading)
+    {
+        m_isReloading = true;
+        m_reloadTimer = 0.0f;
+    }
 }
-
-void GunWeapon::DeleteBullet()
-{
-	// _bulletObjects에서 fired 상태가 false인 총알 제거
-	_bulletObjects.erase(
-		std::remove_if(_bulletObjects.begin(), _bulletObjects.end(),
-			[](const shared_ptr<GameObject>& bulletObject) {
-				if (!bulletObject->GetBullet()->GetIsFired())
-				{
-					// Scene에서 제거
-					GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(bulletObject);
-					return true; // 벡터에서 제거
-				}
-				return false; // 유지
-			}),
-		_bulletObjects.end());
-
-}
-
 
 void GunWeapon::SetBulletPosition()
 {
-	Vec3 weaponPosition = GetTransform()->GetLocalPosition();
-	weaponPosition += _muzzleOffset;
-	_bulletObjects.back()->GetTransform()->SetLocalPosition(weaponPosition);
+    // 무기가 GameObject에 부착되어 있다고 가정
+
+    auto camera = GET_SINGLE(SceneManager)->GetActiveScene()->GetMainCamera();
+    auto transform = camera->GetTransform();
+
+    m_bulletPosition = ToBtVector3(transform->GetWorldPosition());
 }
 
 void GunWeapon::SetBulletDirection()
 {
-	_camera = GET_SINGLE(SceneManager)->GetActiveScene()->GetMainCamera();
-	shared_ptr<Bullet> bullet = _bulletObjects.back()->GetBullet();
-	shared_ptr<Camera> camera = _camera.lock();
-	
-	Matrix worldMat = camera->GetTransform()->GetLocalToWorldMatrix();
-	Vec3 cameraDirection = Vec3(worldMat._31, worldMat._32, worldMat._33);
-	
-	cameraDirection.Normalize();
+    // 메인 카메라의 Look 벡터를 기준으로 방향 설정
+    auto camera = GET_SINGLE(SceneManager)->GetActiveScene()->GetMainCamera();
+    auto mat = camera->GetTransform()->GetLocalToWorldMatrix();
 
-	_bulletObjects.back()->GetBullet()->SetDirection(cameraDirection);
+    m_bulletDirection = ToBtVector3(mat.Backward());
+}
 
-	Vec3 bulletStartPos = GetTransform()->GetLocalPosition() + cameraDirection * 1.0f; // 1.0f는 오프셋 거리
-	_bulletObjects.back()->GetBullet()->GetTransform()->SetLocalPosition(bulletStartPos);
+void GunWeapon::Update()
+{
+    if (m_isReloading)
+    {
+        m_reloadTimer += DELTA_TIME; 
+        if (m_reloadTimer >= m_reloadTime)
+        {
+            m_isReloading = false;
+        }
+    }
+}
+
+void GunWeapon::RemoveHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld)
+{
+    if (!hitObject)
+        return;
+
+    // const 제거 후 물리 월드에서 제거
+    auto mutableHitObject = const_cast<btCollisionObject*>(hitObject);
+    dynamicsWorld->removeCollisionObject(mutableHitObject);
+
+    // 사용자 데이터에서 GameObject 가져오기
+    void* userPointer = mutableHitObject->getUserPointer();
+    if (userPointer)
+    {
+        GameObject* hitGameObject = static_cast<GameObject*>(userPointer);
+        shared_ptr<GameObject> gameObjectPtr = hitGameObject->shared_from_this(); // GameObject가 shared_ptr로 관리된다고 가정
+        if (gameObjectPtr)
+        {
+            // Scene에서 GameObject 제거
+            GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObjectPtr);
+        }
+    }
 }

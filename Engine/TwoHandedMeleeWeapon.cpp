@@ -3,13 +3,20 @@
 
 void TwoHandedMeleeWeapon::Attack()
 {
-	cout << "ÈÖµÎ¸£±â" << endl;
 }
 
 void TwoHandedMeleeWeapon::Reload()
 {
 }
 
-void TwoHandedMeleeWeapon::DeleteBullet()
+void TwoHandedMeleeWeapon::SetBulletPosition()
+{
+}
+
+void TwoHandedMeleeWeapon::SetBulletDirection()
+{
+}
+
+void TwoHandedMeleeWeapon::Update()
 {
 }

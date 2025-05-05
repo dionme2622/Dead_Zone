@@ -35,7 +35,7 @@ void Scene::LateUpdate()
 {
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-		gameObject->LateUpdate();
+		if(gameObject) gameObject->LateUpdate();
 	}
 }
 
@@ -62,7 +62,6 @@ void Scene::Render()
 	RenderFinal();
 
 	RenderForward();
-
 }
 
 void Scene::ClearRTV()
@@ -97,7 +96,6 @@ void Scene::RenderShadow()
 
 void Scene::RenderDeferred()
 {
-
 	// Deferred OMSet
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->OMSetRenderTargets();
 
@@ -111,13 +109,6 @@ void Scene::RenderDeferred()
 
 void Scene::RenderLights()
 {
-	shared_ptr<Camera> mainCamera = _cameras[0];
-	Camera::S_MatView = mainCamera->GetViewMatrix();
-	Camera::S_MatProjection = mainCamera->GetProjectionMatrix();
-
-	Camera::S_MainMatView = mainCamera->GetViewMatrix();
-	Camera::S_MainMatProjection = mainCamera->GetProjectionMatrix();
-
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->OMSetRenderTargets();
 
 	// 광원을 그린다.

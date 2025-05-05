@@ -9,6 +9,14 @@ void ThrowingWeapon::Reload()
 {
 }
 
-void ThrowingWeapon::DeleteBullet()
+void ThrowingWeapon::SetBulletPosition()
+{
+}
+
+void ThrowingWeapon::SetBulletDirection()
+{
+}
+
+void ThrowingWeapon::Update()
 {
 }
