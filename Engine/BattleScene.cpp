@@ -26,6 +26,7 @@
 // TEST
 #include "KeyInput.h"
 
+
 BattleScene::BattleScene()
 {
 }
@@ -41,21 +42,22 @@ void BattleScene::LoadScene()
 	SetLayerName(1, L"UI");
 #pragma endregion
 
-#pragma region DebugCamera
-	{
-		_playerCamera = make_shared<GameObject>();
-		_playerCamera->SetName(L"Debug_Camera");
-		_playerCamera->AddComponent(make_shared<Transform>());
-		_playerCamera->AddComponent(make_shared<Camera>());
-		_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
 
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
-		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-		_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
-		uint8 layerIndex = LayerNameToIndex(L"UI");
-		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
-		AddGameObject(_playerCamera);
-	}
+#pragma region DebugCamera
+	//{
+	//	_playerCamera = make_shared<GameObject>();
+	//	_playerCamera->SetName(L"Debug_Camera");
+	//	_playerCamera->AddComponent(make_shared<Transform>());
+	//	_playerCamera->AddComponent(make_shared<Camera>());
+	//	_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
+
+	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
+	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+	//	_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
+	//	uint8 layerIndex = LayerNameToIndex(L"UI");
+	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
+	//	AddGameObject(_playerCamera);
+	//}
 #pragma endregion
 
 #pragma region SkyBox
@@ -145,18 +147,18 @@ void BattleScene::LoadScene()
 
 
 #pragma region PlayerCamera
-	//{
-	//	_playerCamera = make_shared<GameObject>();
-	//	_playerCamera->SetName(L"Main_Camera");
-	//	_playerCamera->AddComponent(make_shared<Transform>());
-	//	_playerCamera->AddComponent(make_shared<Camera>());
-	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.01f, 2.03f, -6.65f));
-	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-	//	uint8 layerIndex = LayerNameToIndex(L"UI");
-	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
-	//	AddGameObject(_playerCamera);
-	//}
-	//_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player에게 Camera 를 붙인다.
+	{
+		_playerCamera = make_shared<GameObject>();
+		_playerCamera->SetName(L"Main_Camera");
+		_playerCamera->AddComponent(make_shared<Transform>());
+		_playerCamera->AddComponent(make_shared<Camera>());
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.01f, 2.03f, -6.65f));
+		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
+		AddGameObject(_playerCamera);
+	}
+	_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player에게 Camera 를 붙인다.
 
 #pragma endregion
 
@@ -274,7 +276,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\EnvDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -287,7 +289,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -300,7 +302,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\PropDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -314,7 +316,7 @@ void BattleScene::LoadScene()
 		// 여기에 썬 오브젝트 있음
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SkyDome.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -343,7 +345,7 @@ void BattleScene::LoadScene()
 		_mainLight->GetLight()->SetAmbient(Vec3(0.2f, 0.2f, 0.2f));
 		_mainLight->GetLight()->SetSpecular(Vec3(0.2f, 0.2f, 0.2f));
 		_mainLight->GetLight()->SetSunObject(_sunObject);
-		
+		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 200, 50));
 		//_sunObject->GetTransform()->LookAt(Vec3(0, -1, 0));
 		AddGameObject(_mainLight);
 
@@ -366,7 +368,12 @@ void BattleScene::Update()
 	Scene::Update();
 	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
 	//UpdateSunOrbit();
-	
+
+
+	Vec3 direction = Vec3(0.f, 100.f, 100.f) - _mainLight->GetTransform()->GetLocalPosition();
+	direction.Normalize();
+
+	_mainLight->GetLight()->SetLightDirection(Vec3(direction));
 }
 
 
@@ -407,5 +414,6 @@ void BattleScene::UpdateSunOrbit()
 	// _sunObject가 중심을 바라보도록 설정 (맵 중앙: 0, 100, 100)
 	_sunObject->GetTransform()->LookAt(center);
 
-	_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, 0.f));
+
+
 }

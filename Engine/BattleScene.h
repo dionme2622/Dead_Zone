@@ -19,6 +19,10 @@ public:
 	void UpdateSunOrbit();
 
 	static bool isPlayerGrounded;
+	vector<shared_ptr<GameObject>> GetPlayers() { return _player; };
+
+public:
+
 private:
 	shared_ptr<GameObject>			player1;
 	shared_ptr<GameObject>			_playerCamera;

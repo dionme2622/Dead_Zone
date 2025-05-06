@@ -7,6 +7,7 @@
 #include "Timer.h"
 #include "RigidBody.h"
 #include "PhysicsSystem.h"
+#include <bullet3\btBulletDynamicsCommon.h>
 
 // Vector3를 btVector3로 변환하는 유틸리티 함수
 inline btVector3 ToBtVector3(const Vec3& vec)
@@ -40,7 +41,8 @@ void GunWeapon::Attack()
     // 레이캐스트 수행
     btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
     dynamicsWorld->rayTest(from, to, rayCallback);
-
+   
+    
     // 충돌 처리
     if (rayCallback.hasHit())
     {
@@ -94,19 +96,16 @@ void GunWeapon::RemoveHitObject(const btCollisionObject* hitObject, btDiscreteDy
     if (!hitObject)
         return;
 
-    // const 제거 후 물리 월드에서 제거
     auto mutableHitObject = const_cast<btCollisionObject*>(hitObject);
     dynamicsWorld->removeCollisionObject(mutableHitObject);
 
-    // 사용자 데이터에서 GameObject 가져오기
     void* userPointer = mutableHitObject->getUserPointer();
     if (userPointer)
     {
         GameObject* hitGameObject = static_cast<GameObject*>(userPointer);
-        shared_ptr<GameObject> gameObjectPtr = hitGameObject->shared_from_this(); // GameObject가 shared_ptr로 관리된다고 가정
+        shared_ptr<GameObject> gameObjectPtr = hitGameObject->shared_from_this();
         if (gameObjectPtr)
         {
-            // Scene에서 GameObject 제거
             GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObjectPtr);
         }
     }

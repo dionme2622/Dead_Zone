@@ -44,16 +44,17 @@ RigidBody::RigidBody(shared_ptr<GameObject> gameObject, float mass, shared_ptr<B
     );
     _body = make_shared<btRigidBody>(info);
 
-    // 사용자 데이터로 GameObject 설정
-    if (auto lockedGameObject = _weakGameObject.lock())
-    {
-        _body->setUserPointer(lockedGameObject.get());
-    }
-
+   
     // TODO : 키네마틱을 사용하는 가?
     if (_isKinematic) {
         _body->setCollisionFlags(_body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
         _body->setActivationState(DISABLE_DEACTIVATION);
+    }
+
+    // 사용자 데이터로 GameObject 설정
+    if (auto lockedGameObject = _weakGameObject.lock())
+    {
+        _body->setUserPointer(lockedGameObject.get());
     }
 }
 RigidBody::~RigidBody()

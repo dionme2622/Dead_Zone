@@ -42,6 +42,7 @@ public:
     // 이동 방향 벡터 단위(월드 스페이스)
     void Move(const Vec3& direction);
     // 점프
+
     void Jump();
 
     // Component 인터페이스
