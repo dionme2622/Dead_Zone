@@ -22,7 +22,6 @@ public:
 	bool IsGrounded(btRigidBody* body, btDiscreteDynamicsWorld* world);
 	// 이동 관련
 public:
-	void UpdatePlayerOnTerrain();
 
 private:
 	HWND _hwnd;

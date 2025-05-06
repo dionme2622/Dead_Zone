@@ -15,7 +15,6 @@ Light::Light() : Component(COMPONENT_TYPE::LIGHT)
 	_shadowCamera->AddComponent(make_shared<Transform>());
 	_shadowCamera->AddComponent(make_shared<Camera>());
 	_shadowCamera->GetCamera()->SetProjectionType(PROJECTION_TYPE::ORTHOGRAPHIC);
-	_shadowCamera->GetTransform()->debug = true;
 }
 
 Light::~Light()
@@ -24,9 +23,9 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
-	_shadowCamera->GetCamera()->GetTransform()->GetLocalMatrix();
+	//GetTransform()->SetLocalPosition(_sunObject->GetTransform()->GetLocalPosition());
 
-	_lightInfo.position = GetTransform()->GetWorldPosition();
+	_lightInfo.position = GetTransform()->GetLocalPosition();
 
 	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
 
@@ -99,8 +98,8 @@ void Light::SetLightType(LIGHT_TYPE type)
 		_shadowCamera->GetCamera()->SetScale(1.f);
 		_shadowCamera->GetCamera()->SetNear(0.01);
 		_shadowCamera->GetCamera()->SetFar(1000);
-		_shadowCamera->GetCamera()->SetWidth(2000);
-		_shadowCamera->GetCamera()->SetHeight(2000);
+		_shadowCamera->GetCamera()->SetWidth(300);
+		_shadowCamera->GetCamera()->SetHeight(300);
 
 		break;
 	case LIGHT_TYPE::POINT_LIGHT:

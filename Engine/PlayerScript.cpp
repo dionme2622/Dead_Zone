@@ -23,7 +23,7 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<Cha
 	_controller = controller;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 50.0f;
+	_speed = 100.0f;
 	_jumpVelocity = 500.0f;
 	_currentVelocity = 0.0f;
 	_gravity = 9.8f;
@@ -113,10 +113,6 @@ void PlayerScript::UpdateKeyInput()
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
-
-
-
-
 	}
 
 
@@ -208,21 +204,4 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 	rotation.z = 0.0;
 
 	GetTransform()->SetLocalRotation(rotation);
-}
-
-void PlayerScript::UpdatePlayerOnTerrain()
-{	
-	Vec3 pos = GetTransform()->GetLocalPosition();
-
-
-	if (BattleScene::isPlayerGrounded)
-	{
-		_currentVelocity = 0.0f;
-	}
-	else
-	{
-		_currentVelocity += _gravity * DELTA_TIME;
-		pos.y += _currentVelocity * DELTA_TIME;
-	}
-	GetTransform()->SetLocalPosition(pos);
 }

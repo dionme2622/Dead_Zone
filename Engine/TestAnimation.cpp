@@ -8,7 +8,7 @@
 void TestAnimation::Update()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
-	float _speed = 30.0f;
+	float _speed = 200.0f;
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
