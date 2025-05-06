@@ -114,7 +114,7 @@ void PlayerScript::UpdateKeyInput()
 
 	// 5) Animator 에 전달
 	GetAnimator()->SetFloat("Speed", _speed);
-	printf("속도: %f\n", currentSpeed);
+	//printf("속도: %f\n", currentSpeed);
 	/*printf("이전: %f %f %f\n", _prevPosition.x, _prevPosition.y, _prevPosition.z);
 	printf("이후: %f %f %f\n", currentPos.x, currentPos.y, currentPos.z);*/
 
