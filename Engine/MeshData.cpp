@@ -84,8 +84,6 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate(int type, int collidertype)
 	{
 		shared_ptr<GameObject> gameObject = make_shared<GameObject>();
 		gameObject->SetName(info.objName);									// Object 이름 설정
-		//shared_ptr<Transform> newT = make_shared<Transform>(*info.transform);
-		//gameObject->AddComponent(newT);
 		gameObject->AddComponent(info.transform);
 		if (info.mesh != nullptr)
 		{

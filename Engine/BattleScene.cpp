@@ -287,12 +287,12 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
 
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(false);
+			gameObject->SetStatic(true);
 			AddGameObject(gameObject);
 		}
 	}
@@ -300,12 +300,25 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\PropDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
 
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(false);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
+	}
+
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\Wall.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(false);
+			gameObject->SetStatic(true);
 			AddGameObject(gameObject);
 		}
 	}
@@ -319,7 +332,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(false);
+			gameObject->SetStatic(true);
 			AddGameObject(gameObject);
 			/*if (gameObject->GetName() == L"Sun_1")
 				_sunObject = gameObject*/;
