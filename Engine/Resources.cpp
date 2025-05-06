@@ -342,7 +342,7 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorPlayerController()
 		t->AddCondition(
 			/*paramIndex=*/speedIdx,
 			ConditionMode::Less,
-			/*threshold=*/8.0f,
+			/*threshold=*/6.0f,
 			/*exitTime=*/0.0f,
 			/*duration=*/0.0f
 		);

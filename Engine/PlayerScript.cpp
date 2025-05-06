@@ -23,24 +23,15 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<Cha
 	_controller = controller;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 100.0f;
-	_jumpVelocity = 500.0f;
-	_currentVelocity = 0.0f;
-	_gravity = 9.8f;
-	_isGrounded = true;
-
+	_speed = 0.0f;
 }
 
 PlayerScript::~PlayerScript()
 {
 }
 
-void PlayerScript::LateUpdate()
+void PlayerScript::FinalUpdate()
 {
-	
-
-	//UpdatePlayerOnTerrain();
-
 	if (_isLocal)
 	{
 		// 1) 로컬 입력 읽어서 내 캐릭터 움직임 계산 → 클라이언트 예측
@@ -70,19 +61,22 @@ void PlayerScript::UpdatePlayerInput()
 
 void PlayerScript::UpdateKeyInput()
 {
-
+	_speed = 0.f;
 	// 1) 이전 위치 저장
-	Vec3 oldPos = GetTransform()->GetLocalPosition();
-	Vec3 newPos = oldPos;
+	Vec3 currentPos = GetTransform()->GetLocalPosition();
 
 	// 2) WASD 입력에 따른 방향(dir) 계산
 	Vec3 dir(0, 0, 0);
-	if (INPUT->GetButton(KEY_TYPE::W)) dir += GetTransform()->GetLook() * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::S)) dir -= GetTransform()->GetLook() * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight() * DELTA_TIME;
-	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight() * DELTA_TIME;
+	if (INPUT->GetButton(KEY_TYPE::W)) dir += GetTransform()->GetLook(), _speed = 5.0f;
+	if (INPUT->GetButton(KEY_TYPE::S)) dir -= GetTransform()->GetLook(), _speed = 5.0f;
+	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight(), _speed = 5.0f;
+	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight(), _speed = 5.0f;
+	if (INPUT->GetButton(KEY_TYPE::Q) && _speed > 1.0f) _speed = 15.f;
+	if (dir.LengthSquared() > 0.0f)
+		dir.Normalize();
 
-	_controller->Move(dir * _speed * DELTA_TIME);
+	const float fixedStep = 1.0f / 60.0f;
+	_controller->Move(dir * _speed * fixedStep);
 
 	// 3) 땅에 붙어 있을 때만 점프
 	if (INPUT->GetButtonDown(KEY_TYPE::SPACE) && _controller->IsOnGround())
@@ -114,29 +108,17 @@ void PlayerScript::UpdateKeyInput()
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
 		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
 	}
+	Vec3 delta = currentPos - _prevPosition;
+	delta.y = 0;
+	float currentSpeed = delta.Length() / DELTA_TIME;
 
-
-	// 3) 실제 이동량 계산
-	Vec3 delta = newPos - oldPos;
-	// TODO : pos 값을 서버로 보낸다.
-
-	// 4) 초당 속도로 변환
-	float currentSpeed = 0.0f;
-	if (delta.LengthSquared() > 0.0f)   // >0 이면
-	{
-		float dist = delta.Length();    // 이동 거리
-		currentSpeed = dist / DELTA_TIME;
-		// (만약 애니메이터가 0~1 사이 값을 기대하면
-		//  currentSpeed /= _speed; // maxSpeed 로 정규화)
-	}
-	 
 	// 5) Animator 에 전달
-	GetAnimator()->SetFloat("Speed", currentSpeed);
-	//printf("속도: %f\n", currentSpeed);
+	GetAnimator()->SetFloat("Speed", _speed);
+	printf("속도: %f\n", currentSpeed);
+	/*printf("이전: %f %f %f\n", _prevPosition.x, _prevPosition.y, _prevPosition.z);
+	printf("이후: %f %f %f\n", currentPos.x, currentPos.y, currentPos.z);*/
 
-	// 5) 최종 속도 세팅 (Y 속도는 점프/중력 유지)
-//	body->setLinearVelocity(btVector3(dir.x, yVel, dir.z));
-	//GetTransform()->SetLocalPosition(newPos);
+	_prevPosition = currentPos;
 }
 
 
@@ -167,28 +149,6 @@ void PlayerScript::UpdateMouseInput()
 		SetCursorPos(screenCenter.x, screenCenter.y);
 	}
 }
-
-bool PlayerScript::IsGrounded(btRigidBody* body, btDiscreteDynamicsWorld* world)
-{
-	// 1) 리지드바디 현재 위치
-	btTransform trans;
-	body->getMotionState()->getWorldTransform(trans);
-	btVector3 origin = trans.getOrigin();
-
-	// 2) 레이 시작점과 끝점 설정 (Y축 아래로 e.g. 0.1m 만큼)
-	btVector3 from = origin;
-	btVector3 to = origin - btVector3(0, /*down*/ 0.12f, 0);
-
-	// 3) 레이캐스트 콜백
-	btCollisionWorld::ClosestRayResultCallback rayCB(from, to);
-	world->rayTest(from, to, rayCB);
-
-	// 4) 땅에 닿았으면 fraction < 1.0
-	return rayCB.hasHit() && rayCB.m_closestHitFraction < 1.0f;
-}
-
-
-
 
 void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 {

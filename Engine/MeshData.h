@@ -34,7 +34,7 @@ public:
 	vector<MeshRenderInfo> GetMeshRenderInfo() { return _meshRenders; };
 
 	static shared_ptr<MeshData> LoadModelFromBinary(const char* path, int type);
-	vector<shared_ptr<GameObject>> Instantiate(int type = OBJECT);
+	vector<shared_ptr<GameObject>> Instantiate(int type = OBJECT, int collidertype = NONE);
 
 private:
 	vector<MeshRenderInfo> _meshRenders;
