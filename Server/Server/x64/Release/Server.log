@@ -1,0 +1,7 @@
+﻿  iocp_server.cpp
+C:\Users\wolf1\Desktop\Dead_Zone\Server\iocp_server.cpp(239,42): warning C4267: '=': 'size_t'에서 'unsigned char'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다.
+  Previous IPDB not found, fall back to full compilation.
+  All 373 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  코드를 생성했습니다.
+  Server.vcxproj -> C:\Users\wolf1\Desktop\Dead_Zone\Server\x64\Release\Server.exe
