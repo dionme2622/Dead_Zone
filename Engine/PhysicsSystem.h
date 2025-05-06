@@ -30,6 +30,8 @@ private:
     unique_ptr<btBroadphaseInterface>                _broadphase;
     unique_ptr<btSequentialImpulseConstraintSolver>  _solver;
     unique_ptr<btDiscreteDynamicsWorld>              _dynamicsWorld;
+
+    float _accumulator = 0.0f;
 };
 
 inline btVector3 ToBt(const Vec3& v) {

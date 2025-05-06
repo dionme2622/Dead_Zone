@@ -13,12 +13,6 @@ public:
 	virtual void Update();
 
 
-public:
-	void CreateZombie();
-
-	void CheckCollisions();
-
-	static bool isPlayerGrounded;
 private:
 	//shared_ptr<Player>			_player;
 	shared_ptr<GameObject>			_playerCamera;

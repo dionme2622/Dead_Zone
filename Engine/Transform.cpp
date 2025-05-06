@@ -15,8 +15,6 @@ Transform::~Transform()
 
 void Transform::Update()
 {
-	//_matPrevWorld = _matWorld;
-
 	/*float radX = _localRotation.x * (XM_PI / 180.0f);
 	float radY = _localRotation.y * (XM_PI / 180.0f);
 	float radZ = _localRotation.z * (XM_PI / 180.0f);
@@ -31,10 +29,13 @@ void Transform::Update()
 
 	_matWorld = _matLocal;
 
-	shared_ptr<Transform> parent = GetParent().lock();
-	if (parent != nullptr)
+	if (!_no)
 	{
-		_matWorld *= parent->GetLocalToWorldMatrix();
+		shared_ptr<Transform> parent = GetParent().lock();
+		if (parent != nullptr)
+		{
+			_matWorld *= parent->GetLocalToWorldMatrix();
+		}
 	}*/
 }
 

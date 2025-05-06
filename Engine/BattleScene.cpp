@@ -26,12 +26,6 @@
 // TEST
 #include "KeyInput.h"
 
-
-
-
-bool BattleScene::isPlayerGrounded = false;
-
-
 BattleScene::BattleScene()
 {
 }
@@ -99,7 +93,7 @@ void BattleScene::LoadScene()
 
 	shared_ptr<MeshData> FemaleSoldier_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin", PLAYER); // MeshData* meshData
 
-	vector<shared_ptr<GameObject>> FemaleSoldier = FemaleSoldier_data->Instantiate(PLAYER);
+	vector<shared_ptr<GameObject>> FemaleSoldier = FemaleSoldier_data->Instantiate(PLAYER, NONE);
 
 	shared_ptr<GameObject> player1 = FemaleSoldier[23];
 	for (auto& gameObject : FemaleSoldier)
@@ -111,8 +105,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(15, 200.f, 0));
-	Matrix mat = player1->GetTransform()->GetLocalMatrix();
+	player1->GetTransform()->SetLocalPosition(Vec3(15, 100.f, 0));
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
 	player1->AddComponent(make_shared<CharacterController>(0.5, 1.0, 0.3f));
@@ -122,32 +115,31 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Player2
-	//_theirID = 2;
-	//islocal = (_theirID == _myID);
+	_theirID = 2;
+	islocal = (_theirID == _myID);
 
-	//shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
+	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
 
-	//vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
+	vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
 
-	//shared_ptr<GameObject> player2 = FemaleHero[23];
-	//for (auto& gameObject : FemaleHero)
-	//{	
-	//	//gameObject->SetName(L"FemaleSoldier");
-	//	gameObject->SetCheckFrustum(false);
-	//	gameObject->SetStatic(true);
-	//	gameObject->GetTransform()->FinalUpdate();
-	//	AddGameObject(gameObject);
-	//}
+	shared_ptr<GameObject> player2 = FemaleHero[23];
+	for (auto& gameObject : FemaleHero)
+	{	
+		//gameObject->SetName(L"FemaleSoldier");
+		gameObject->SetCheckFrustum(false);
+		gameObject->SetStatic(true);
+		gameObject->GetTransform()->FinalUpdate();
+		AddGameObject(gameObject);
+	}
 
-	//player2->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
-	//Vec3 pos2 = player2->GetTransform()->GetLocalPosition();
-	////player2->AddComponent(make_shared<CapsuleCollider>(0.5f, 1.0f));										// Capsule Collider 생성
-	////player2->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<CapsuleCollider>(player2->GetCollider()), pos2, false));			// Rigid Body 생성
-	////player2->GetRigidBody()->OnEnable();
-	////player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
-	////player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
+	player2->GetTransform()->SetLocalPosition(Vec3(20, 300.f, 0));
+	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
+	player2->AddComponent(make_shared<PlayerStats>());
+	player2->AddComponent(make_shared<CharacterController>(0.5, 1.0, 0.3f));
+	player2->GetCharacterController()->OnEnable();
+	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
 
-	//_player.push_back(player2);
+	_player.push_back(player2);
 
 #pragma endregion
 
@@ -297,7 +289,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\EnvDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -310,7 +302,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -323,7 +315,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\PropDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -333,18 +325,18 @@ void BattleScene::LoadScene()
 		}
 	}
 
-	//{
-	//	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SkyDome.bin"); // MeshData* meshData
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SkyDome.bin"); // MeshData* meshData
 
-	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
 
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//		gameObject->SetCheckFrustum(true);
-	//		gameObject->SetStatic(false);
-	//		AddGameObject(gameObject);
-	//	}
-	//}
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(false);
+			AddGameObject(gameObject);
+		}
+	}
 
 }
 #pragma endregion
@@ -353,15 +345,12 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	/*Vec3 pos = _player[1]->GetTransform()->GetLocalPosition();
+	/*Vec3 pos = _player[0]->GetTransform()->GetLocalPosition();
 	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
-
-
 
 	Scene::Update();
 	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
 
-	//CheckCollisions();
 
 	/*if (GET_SINGLE(KeyInput)->GetButtonDown(KEY_TYPE::TAB))
 		CreateZombie();*/
@@ -415,187 +404,9 @@ void BattleScene::Update()
 	//}
 
 	// 라이트가 (0,0,0)을 계속 보도록 설정
-	Vec3 direction = Vec3(0.f, 0.f, 0.f) - _mainLight->GetTransform()->GetLocalPosition();
+	/*Vec3 direction = Vec3(0.f, 0.f, 0.f) - _mainLight->GetTransform()->GetLocalPosition();
 	direction.Normalize();
 
-	_mainLight->GetLight()->SetLightDirection(Vec3(direction));
+	_mainLight->GetLight()->SetLightDirection(Vec3(direction));*/
 
-}
-
-
-	
-// 축에 투영하는 헬퍼 함수
-void ProjectBoxOntoAxis(const BoundingOrientedBox& box, const Vec3& axis, float& min_, float& max_)
-{
-	Vec3 corners[8];
-	box.GetCorners(corners);
-
-	min_ = max_ = corners[0].Dot(axis);
-
-		
-	for (int i = 1; i < 8; i++)
-	{
-		float projection = corners[i].Dot(axis);
-		min_ = min(min_, projection);
-		max_ = max(max_, projection);
-	}
-}
-
-// 겹침 정도 계산 헬퍼 함수
-float GetOverlap(float minA, float maxA, float minB, float maxB)
-{
-	if (minA > maxB || minB > maxA)
-		return 0.0f; // 분리됨
-	return min(maxA, maxB) - max(minA, minB);
-}
-
-
-void BattleScene::CheckCollisions()
-{
-	//shared_ptr<GameObject> playerRootObject = _player[0];
-	//vector<shared_ptr<GameObject>> allGameObjects = GetGameObjects();
-
-	//shared_ptr<BoxCollider> playerCollider = dynamic_pointer_cast<BoxCollider>(_player[0]->GetCollider());
-	//BoundingOrientedBox playerBox = playerCollider->GetBoundingBox();
-
-	////{
-	////	shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Wall2.bin"); // MeshData* meshData
-	//Vec3 totalMTV = Vec3(0, 0, 0); // 모든 MTV를 합산
-	//bool hasCollision = false;
-
-	//for (auto& otherObject : allGameObjects)
-	//{
-	//	shared_ptr<BoxCollider> otherCollider = dynamic_pointer_cast<BoxCollider>(otherObject->GetCollider());
-
-	//	if (!otherCollider || otherCollider == playerCollider)
-	//		continue;
-
-	//	BoundingOrientedBox otherBox = otherCollider->GetBoundingBox();
-
-	//	if (playerBox.Intersects(otherBox))
-	//	{
-	//		hasCollision = true;
-
-	//		Vec3 mtv;
-	//		float minOverlap = FLT_MAX;
-	//		Vec3 collisionNormal;
-
-	//		// 분리 축 설정 (총 15개: 각 상자 3개 + 외적 9개)
-	//		Vec3 axes[15];
-
-	//		// playerBox의 Orientation
-	//		XMFLOAT4 playerQuat = playerBox.Orientation;
-	//		XMMATRIX playerRotationMatrix = XMMatrixRotationQuaternion(XMLoadFloat4(&playerQuat));
-	//		XMFLOAT4X4 playerOrientation;
-	//		XMStoreFloat4x4(&playerOrientation, playerRotationMatrix);
-
-	//		axes[0] = Vec3(playerOrientation._11, playerOrientation._12, playerOrientation._13); // Right
-	//		axes[1] = Vec3(playerOrientation._21, playerOrientation._22, playerOrientation._23); // Up
-	//		axes[2] = Vec3(playerOrientation._31, playerOrientation._32, playerOrientation._33); // Forward
-
-	//		// otherBox의 Orientation
-	//		XMFLOAT4 otherQuat = otherBox.Orientation;
-	//		XMMATRIX otherRotationMatrix = XMMatrixRotationQuaternion(XMLoadFloat4(&otherQuat));
-	//		XMFLOAT4X4 otherOrientation;
-	//		XMStoreFloat4x4(&otherOrientation, otherRotationMatrix);
-
-	//		axes[3] = Vec3(otherOrientation._11, otherOrientation._12, otherOrientation._13); // Right
-	//		axes[4] = Vec3(otherOrientation._21, otherOrientation._22, otherOrientation._23); // Up
-	//		axes[5] = Vec3(otherOrientation._31, otherOrientation._32, otherOrientation._33); // Forward
-
-	//		// 외적 축 추가
-	//		int axisIndex = 6;
-	//		for (int i = 0; i < 3; i++)
-	//		{
-	//			for (int j = 0; j < 3; j++)
-	//			{
-	//				axes[axisIndex] = axes[i].Cross(axes[j + 3]);
-	//				axisIndex++;
-	//			}
-	//		}
-
-	//		// SAT 적용
-	//		for (int i = 0; i < 15; i++)
-	//		{
-	//			if (axes[i].LengthSquared() < 0.0001f) // 유효하지 않은 축 건너뛰기
-	//			{
-	//				continue;
-	//			}
-	//			axes[i].Normalize();
-
-	//			// 두 박스를 축에 투영
-	//			float playerMin, playerMax, otherMin, otherMax;
-	//			ProjectBoxOntoAxis(playerBox, axes[i], playerMin, playerMax);
-	//			ProjectBoxOntoAxis(otherBox, axes[i], otherMin, otherMax);
-
-	//			float overlap = GetOverlap(playerMin, playerMax, otherMin, otherMax);
-	//			if (overlap <= 0) // 분리된 경우 충돌 없음
-	//				return;
-
-	//			if (overlap < minOverlap)
-	//			{
-	//				minOverlap = overlap;
-	//				collisionNormal = axes[i];
-	//				mtv = collisionNormal * overlap;
-
-	//				// MTV 방향 보정
-	//				Vec3 toOther;
-	//				toOther.x = otherBox.Center.x - playerBox.Center.x;
-	//				toOther.y = otherBox.Center.y - playerBox.Center.y;
-	//				toOther.z = otherBox.Center.z - playerBox.Center.z;
-	//				if (toOther.Dot(collisionNormal) > 0)
-	//					mtv = -mtv;
-	//			}
-	//		}
-
-	//		// MTV 합산
-	//		totalMTV += mtv;
-
-	//		//RemoveGameObject(otherObject);
-	//	}
-	//}
-	//		gameObject->SetStatic(true);
-	//		AddGameObject(gameObject);
-	//	}
-	//	// MTV 크기 제한 (플레이어가 과도하게 밀려나는 것을 방지)
-	//	float maxMTVLength = 1.0f; // 최대 MTV 크기
-	//	if (totalMTV.Length() > maxMTVLength)
-
-	//	vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate();
-
-	//	for (auto& gameObject : gameObjects)
-	//	{
-	//	// 플레이어 위치 보정
-	//	Vec3 newPosition = playerRootObject->GetTransform()->GetLocalPosition() + totalMTV;
-	//	playerRootObject->GetTransform()->SetLocalPosition(newPosition);
-
-
-
-
-
-
-	//	if (totalMTV.y > 0.01f) // MTV가 아래에서 위로 (즉, 플레이어가 위에서 떨어졌다는 뜻)
-	//	{
-	//		isPlayerGrounded = true;
-	//shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin"); // MeshData* meshData
-
-	//vector<shared_ptr<GameObject>> zombies = Zombie->Instantiate();
-
-	//for (auto& gameObject : zombies)
-	//{
-	//	//gameObject->SetName(L"FemaleSoldier");
-	//	gameObject->SetCheckFrustum(true);
-	//	gameObject->SetStatic(false);
-	//	AddGameObject(gameObject); 
-	//}
-
-	//shared_ptr<GameObject> rootObject = gameObjects[0];
-	//rootObject->GetTransform()->SetLocalPosition(Vec3(rand() % 100, rand() % 100, rand() % 100));
-	//rootObject->GetTransform()->SetLocalScale(Vec3(10.f, 10.f, 10.f));
-	//rootObject->SetLayerIndex(LayerNameToIndex(L"Battle"));
-}
-
-void BattleScene::CreateZombie()
-{
-	
 }

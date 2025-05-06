@@ -46,16 +46,17 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "bullet3\\BulletDynamics_Debug.lib")
 #pragma comment(lib, "bullet3\\LinearMath_Debug.lib")
 #else
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+
 #pragma comment(lib, "DirectXTex\\DirectXTex.lib")
 #pragma comment(lib, "bullet3\\BulletCollision.lib")
 #pragma comment(lib, "bullet3\\BulletDynamics.lib")
 #pragma comment(lib, "bullet3\\LinearMath.lib")
 #endif
 
-//#define _DEBUG_COLLIDER
-//#define _INSTANCING_MODE
+#define _INSTANCING_MODE
 extern bool _WIRE_FRAME_MODE;
-
+extern bool _DEBUG_COLLIDER;
 // °¢Á¾ typedef
 using int8 = __int8;
 using int16 = __int16;
@@ -203,3 +204,7 @@ enum
 	OBJECT = 0, PLAYER = 1, ZOMBIE = 2
 };
 
+enum
+{
+	NONE = 0, BOX = 1, MESH = 2
+};

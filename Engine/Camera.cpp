@@ -194,9 +194,11 @@ void Camera::Render_Forward()
 		gameObject->GetParticleSystem()->Render();
 	}*/
 
-	GET_SINGLE(DebugRenderer)->Flush();
-	GET_SINGLE(DebugRenderer)->Clear();
-
+	if (_DEBUG_COLLIDER)
+	{
+		GET_SINGLE(DebugRenderer)->Flush();
+		GET_SINGLE(DebugRenderer)->Clear();
+	}
 }
 
 

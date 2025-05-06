@@ -76,7 +76,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path, int type)
 }
 
 
-vector<shared_ptr<GameObject>> MeshData::Instantiate(int type)
+vector<shared_ptr<GameObject>> MeshData::Instantiate(int type, int collidertype)
 {
 	vector<shared_ptr<GameObject>> v;
 
@@ -96,21 +96,31 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate(int type)
 
 			
 			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
-			if (info.boxCollider != nullptr)
+			switch (collidertype)
 			{
-				shared_ptr<BoxCollider> collider = info.boxCollider;
-				gameObject->AddComponent(collider);
-				gameObject->AddComponent(make_shared<RigidBody>(gameObject, 0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix(), false));
-				gameObject->GetRigidBody()->OnEnable();
-			}
-			if (info.meshCollider != nullptr)
-			{
-				/*shared_ptr<MeshCollider> collider = info.meshCollider;
-				gameObject->AddComponent(collider);
-				gameObject->AddComponent(make_shared<RigidBody>(0.0f, dynamic_pointer_cast<MeshCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix() , false));
-				gameObject->GetRigidBody()->OnEnable();*/
+			case NONE:
+				break;
+			case BOX:
+				if (info.boxCollider != nullptr)
+				{
+					shared_ptr<BoxCollider> collider = info.boxCollider;
+					gameObject->AddComponent(collider);
+					gameObject->AddComponent(make_shared<RigidBody>(gameObject, 0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix(), false));
+					gameObject->GetRigidBody()->OnEnable();
+				}
+				break;
+			case MESH:
+				if (info.meshCollider != nullptr)
+				{
+					shared_ptr<MeshCollider> collider = info.meshCollider;
+					gameObject->AddComponent(collider);
+					gameObject->AddComponent(make_shared<RigidBody>(gameObject, 0.0f, dynamic_pointer_cast<MeshCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix() , false));
+					gameObject->GetRigidBody()->OnEnable();
 
+				}
+				break;
 			}
+			
 			if (info.mesh->hasAnimation())				// Mesh가 애니메이션을 가지고 있다면?
 			{
 				shared_ptr<Animator> animator = nullptr;

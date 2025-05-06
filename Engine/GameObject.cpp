@@ -88,6 +88,10 @@ void GameObject::FinalUpdate()
 		if (component)
 			component->FinalUpdate();
 	}
+	for (shared_ptr<MonoBehaviour>& script : _scripts)
+	{
+		script->FinalUpdate();
+	}
 }
 
 shared_ptr<Component> GameObject::GetFixedComponent(COMPONENT_TYPE type)

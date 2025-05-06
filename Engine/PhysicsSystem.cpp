@@ -35,7 +35,17 @@ void PhysicsSystem::Shutdown() {
 }
 
 void PhysicsSystem::Update(float deltaTime) {
-    if (_dynamicsWorld) {
-        _dynamicsWorld->stepSimulation(deltaTime);
+    // (1) 프레임마다 들어온 실제 경과 시간
+    _accumulator += deltaTime;
+
+    // (2) 물리는 항상 fixedStep 으로 연속 처리
+    const float fixedStep = 1.0f / 60.0f;  // 60Hz 물리
+    int   maxSubSteps = 5;             // 최대 서브스텝 개수
+
+    // 경과 시간을 fixedStep 단위로 쪼개서 물리 시뮬 돌리기
+    while (_accumulator >= fixedStep && maxSubSteps-- > 0)
+    {
+        _dynamicsWorld->stepSimulation(fixedStep, 0);
+        _accumulator -= fixedStep;
     }
 }

@@ -69,9 +69,12 @@ public:
 	shared_ptr<StructuredBuffer>	GetBoneOffsetBuffer() { return  _offsetBuffer; }
 private:
 	ComPtr<ID3D12Resource>				 _vertexBuffer;
+	ComPtr<ID3D12Resource>				 _vertexuploadBuffer;
+
 	D3D12_VERTEX_BUFFER_VIEW			 _vertexBufferView = {};
 	uint32								 _vertexCount = 0;
-										 
+							
+	ComPtr<ID3D12Resource>				 _indexloadBuffer;
 	vector<IndexBufferInfo>				 _vecIndexInfo;
 										 
 	// Animation						 

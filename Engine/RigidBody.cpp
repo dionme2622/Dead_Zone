@@ -2,7 +2,7 @@
 #include "RigidBody.h"
 #include "PhysicsSystem.h"
 #include "Transform.h"
-
+#include "Timer.h"
 
 RigidBody::RigidBody(shared_ptr<GameObject> gameObject, float mass, shared_ptr<BaseCollider> collider, Matrix matrix, bool isKinematic)
     : Component(COMPONENT_TYPE::RIGIDBODY)
@@ -164,13 +164,13 @@ void CharacterController::FinalUpdate()
     if (!_controller->onGround())
     {
         _controller->setGravity(btVector3(0, -50.f, 0));
-        _controller->setFallSpeed(150.0f);
+        //_controller->setFallSpeed(1500.0f);
     }
     else
     {
         // 땅에 닿으면 원래 값으로 복원
         _controller->setGravity(btVector3(0, -9.8f, 0));
-        _controller->setFallSpeed(55.0f);
+       // _controller->setFallSpeed(550.0f );
     }
 
     GetTransform()->SetNo(true);

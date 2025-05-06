@@ -9,7 +9,7 @@ public:
 	PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<CharacterController> controller);
 	virtual ~PlayerScript();
 
-	virtual void LateUpdate() override;
+	virtual void FinalUpdate() override;
 
 	void UpdatePlayerInput();
 
@@ -19,11 +19,6 @@ public:
 
 	void UpdateMouseInput();
 
-	bool IsGrounded(btRigidBody* body, btDiscreteDynamicsWorld* world);
-	// 이동 관련
-public:
-	void UpdatePlayerOnTerrain();
-
 private:
 	HWND _hwnd;
 	bool _isLocal;
@@ -31,11 +26,7 @@ private:
 
 	shared_ptr<btRigidBody> _body = nullptr;
 
-	float _speed;     // 기존에 있던 이동 속도
-	float _jumpVelocity;    // 점프 초기 속도
-	float _currentVelocity; // 현재 수직 속도
-	float _gravity;         // 중력 가속도
-	bool _isGrounded;       // 땅에 닿아있는지 여부
+	float _speed;			// 기존에 있던 이동 속도
 	shared_ptr<CharacterController> _controller;
 
 private:
@@ -47,5 +38,6 @@ private:
 
 	bool _mouseMove;
 	shared_ptr<Transform> _cameraTransform;
+	Vec3 _prevPosition{ 0,0,0 };
 };
 
