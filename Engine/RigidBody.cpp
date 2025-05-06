@@ -138,9 +138,14 @@ void CharacterController::OnEnable()
     world->addAction(_controller.get());
 
     // 4) 초기 위치 동기화: Transform → GhostObject
-    Vec3 pos = GetTransform()->GetLocalPosition();
-    btVector3 startPos(pos.x, pos.y, pos.z);
-    _ghost->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1), startPos));
+    Vec3 p = GetTransform()->GetLocalPosition();
+    const float yOffset = 1.5f;
+    btVector3 startPos(p.x, p.y + yOffset, p.z);
+
+    btTransform start;
+    start.setIdentity();
+    start.setOrigin(startPos);
+    _ghost->setWorldTransform(start);   
 
     // warp() 로 내부 상태까지 초기화
     _controller->warp(startPos);
@@ -157,9 +162,13 @@ void CharacterController::OnDisable()
 
 void CharacterController::FinalUpdate()
 {
+    // 1) GhostObject world transform 가져오기
     btTransform btTrans = _ghost->getWorldTransform();
     btVector3 btPos = btTrans.getOrigin();
-    Vec3 worldPos(btPos.x(), btPos.y(), btPos.z());
+
+    // 2) Y축 10만큼 내리기 (Transform 위치 보정)
+    const float yOffset = 1.5f;
+    Vec3 worldPos(btPos.x(), btPos.y() - yOffset, btPos.z());
 
     if (!_controller->onGround())
     {
@@ -170,11 +179,30 @@ void CharacterController::FinalUpdate()
     {
         // 땅에 닿으면 원래 값으로 복원
         _controller->setGravity(btVector3(0, -9.8f, 0));
-       // _controller->setFallSpeed(550.0f );
+        // _controller->setFallSpeed(550.0f );
     }
 
+    // 3) Transform에 반영
     GetTransform()->SetNo(true);
     GetTransform()->SetLocalPosition(worldPos);
 
-    GET_SINGLE(DebugRenderer)->AddCapsule(_radius, _height, GetTransform()->GetLocalToWorldMatrix(), { 1,0,0,1 });
+    // 4) 디버그 캡슐 렌더링 (for visualization)
+    Matrix capsuleWorld = Matrix::CreateTranslation(
+        btPos.x(),
+        btPos.y(),
+        btPos.z()
+    );
+    GET_SINGLE(DebugRenderer)
+        ->AddCapsule(_radius, _height, capsuleWorld, { 1,0,0,1 });
+
+    //btTransform btTrans = _ghost->getWorldTransform();
+    //btVector3 btPos = btTrans.getOrigin();
+    //Vec3 worldPos(btPos.x(), btPos.y(), btPos.z());
+
+    
+
+    //GetTransform()->SetNo(true);
+    //GetTransform()->SetLocalPosition(worldPos);
+
+    //GET_SINGLE(DebugRenderer)->AddCapsule(_radius, _height, GetTransform()->GetLocalToWorldMatrix(), { 1,0,0,1 });
 }
