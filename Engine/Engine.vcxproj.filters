@@ -198,7 +198,6 @@
     <ClInclude Include="Bullet.h">
       <Filter>Object\Component\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="AnimationStateMachine.h" />
     <ClInclude Include="AnimatorController.h" />
     <ClInclude Include="AnimationState.h" />
     <ClInclude Include="AnimatorParameter.h" />
@@ -370,7 +369,6 @@
     <ClCompile Include="Bullet.cpp">
       <Filter>Object\Component\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="AnimationStateMachine.cpp" />
     <ClCompile Include="AnimatorController.cpp" />
     <ClCompile Include="AnimationState.cpp" />
     <ClCompile Include="Transition.cpp" />

@@ -41,16 +41,6 @@ void Animator::FinalUpdate()
 {
 	if (!_controller)
 		return;
-
-	if (INPUT->GetButton(KEY_TYPE::Q))
-		_controller->SetCurrentState(L"Walk");
-	if (INPUT->GetButton(KEY_TYPE::E))
-		_controller->SetCurrentState(L"Idle");
-
-
-	
-
-	
 	// 1) 전이 평가
 	EvaluateTransitions();
 	// 2) 시간 누적 및 전이 처리

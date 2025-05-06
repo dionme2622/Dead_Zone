@@ -71,7 +71,7 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::S)) dir -= GetTransform()->GetLook(), _speed = 5.0f;
 	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight(), _speed = 5.0f;
 	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight(), _speed = 5.0f;
-	if (INPUT->GetButton(KEY_TYPE::Q) && _speed > 1.0f) _speed = 15.f;
+	if (INPUT->GetButton(KEY_TYPE::SHIFT) && _speed > 1.0f) _speed = 10.f;
 	if (dir.LengthSquared() > 0.0f)
 		dir.Normalize();
 
@@ -114,6 +114,8 @@ void PlayerScript::UpdateKeyInput()
 
 	// 5) Animator 에 전달
 	GetAnimator()->SetFloat("Speed", _speed);
+	GetAnimator()->SetBool("isJumping", !_controller->IsOnGround());
+	//printf("점프?: %d\n", !_controller->IsOnGround());
 	//printf("속도: %f\n", currentSpeed);
 	/*printf("이전: %f %f %f\n", _prevPosition.x, _prevPosition.y, _prevPosition.z);
 	printf("이후: %f %f %f\n", currentPos.x, currentPos.y, currentPos.z);*/
@@ -124,7 +126,7 @@ void PlayerScript::UpdateKeyInput()
 
 void PlayerScript::UpdateMouseInput()
 {
-	if (INPUT->GetButtonDown(KEY_TYPE::SHIFT))
+	if (INPUT->GetButtonDown(KEY_TYPE::Q))
 		_mouseMove = !_mouseMove;
 
 	POINT mousePos;

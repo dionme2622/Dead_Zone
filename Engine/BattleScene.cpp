@@ -91,7 +91,7 @@ void BattleScene::LoadScene()
 	_theirID = 1;
 	bool islocal = (_theirID == _myID);
 
-	shared_ptr<MeshData> FemaleSoldier_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin", PLAYER); // MeshData* meshData
+	shared_ptr<MeshData> FemaleSoldier_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleSoldier.bin", PLAYER); // MeshData* meshData
 
 	vector<shared_ptr<GameObject>> FemaleSoldier = FemaleSoldier_data->Instantiate(PLAYER, NONE);
 
@@ -118,7 +118,7 @@ void BattleScene::LoadScene()
 	_theirID = 2;
 	islocal = (_theirID == _myID);
 
-	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
+	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
 
 	vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
 
@@ -287,7 +287,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -300,7 +300,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\PropDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -313,7 +313,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\Wall.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
