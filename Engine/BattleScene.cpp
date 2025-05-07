@@ -137,7 +137,7 @@ void BattleScene::LoadScene()
 	player2->GetTransform()->SetLocalPosition(Vec3(20, 300.f, 0));
 	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player2->AddComponent(make_shared<PlayerStats>());
-	player2->AddComponent(make_shared<CharacterController>(0.5, 3.0, 0.3f));
+	player2->AddComponent(make_shared<CharacterController>(player2, 0.5, 3.0, 0.3f));
 	player2->GetCharacterController()->OnEnable();
 	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
 
@@ -265,7 +265,7 @@ void BattleScene::LoadScene()
 				AddGameObject(gameObject);
 			}
 				gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 80.0f, 0.0f));
-				gameObjects[23]->AddComponent(make_shared<CharacterController>(0.5, 3.0, 0.3f));
+				gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
 				gameObjects[23]->GetCharacterController()->OnEnable();
 		}
 	}
