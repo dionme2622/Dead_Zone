@@ -23,5 +23,5 @@ private:
     float m_reloadTime; // 재장전 시간
     float m_reloadTimer; // 재장전 타이머
 
-    void RemoveHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld);
+    void ApplyDamageToHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld);
 };

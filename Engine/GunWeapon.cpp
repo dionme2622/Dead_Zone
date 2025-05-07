@@ -5,8 +5,8 @@
 #include "Resources.h"
 #include "Bullet.h"
 #include "Timer.h"
-#include "RigidBody.h"
 #include "PhysicsSystem.h"
+#include "PlayerStats.h"
 #include <bullet3\btBulletDynamicsCommon.h>
 
 // Vector3를 btVector3로 변환하는 유틸리티 함수
@@ -38,16 +38,17 @@ void GunWeapon::Attack()
     btVector3 from = m_bulletPosition;
     btVector3 to = m_bulletPosition + m_bulletDirection * m_range;
 
-    // 레이캐스트 수행
+    // 레이캐스트 수행 (CharacterFilter와 충돌하도록 설정)
     btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
+    rayCallback.m_collisionFilterGroup = btBroadphaseProxy::DefaultFilter;
+    rayCallback.m_collisionFilterMask = btBroadphaseProxy::CharacterFilter | btBroadphaseProxy::DefaultFilter;
     dynamicsWorld->rayTest(from, to, rayCallback);
-   
-    
+
     // 충돌 처리
     if (rayCallback.hasHit())
     {
         const btCollisionObject* hitObject = rayCallback.m_collisionObject;
-        RemoveHitObject(hitObject, dynamicsWorld);
+        ApplyDamageToHitObject(hitObject, dynamicsWorld);
     }
 }
 
@@ -62,20 +63,15 @@ void GunWeapon::Reload()
 
 void GunWeapon::SetBulletPosition()
 {
-    // 무기가 GameObject에 부착되어 있다고 가정
-
     auto camera = GET_SINGLE(SceneManager)->GetActiveScene()->GetMainCamera();
     auto transform = camera->GetTransform();
-
     m_bulletPosition = ToBtVector3(transform->GetWorldPosition());
 }
 
 void GunWeapon::SetBulletDirection()
 {
-    // 메인 카메라의 Look 벡터를 기준으로 방향 설정
     auto camera = GET_SINGLE(SceneManager)->GetActiveScene()->GetMainCamera();
     auto mat = camera->GetTransform()->GetLocalToWorldMatrix();
-
     m_bulletDirection = ToBtVector3(mat.Backward());
 }
 
@@ -83,7 +79,7 @@ void GunWeapon::Update()
 {
     if (m_isReloading)
     {
-        m_reloadTimer += DELTA_TIME; 
+        m_reloadTimer += DELTA_TIME;
         if (m_reloadTimer >= m_reloadTime)
         {
             m_isReloading = false;
@@ -91,22 +87,38 @@ void GunWeapon::Update()
     }
 }
 
-void GunWeapon::RemoveHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld)
+void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld)
 {
-    if (!hitObject)
-        return;
-
-    auto mutableHitObject = const_cast<btCollisionObject*>(hitObject);
-    dynamicsWorld->removeCollisionObject(mutableHitObject);
-
-    void* userPointer = mutableHitObject->getUserPointer();
-    if (userPointer)
+    if (!hitObject || !hitObject->getUserPointer())
     {
-        GameObject* hitGameObject = static_cast<GameObject*>(userPointer);
-        shared_ptr<GameObject> gameObjectPtr = hitGameObject->shared_from_this();
-        if (gameObjectPtr)
+        std::cout << "No valid userPointer for hit object" << std::endl;
+        return;
+    }
+
+    GameObject* hitGameObject = static_cast<GameObject*>(hitObject->getUserPointer());
+    shared_ptr<GameObject> gameObjectPtr;
+    try
+    {
+        gameObjectPtr = hitGameObject->shared_from_this();
+    }
+    catch (const std::bad_weak_ptr&)
+    {
+        std::cerr << "Error: GameObject is not managed by shared_ptr" << std::endl;
+        return;
+    }
+
+    // CharacterController가 있는 경우
+    if (auto characterController = gameObjectPtr->GetCharacterController())
+    {
+        // PlayerStats 컴포넌트를 통해 데미지 적용 (가정)
+        if (auto playerStats = gameObjectPtr->GetPlayerStats())
         {
-            GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObjectPtr);
+            playerStats->ApplyDamage(40.0f); 
+            if (playerStats->IsDead())
+            {
+                //characterController->OnDisable();
+                GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObjectPtr);
+            }
         }
     }
 }

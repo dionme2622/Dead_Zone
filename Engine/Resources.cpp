@@ -796,6 +796,7 @@ void Resources::CreateDefaultMaterial()
 		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"DiffuseTarget"));
 		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"DiffuseLightTarget"));
 		material->SetTexture(2, GET_SINGLE(Resources)->Get<Texture>(L"SpecularLightTarget"));
+		material->SetTexture(3, GET_SINGLE(Resources)->Get<Texture>(L"MetallicLightTarget"));
 		Add<Material>(L"Final", material);
 	}
 

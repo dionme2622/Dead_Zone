@@ -20,6 +20,7 @@ struct PS_OUT
 {
     float4 diffuse : SV_Target0;
     float4 specular : SV_Target1;
+    float4 metalic : SV_Target2;
 };
 
 // [Directional Light]
@@ -131,6 +132,7 @@ PS_OUT PS_PointLight(VS_OUT input)
 // g_tex_0 : Diffuse Color Target
 // g_tex_1 : Diffuse Light Target
 // g_tex_2 : Specular Light Target
+// g_tex_3 : metalic Light Target
 // Mesh : Rectangle
 
 VS_OUT VS_Final(VS_IN input)
@@ -153,8 +155,14 @@ float4 PS_Final(VS_OUT input) : SV_Target
 
     float4 color = g_tex_0.Sample(g_sam_0, input.uv);
     float4 specular = g_tex_2.Sample(g_sam_0, input.uv);
+    float4 metalic = g_tex_3.Sample(g_sam_0, input.uv);
 
-    output = (color * lightPower) + specular;
+    // 메탈릭 값에 따라 디퓨즈와 스페큘러 조정
+    float metalicFactor = metalic.r; // 메탈릭은 단일 채널로 가정
+    float diffuseFactor = 1.0f - metalicFactor; // 메탈릭이 높을수록 디퓨즈 감소
+    float specularFactor = 1.0f; // 메탈릭이 높을수록 스페큘러 유지
+
+    output = (color * lightPower * diffuseFactor) + (specular * specularFactor);
     return output;
 }
 

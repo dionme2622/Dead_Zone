@@ -36,7 +36,7 @@ class CharacterController : public Component
 {
 public:
     // radius: 캡슐 반지름, height: 캡슐 높이, stepHeight: 한 걸음 최대 오르막 높이
-    CharacterController(float radius, float height, float stepHeight);
+    CharacterController(shared_ptr<GameObject> gameObject, float radius, float height, float stepHeight);
     ~CharacterController();
 
     // 이동 방향 벡터 단위(월드 스페이스)
@@ -59,4 +59,6 @@ private:
     std::shared_ptr<btPairCachingGhostObject>    _ghost;
     std::shared_ptr<btCapsuleShape>              _shape;
     std::shared_ptr<btKinematicCharacterController> _controller;
+
+    weak_ptr<GameObject>                _weakGameObject;        // 이 컴포넌트를 가진 객체
 };

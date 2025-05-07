@@ -51,11 +51,11 @@ RigidBody::RigidBody(shared_ptr<GameObject> gameObject, float mass, shared_ptr<B
         _body->setActivationState(DISABLE_DEACTIVATION);
     }
 
-    // 사용자 데이터로 GameObject 설정
-    if (auto lockedGameObject = _weakGameObject.lock())
-    {
-        _body->setUserPointer(lockedGameObject.get());
-    }
+    
+
+
+
+
 }
 RigidBody::~RigidBody()
 {
@@ -80,7 +80,8 @@ void RigidBody::FinalUpdate() {
 
 }
 
-CharacterController::CharacterController(float radius, float height, float stepHeight) : Component(COMPONENT_TYPE::CHARACTER_CONTROLLER)
+CharacterController::CharacterController(shared_ptr<GameObject> gameObject, float radius, float height, float stepHeight) : Component(COMPONENT_TYPE::CHARACTER_CONTROLLER)
+, _weakGameObject(gameObject)
 , _radius(radius)
 , _height(height)
 , _stepHeight(stepHeight)
@@ -88,6 +89,10 @@ CharacterController::CharacterController(float radius, float height, float stepH
     // 1) Ghost Object 생성 (충돌 검사 전용)
     _ghost = std::make_unique<btPairCachingGhostObject>();
     _ghost->setCollisionFlags(btCollisionObject::CF_CHARACTER_OBJECT);
+
+
+    if (auto lockedGameObject = _weakGameObject.lock())
+        _ghost->setUserPointer(lockedGameObject.get()); // GameObject 연결
 
     // 2) 캡슐 콜라이더 생성 (height 에서 상·하 반경 제외)
     float capsuleHeight = _height - 2.0f * _radius;
@@ -105,6 +110,8 @@ CharacterController::CharacterController(float radius, float height, float stepH
     _controller->setGravity(btVector3(0, -9.8f, 0));      // 월드 단위 중력
     _controller->setFallSpeed(100.0f);   // max fall speed
     _controller->setJumpSpeed(20.0f);    // 원하는 점프 속도
+
+
 }
 CharacterController::~CharacterController()
 {
