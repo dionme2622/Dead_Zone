@@ -71,13 +71,46 @@ void RigidBody::OnDisable() {
     PhysicsSystem::GET_SINGLE(PhysicsSystem)->GetDynamicsWorld()->removeRigidBody(_body.get());
 }
 
-void RigidBody::FinalUpdate() {
-    btTransform trans;
-    _body->getMotionState()->getWorldTransform(trans);
-    Vec3 p(trans.getOrigin().x(), trans.getOrigin().y(), trans.getOrigin().z());
-    GetTransform()->SetNo(true);
-    GetTransform()->SetLocalPosition(p);
+void RigidBody::FinalUpdate()
+{
+    // 1) Bullet world transform
+    btTransform    btTrans;
+    _body->getMotionState()->getWorldTransform(btTrans);
 
+    // 2) Position
+    Vec3 pos(
+        btTrans.getOrigin().x(),
+        btTrans.getOrigin().y(),
+        btTrans.getOrigin().z()
+    );
+
+    // 3) Rotation: Bullet quaternion → SimpleMath quaternion
+    btQuaternion btQuat = btTrans.getRotation();
+    SimpleMath::Quaternion   q(btQuat.x(), btQuat.y(), btQuat.z(), btQuat.w());
+
+    // 4) Quaternion → Rotation matrix
+    Matrix   rotMat = Matrix::CreateFromQuaternion(q);
+
+    // 5) Matrix → Euler 각도(라디안) 분해
+    Vec3     eulerRad = GetTransform()->DecomposeRotationMatrix(rotMat);
+
+    // 6) 라디안 → 도(°) 로 변환
+    const float radToDeg = 180.0f / XM_PI;
+    Vec3     eulerDeg(
+        eulerRad.x * radToDeg,
+        eulerRad.y * radToDeg,
+        eulerRad.z * radToDeg
+    );
+
+    // 7) Scale: 기존 Transform 스케일 유지
+    Vec3     scale = GetTransform()->GetLocalScale();
+
+    // 8) Transform에 한 번에 적용
+    auto t = GetTransform();
+    t->SetNo(true);
+    t->SetLocalPosition(pos);
+    t->SetLocalRotation(eulerDeg);
+    t->SetLocalScale(scale);
 }
 
 CharacterController::CharacterController(shared_ptr<GameObject> gameObject, float radius, float height, float stepHeight) : Component(COMPONENT_TYPE::CHARACTER_CONTROLLER)
