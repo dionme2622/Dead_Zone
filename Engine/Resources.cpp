@@ -274,94 +274,140 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorPlayerController()
 	auto controller = make_shared<AnimatorController>();
 
 	// 2) 파라미터 정의: Speed (float)
-	AnimatorParameter speedParam;
-	speedParam.name = "Speed";
-	speedParam.type = ParameterType::Float;
-	speedParam.defaultValue = 0.1f;
+	AnimatorParameter speedParam{ "Speed", ParameterType::Float , 0.1f };
 	controller->AddParameter(speedParam);
 
-	// 2) 파라미터 정의: Speed (float)
-	AnimatorParameter shootParam;
-	shootParam.name = "Shoot";
-	shootParam.type = ParameterType::Trigger;
-	shootParam.defaultValue = 0.0f;
-	controller->AddParameter(shootParam);
+	// 2) 파라미터 정의: isJumping (bool)
+	AnimatorParameter isJumpingParam{ "isJumping" , ParameterType::Bool, 0.0 };
+	controller->AddParameter(isJumpingParam);
 
 	// 3) 스테이트 생성 (이름, 클립, 클립 인덱스, 속도, loop)
-	auto idle = make_shared<AnimationState>(L"Idle", GetAnimClip(L"Idle"), 5, 1.0f, true);
-	auto walk = make_shared<AnimationState>(L"Walk", GetAnimClip(L"Walk"), 6, 1.0f, true);
-	auto run = make_shared<AnimationState>(L"Run", GetAnimClip(L"Run"), 7, 1.0f, true);
-	auto rifle_shoot = make_shared<AnimationState>(L"Rifle_Shoot", GetAnimClip(L"Rifle_Shoot"), 11, 1.0f, false);
+	auto Idle = make_shared<AnimationState>(L"Idle", GetAnimClip(L"Idle"), 0, 1.0f, true);
+	auto Walk = make_shared<AnimationState>(L"Walk", GetAnimClip(L"Walk"), 1, 1.0f, true);
+	auto Run = make_shared<AnimationState>(L"Run", GetAnimClip(L"Run"), 2, 1.0f, true);
+	auto Jump = make_shared<AnimationState>(L"Jump", GetAnimClip(L"Jump"), 3, 1.0f, true);
+	auto Death = make_shared<AnimationState>(L"Death", GetAnimClip(L"Death"), 4, 1.0f, true);
+	auto Rifle_Idle = make_shared<AnimationState>(L"Rifle_Idle", GetAnimClip(L"Rifle_Idle"), 5, 1.0f, true);
+	auto Rifle_Reload = make_shared<AnimationState>(L"Rifle_Reload", GetAnimClip(L"Rifle_Reload"), 6, 1.0f, true);
+	auto Rifle_Shoot = make_shared<AnimationState>(L"Rifle_Shoot", GetAnimClip(L"Rifle_Shoot"), 7, 1.0f, true);
+	auto Handgun_Idle = make_shared<AnimationState>(L"Handgun_Idle", GetAnimClip(L"Handgun_Idle"), 8, 1.0f, true);
+	auto Handgun_Reload = make_shared<AnimationState>(L"Handgun_Reload", GetAnimClip(L"Handgun_Reload"), 9, 1.0f, true);
+	auto Handgun_Shoot = make_shared<AnimationState>(L"Handgun_Shoot", GetAnimClip(L"Handgun_Shoot"), 10, 1.0f, true);
+	auto Shotgun_Idle = make_shared<AnimationState>(L"Shotgun_Idle", GetAnimClip(L"Shotgun_Idle"), 11, 1.0f, true);
+	auto Shotgun_Reload = make_shared<AnimationState>(L"Shotgun_Reload", GetAnimClip(L"Shotgun_Reload"), 12, 1.0f, true);
+	auto Shotgun_Shoot = make_shared<AnimationState>(L"Shotgun_Shoot", GetAnimClip(L"Shotgun_Shoot"), 13, 1.0f, true);
+	auto SubMachinegun_Idle = make_shared<AnimationState>(L"SubMachinegun_Idle", GetAnimClip(L"SubMachinegun_Idle"), 14, 1.0f, true);
+	auto SubMachinegun_Reload = make_shared<AnimationState>(L"SubMachinegun_Reload", GetAnimClip(L"SubMachinegun_Reload"), 15, 1.0f, true);
+	auto SubMachinegun_Shoot = make_shared<AnimationState>(L"SubMachinegun_Shoot", GetAnimClip(L"SubMachinegun_Shoot"), 16, 1.0f, true);
+	auto OneHand_Attack = make_shared<AnimationState>(L"OneHand_Attack", GetAnimClip(L"OneHand_Attack"), 17, 1.0f, true);
+	auto TwoHand_Attack = make_shared<AnimationState>(L"TwoHand_Attack", GetAnimClip(L"TwoHand_Attack"), 18, 1.0f, true);
+	controller->AddState(Idle);
+	controller->AddState(Walk);
+	controller->AddState(Run);
+	controller->AddState(Jump);
 
-	controller->AddState(idle);
-	controller->AddState(walk);
-	controller->AddState(run);
-	controller->AddState(rifle_shoot);
+	controller->AddState(Rifle_Shoot);
 
 	int speedIdx = controller->GetParamIndex("Speed");
-	int shootIdx = controller->GetParamIndex("Shoot");
+	int isJumpingIdx = controller->GetParamIndex("isJumping");
 
 	// 4) Idle → Walk 전이 추가 (Speed > 0.1)
 	{
-		auto t = make_shared<Transition>(walk);
+		auto t = make_shared<Transition>(Walk);
 		t->AddCondition(
 			/*paramIndex=*/speedIdx,
+			ParameterType::Float,
 			ConditionMode::Greater,
 			/*threshold=*/4.0f,
 			/*exitTime=*/0.0f,
 			/*duration=*/0.0f
 		);
-		idle->AddTransition(t);
+		Idle->AddTransition(t);
 	}
 
 	// 5) Walk → Idle 전이 추가 (Speed < 0.05)
 	{
-		auto t = make_shared<Transition>(run);
+		auto t = make_shared<Transition>(Run);
 		t->AddCondition(
 			/*paramIndex=*/speedIdx,
+			ParameterType::Float,
 			ConditionMode::Greater,
-			/*threshold=*/10.0f,
+			/*threshold=*/8.0f,
 			/*exitTime=*/0.0f,
 			/*duration=*/0.0f
 		);
-		walk->AddTransition(t);
+		Walk->AddTransition(t);
 	}
 	{
-		auto t = make_shared<Transition>(idle);
+		auto t = make_shared<Transition>(Idle);
 		t->AddCondition(
 			/*paramIndex=*/speedIdx,
+			ParameterType::Float,
 			ConditionMode::Less,
 			/*threshold=*/4.0f,
 			/*exitTime=*/0.0f,
 			/*duration=*/0.0f
 		);
-		walk->AddTransition(t);
+		Walk->AddTransition(t);
 	}
 	{
-		auto t = make_shared<Transition>(walk);
+		auto t = make_shared<Transition>(Walk);
 		t->AddCondition(
 			/*paramIndex=*/speedIdx,
+			ParameterType::Float,
 			ConditionMode::Less,
-			/*threshold=*/6.0f,
+			/*threshold=*/8.0f,
 			/*exitTime=*/0.0f,
 			/*duration=*/0.0f
 		);
-		run->AddTransition(t);
+		Run->AddTransition(t);
 	}
-	// 4) 클릭 시 Shoot 상태로 전이
-	for (auto baseState : { idle, walk, run })
+
+	// □ Idle/Walk/Run → Jump
+	for (auto baseState : { Idle, Walk, Run })
 	{
-		auto t = make_shared<Transition>(rifle_shoot);
-		t->AddCondition(shootIdx, ConditionMode::Equals, 1.0f, /*exitTime=*/0.0f, /*fade=*/0.1f);
+		auto t = make_shared<Transition>(Jump);
+		// isJumping == true 일 때 전환
+		t->AddCondition(
+			/*paramIndex=*/ isJumpingIdx,
+			ParameterType::Bool,
+			/*mode=*/       ConditionMode::Equals,
+			/*threshold=*/  1.0f,       // Bool:true → 1.0
+			/*exitTime=*/   0.0f,
+			/*duration=*/   0.1f        // 부드러운 페이드 타임
+		);
 		baseState->AddTransition(t);
 	}
 
-	// 5) Shoot 끝나면 Idle로 복귀 (exitTime=1.0f)
+	// □ Jump → Idle (착지 시 자동 복귀)
 	{
-		auto t = make_shared<Transition>(idle);
-		t->AddCondition(shootIdx, ConditionMode::Equals, 1.0f, /*exitTime=*/0.0f, /*fade=*/0.1f);
-		rifle_shoot->AddTransition(t);
+		auto t = make_shared<Transition>(Idle);
+		// isJumping == false 일 때 전환
+		t->AddCondition(
+			/*paramIndex=*/ isJumpingIdx,
+			ParameterType::Bool,
+			/*mode=*/       ConditionMode::Equals,
+			/*threshold=*/  0.0f,       // Bool:false → 0.0
+			/*exitTime=*/   0.0f,
+			/*duration=*/   0.1f
+		);
+		Jump->AddTransition(t);
 	}
+
+	// 4) 클릭 시 Shoot 상태로 전이
+	//for (auto baseState : { Idle, Walk, Run })
+	//{
+	//	auto t = make_shared<Transition>(Rifle_Shoot);
+	//	t->AddCondition(shootIdx, ConditionMode::Equals, 1.0f, /*exitTime=*/0.0f, /*fade=*/0.1f);
+	//	baseState->AddTransition(t);
+	//}
+
+	//// 5) Shoot 끝나면 Idle로 복귀 (exitTime=1.0f)
+	//{
+	//	auto t = make_shared<Transition>(Idle);
+	//	t->AddCondition(shootIdx, ConditionMode::Equals, 1.0f, /*exitTime=*/0.0f, /*fade=*/0.1f);
+	//	Rifle_Shoot->AddTransition(t);
+	//}
 
 
 	// 6) Entry State 설정

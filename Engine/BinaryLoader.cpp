@@ -673,6 +673,10 @@ void BinaryLoader::CreateMaterials()
 						material->SetTexture(0, texture);
 				}
 
+				{
+					float metalic = _meshes[i].materials[j].metalic;
+					material->SetFloat(2, metalic);
+				}
 				GET_SINGLE(Resources)->Add<Material>(material->GetName(), material);
 			}
 		}

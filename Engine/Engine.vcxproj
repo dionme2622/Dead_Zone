@@ -166,12 +166,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AnimationState.h" />
-    <ClInclude Include="AnimationStateMachine.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
     <ClInclude Include="Animator.h" />
     <ClInclude Include="AnimatorController.h" />
     <ClInclude Include="AnimatorParameter.h" />
@@ -235,12 +229,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AnimationState.cpp" />
-    <ClCompile Include="AnimationStateMachine.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="AnimatorController.cpp" />
     <ClCompile Include="BaseCollider.cpp" />

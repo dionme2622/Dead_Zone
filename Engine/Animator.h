@@ -36,7 +36,6 @@ public:
 
 private:
 	const vector<BoneInfo>*			_bones = nullptr;
-	//const vector<AnimClipInfo>*		_animClips = nullptr;
 
 	float							_updateTime = 0.0f;
 

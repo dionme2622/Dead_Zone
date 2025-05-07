@@ -196,14 +196,4 @@ void CharacterController::FinalUpdate()
     GET_SINGLE(DebugRenderer)
         ->AddCapsule(_radius, _height, capsuleWorld, { 1,0,0,1 });
 
-    //btTransform btTrans = _ghost->getWorldTransform();
-    //btVector3 btPos = btTrans.getOrigin();
-    //Vec3 worldPos(btPos.x(), btPos.y(), btPos.z());
-
-    
-
-    //GetTransform()->SetNo(true);
-    //GetTransform()->SetLocalPosition(worldPos);
-
-    //GET_SINGLE(DebugRenderer)->AddCapsule(_radius, _height, GetTransform()->GetLocalToWorldMatrix(), { 1,0,0,1 });
 }

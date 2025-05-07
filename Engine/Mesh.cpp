@@ -260,30 +260,30 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader, int type)
 		switch (type)
 		{
 		case PLAYER:
-			GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-			GET_SINGLE(Resources)->AddAnimClip(L"Walk", _animClips[6]);
-			GET_SINGLE(Resources)->AddAnimClip(L"Run", _animClips[7]);
-			GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Shoot", _animClips[11]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[0]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Walk", _animClips[1]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Run", _animClips[2]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Jump", _animClips[3]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Death", _animClips[4]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Idle", _animClips[5]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Reload", _animClips[6]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Shoot", _animClips[7]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Handgun_Idle", _animClips[8]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Handgun_Reload", _animClips[9]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Handgun_Shoot", _animClips[10]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Shotgun_Idle", _animClips[11]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Shotgun_Reload", _animClips[12]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Shotgun_Shoot", _animClips[13]);
+			GET_SINGLE(Resources)->AddAnimClip(L"SubMachinegun_Idle", _animClips[14]);
+			GET_SINGLE(Resources)->AddAnimClip(L"SubMachinegun_Reload", _animClips[15]);
+			GET_SINGLE(Resources)->AddAnimClip(L"SubMachinegun_Shoot", _animClips[16]);
+			GET_SINGLE(Resources)->AddAnimClip(L"OneHand_Attack", _animClips[17]);
+			GET_SINGLE(Resources)->AddAnimClip(L"TwoHand_Attack", _animClips[18]);
 			break;
 		case ZOMBIE:
 			GET_SINGLE(Resources)->AddAnimClip(L"Zombie_Idle", _animClips[0]);
 			break;
 		}
-		
-
-		/*GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);
-		GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[5]);*/
 	}
 #pragma endregion
 }

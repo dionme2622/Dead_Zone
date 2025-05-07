@@ -93,11 +93,11 @@ void BattleScene::LoadScene()
 	_theirID = 1;
 	bool islocal = (_theirID == _myID);
 
-	shared_ptr<MeshData> FemaleSoldier_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin", PLAYER); // MeshData* meshData
+	shared_ptr<MeshData> FemaleSoldier_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleSoldier.bin", PLAYER); // MeshData* meshData
 
 	vector<shared_ptr<GameObject>> FemaleSoldier = FemaleSoldier_data->Instantiate(PLAYER, NONE);
 
-	player1 = FemaleSoldier[23];
+	shared_ptr<GameObject> player1 = FemaleSoldier[23];
 	for (auto& gameObject : FemaleSoldier)
 	{
 		//gameObject->SetName(L"FemaleSoldier");
@@ -120,7 +120,7 @@ void BattleScene::LoadScene()
 	_theirID = 2;
 	islocal = (_theirID == _myID);
 
-	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
+	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
 
 	vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
 
@@ -294,7 +294,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(false);
+			gameObject->SetStatic(true);
 			AddGameObject(gameObject);
 		}
 	}
@@ -307,7 +307,20 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(false);
+			gameObject->SetStatic(true);
+			AddGameObject(gameObject);
+		}
+	}
+
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\Wall.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(false);
+			gameObject->SetStatic(true);
 			AddGameObject(gameObject);
 		}
 	}
@@ -321,7 +334,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(false);
+			gameObject->SetStatic(true);
 			AddGameObject(gameObject);
 			/*if (gameObject->GetName() == L"Sun_1")
 				_sunObject = gameObject*/;
