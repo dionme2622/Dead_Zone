@@ -41,6 +41,7 @@ void Animator::FinalUpdate()
 {
 	if (!_controller)
 		return;
+
 	// 1) 전이 평가
 	EvaluateTransitions();
 	// 2) 시간 누적 및 전이 처리

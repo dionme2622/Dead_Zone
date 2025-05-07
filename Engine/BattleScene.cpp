@@ -135,7 +135,7 @@ void BattleScene::LoadScene()
 	player2->GetTransform()->SetLocalPosition(Vec3(20, 300.f, 0));
 	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player2->AddComponent(make_shared<PlayerStats>());
-	player2->AddComponent(make_shared<CharacterController>(0.5, 1.5, 0.3f));
+	player2->AddComponent(make_shared<CharacterController>(0.5, 3.0, 0.3f));
 	player2->GetCharacterController()->OnEnable();
 	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
 
@@ -249,23 +249,24 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 
-#pragma region Character
-	//{
-	//	for (int i = 0; i < 10; ++i)
-	//	{
-	//		shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
+#pragma region Zombie
+	{
+		for (int i = 0; i < 10; ++i)
+		{
+			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
 
-	//		vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate(ZOMBIE);
-	//		for (auto& gameObject : gameObjects)
-	//		{
-	//			gameObject->SetCheckFrustum(true);
-	//			gameObject->SetStatic(true);
-	//			AddGameObject(gameObject);
-	//		}
-	//			gameObjects[0]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 0.0f, 0.0f));
-	//			//gameObjects[0]->GetTransform()->SetLocalRotation(Vec3(0.f, 0.0f, 0.0f));
-	//	}
-	//}
+			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate(ZOMBIE);
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetCheckFrustum(true);
+				gameObject->SetStatic(true);
+				AddGameObject(gameObject);
+			}
+				gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 80.0f, 0.0f));
+				gameObjects[23]->AddComponent(make_shared<CharacterController>(0.5, 3.0, 0.3f));
+				gameObjects[23]->GetCharacterController()->OnEnable();
+		}
+	}
 
 #pragma endregion
 
@@ -292,7 +293,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
+			gameObject->SetStatic(false);
 			AddGameObject(gameObject);
 		}
 	}
@@ -305,7 +306,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(true);
-			gameObject->SetStatic(true);
+			gameObject->SetStatic(false);
 			AddGameObject(gameObject);
 		}
 	}
@@ -318,7 +319,7 @@ void BattleScene::LoadScene()
 		for (auto& gameObject : gameObjects)
 		{
 			gameObject->SetCheckFrustum(false);
-			gameObject->SetStatic(true);
+			gameObject->SetStatic(false);
 			AddGameObject(gameObject);
 		}
 	}
