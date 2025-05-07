@@ -676,7 +676,6 @@ void BinaryLoader::CreateMaterials()
 				{
 					float metalic = _meshes[i].materials[j].metalic;
 					material->SetFloat(2, metalic);
-					cout << metalic << endl;
 				}
 				GET_SINGLE(Resources)->Add<Material>(material->GetName(), material);
 			}

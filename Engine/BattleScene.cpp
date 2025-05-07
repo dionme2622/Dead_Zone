@@ -258,16 +258,18 @@ void BattleScene::LoadScene()
 			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
 
 			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate(ZOMBIE);
+
 			for (auto& gameObject : gameObjects)
 			{
 				gameObject->SetCheckFrustum(true);
 				gameObject->SetStatic(true);
 				AddGameObject(gameObject);
 			}
-				gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 80.0f, 0.0f));
-				gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
-				gameObjects[23]->AddComponent(make_shared<PlayerStats>());
-				gameObjects[23]->GetCharacterController()->OnEnable();
+
+			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 80.0f, 0.0f));
+			gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
+			gameObjects[23]->AddComponent(make_shared<PlayerStats>());
+			gameObjects[23]->GetCharacterController()->OnEnable();
 		}
 	}
 

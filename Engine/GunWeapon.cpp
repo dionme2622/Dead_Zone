@@ -16,27 +16,43 @@ inline btVector3 ToBtVector3(const Vec3& vec)
 }
 
 GunWeapon::GunWeapon()
-    : m_bulletPosition(btVector3(0, 0, 0))
-    , m_bulletDirection(btVector3(0, 0, -1))
-    , m_range(1000.0f)
-    , m_isReloading(false)
-    , m_reloadTime(2.0f)
-    , m_reloadTimer(0.0f)
+    : _bulletPosition(btVector3(0, 0, 0))
+    , _bulletDirection(btVector3(0, 0, -1))
+    , _range(1000.0f)
+    , _isReloading(false)
+    , _reloadTime(2.0f)
+    , _reloadTimer(0.0f)
+    , _bulletNum(12)
+    , _maxBulletNum(12)
+    , _fireRate(4.0f)      // 초당 2발
+    , _fireTimer(0.0f)
 {
 }
 
 void GunWeapon::Attack()
 {
-    if (m_isReloading)
-        return; // 재장전 중에는 발사 불가
+    if (_isReloading || _fireTimer > 0.0f)
+        return; // 재장전 중이거나 발사 대기 시간 중에는 발사 불가
+
+    if (_bulletNum <= 0)
+    {
+        Reload();
+        return;
+    }
+
+    Beep(1000, 100);
+
+
+    _fireTimer = 1.0f / _fireRate; // 다음 발사까지 대기 시간 설정
+    --_bulletNum;
 
     auto* dynamicsWorld = GET_SINGLE(PhysicsSystem)->GetDynamicsWorld();
     if (!dynamicsWorld)
         return;
 
     // 발사 시작점과 끝점 계산
-    btVector3 from = m_bulletPosition;
-    btVector3 to = m_bulletPosition + m_bulletDirection * m_range;
+    btVector3 from = _bulletPosition;
+    btVector3 to = _bulletPosition + _bulletDirection * _range;
 
     // 레이캐스트 수행 (CharacterFilter와 충돌하도록 설정)
     btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
@@ -54,44 +70,50 @@ void GunWeapon::Attack()
 
 void GunWeapon::Reload()
 {
-    if (!m_isReloading)
-    {
-        m_isReloading = true;
-        m_reloadTimer = 0.0f;
-    }
+    _isReloading = true;
+    _reloadTimer = 0.0f;
+    _bulletNum = _maxBulletNum;
 }
 
 void GunWeapon::SetBulletPosition()
 {
     auto camera = GET_SINGLE(SceneManager)->GetActiveScene()->GetMainCamera();
     auto transform = camera->GetTransform();
-    m_bulletPosition = ToBtVector3(transform->GetWorldPosition());
+    _bulletPosition = ToBtVector3(transform->GetWorldPosition());
 }
 
 void GunWeapon::SetBulletDirection()
 {
     auto camera = GET_SINGLE(SceneManager)->GetActiveScene()->GetMainCamera();
     auto mat = camera->GetTransform()->GetLocalToWorldMatrix();
-    m_bulletDirection = ToBtVector3(mat.Backward());
+    _bulletDirection = ToBtVector3(mat.Backward());
 }
 
 void GunWeapon::Update()
 {
-    if (m_isReloading)
+    if (_isReloading)
     {
-        m_reloadTimer += DELTA_TIME;
-        if (m_reloadTimer >= m_reloadTime)
+        _reloadTimer += DELTA_TIME;
+        if (_reloadTimer >= _reloadTime)
         {
-            m_isReloading = false;
+            _isReloading = false;
         }
     }
+
+    if (_fireTimer > 0.0f)
+    {
+        _fireTimer -= DELTA_TIME;
+        if (_fireTimer < 0.0f)
+            _fireTimer = 0.0f;
+    }
+
+    cout << _bulletNum << endl;
 }
 
 void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld)
 {
     if (!hitObject || !hitObject->getUserPointer())
     {
-        std::cout << "No valid userPointer for hit object" << std::endl;
         return;
     }
 
@@ -113,7 +135,7 @@ void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDis
         // PlayerStats 컴포넌트를 통해 데미지 적용 (가정)
         if (auto playerStats = gameObjectPtr->GetPlayerStats())
         {
-            playerStats->ApplyDamage(40.0f); 
+            playerStats->ApplyDamage(40.0f);
             if (playerStats->IsDead())
             {
                 //characterController->OnDisable();
