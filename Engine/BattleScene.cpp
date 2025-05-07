@@ -98,7 +98,6 @@ void BattleScene::LoadScene()
 #pragma region Player1
 	_theirID = 1;
 	bool islocal = (_theirID == _myID);
-
 	shared_ptr<MeshData> FemaleSoldier_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Character_FemaleSoldier.bin"); // MeshData* meshData
 
 	vector<shared_ptr<GameObject>> FemaleSoldier = FemaleSoldier_data->Instantiate();
@@ -113,7 +112,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
+	player1->GetTransform()->SetLocalPosition(Vec3(0.f, 0.f, 0.f));
 	player1->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));								// Add Player Controller
 	player1->AddComponent(make_shared<WeaponManager>());												// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
@@ -139,7 +138,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player2->GetTransform()->SetLocalPosition(Vec3(0.f, 100.f, 0.f));
+	player2->GetTransform()->SetLocalPosition(Vec3(50.f, 0.f, 0.f));
 	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID));
 
 	_player.push_back(player2);
@@ -331,10 +330,11 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	/*Vec3 pos = _player->GetTransform()->GetLocalPosition();
-	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
-	
-
+	//Vec3 pos = _player[0]->GetTransform()->GetLocalPosition();
+	//printf("Player1: %f %f %f\n", pos.x, pos.y, pos.z);
+	//
+	//pos = _player[1]->GetTransform()->GetLocalPosition();
+	//printf("Player2: %f %f %f\n", pos.x, pos.y, pos.z);
 
 	Scene::Update();
 }

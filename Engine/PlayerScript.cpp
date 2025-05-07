@@ -43,32 +43,32 @@ void PlayerScript::LateUpdate()
 	}
 	else
 	{
-		
-
-
 		// 2) 원격 플레이어: 네트워크 상태를 받아서 Transform에 적용
-		// TODO : 여기서 다른 플레이어 객체들의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
-		// EX) 서버로 부터 자기 ID에 맞는 객체의 pos 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
+		// TODO : 여기서 다른 플레이어 객체들의 Location, Rotation, Scale 값을 받아와서 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
+		// EX) 서버로 부터 자기 ID에 맞는 객체의 Location, Rotation, Scale 값을 받아와서 각각 GetTransform()->SetLocalPosition(pos); 을 하면 된다.
 		std::lock_guard<std::mutex> lock(g_posMutex);
 
-		std::cout << "[LateUpdate] 전체 위치 정보\n";
-		for (const auto& [id, pos] : g_otherPlayerPositions)
+		//std::cout << "[LateUpdate] 전체 위치 정보\n";
+		long long key = _playerId-1;
+		auto it = g_otherPlayerPositions.find(key);
+		if (it != g_otherPlayerPositions.end())
 		{
-			float x = std::get<0>(pos);
-			float y = std::get<1>(pos);
-			float z = std::get<2>(pos);
+			auto [x, y, z, rx, ry, rz] = it->second; // 6개 값 받아오기
+			//std::cout << "Player 1 위치: (" << x << ", " << y << ", " << z << ") 회전: (" << rx << ", " << ry << ", " << rz << ")\n";
 
-			std::cout << "- ID: " << id << " 위치: (" << x << ", " << y << ", " << z << ")\n";
 			GetTransform()->SetLocalPosition(Vec3(x, y, z));
+			GetTransform()->SetLocalRotation(Vec3(rx, ry, rz)); // 추가된 회전 적용
 		}
-
+		else
+		{
+			//std::cout << "키 1인 항목이 없습니다.\n";
+		}
 
 		
 		/*auto state = NetworkManager::Get()->GetPlayerState(_playerId);
 		ApplyNetworkState(state.position, state.rotationEuler, state.equippedWeapon);*/
 	}
 
-	
 
 }
 
@@ -84,6 +84,7 @@ void PlayerScript::UpdatePlayerInput()
 void PlayerScript::UpdateKeyInput()
 {
 	Vec3 pos = GetTransform()->GetLocalPosition();
+	Vec3 rotation = GetTransform()->GetLocalRotation();
 
 	if (INPUT->GetButton(KEY_TYPE::W))
 		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
@@ -117,7 +118,7 @@ void PlayerScript::UpdateKeyInput()
 		GetWeaponManager()->EquipWeapon(2);
 
 
-	// TODO : pos 값을 서버로 보낸다.
+	// TODO : Location, Rotation, Scale 값을 서버로 보낸다.
 
 	ctos_packet_position ctos_pos{};
 	ctos_pos.size = sizeof(ctos_pos);
@@ -125,10 +126,16 @@ void PlayerScript::UpdateKeyInput()
 	ctos_pos.x = pos.x;
 	ctos_pos.y = pos.y;
 	ctos_pos.z = pos.z;
+	ctos_pos.rx = rotation.x;
+	ctos_pos.ry = rotation.y;
+	ctos_pos.rz = rotation.z;
+
+
+
 	send(sock, reinterpret_cast<char*>(&ctos_pos), sizeof(ctos_pos), 0);
-	//std::this_thread::sleep_for(std::chrono::seconds(1));
-	 
-	// TODO : pos 값을 서버로 받아.
+	
+	 //
+	
 
 
 	GetTransform()->SetLocalPosition(pos);

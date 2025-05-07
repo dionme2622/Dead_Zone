@@ -7,7 +7,7 @@ std::atomic<bool> running{ true };
 bool g_receivedMyInfo = false;
 stoc_packet_player_info g_myInfo;
 
-std::unordered_map<long long, std::tuple<float, float, float>> g_otherPlayerPositions;
+std::unordered_map<long long, std::tuple<float, float, float, float, float, float>> g_otherPlayerPositions;
 std::mutex g_posMutex;
 
 bool ConnectAndLogin()
@@ -48,19 +48,29 @@ bool ConnectAndLogin()
 }
 
 void recv_thread(SOCKET sock) {
-    char buffer[1024];
+    unsigned char buffer[4096];
+    int data_size = 0;
+
     while (running) {
-        int ret = recv(sock, buffer, sizeof(buffer), 0);
+        int ret = recv(sock, reinterpret_cast<char*>(buffer) + data_size, sizeof(buffer) - data_size, 0);
         if (ret <= 0) {
             std::cout << "서버 연결 끊김.\n";
             running = false;
             break;
         }
 
+        data_size += ret;
         int offset = 0;
-        while (offset < ret) {
+
+        while (true) {
+            if (data_size - offset < 2)  // 최소한 size와 type은 있어야 함
+                break;
+
             unsigned char size = buffer[offset];
-            char type = buffer[offset + 1];
+            if (data_size - offset < size)
+                break;
+
+            unsigned char type = buffer[offset + 1];
 
             switch (type) {
             case SToC_PLAYER_INFO: {
@@ -72,7 +82,8 @@ void recv_thread(SOCKET sock) {
             }
             case SToC_PLAYER_ENTER: {
                 auto* p = reinterpret_cast<stoc_packet_enter*>(&buffer[offset]);
-                std::cout << "[입장] ID: " << p->id << " 이름: " << p->name << " 위치: (" << p->x << ", " << p->y << ", " << p->z << ")\n";
+                std::cout << "[입장] ID: " << p->id << " 이름: " << p->name
+                    << " 위치: (" << p->x << ", " << p->y << ", " << p->z << ")\n";
                 break;
             }
             case SToC_PLAYER_LEAVE: {
@@ -84,25 +95,33 @@ void recv_thread(SOCKET sock) {
                 auto* p = reinterpret_cast<stoc_packet_all_position*>(&buffer[offset]);
 
                 std::lock_guard<std::mutex> lock(g_posMutex);
-
                 for (int i = 0; i < p->count; ++i) {
                     g_otherPlayerPositions[p->players[i].id] = std::make_tuple(
                         p->players[i].x,
                         p->players[i].y,
-                        p->players[i].z
+                        p->players[i].z,
+                        p->players[i].rx,
+                        p->players[i].ry,
+                        p->players[i].rz
                     );
                 }
-
                 break;
             }
             default:
-                std::cout << "[알 수 없는 패킷 타입]\n";
+                std::cout << "[알 수 없는 패킷 타입: " << static_cast<int>(type) << "]\n";
                 break;
             }
+
             offset += size;
+        }
+
+        if (offset > 0) {
+            memmove(buffer, buffer + offset, data_size - offset);
+            data_size -= offset;
         }
     }
 }
+
 
 //void pos_sender_thread(SOCKET sock) {
 //    while (running) {
