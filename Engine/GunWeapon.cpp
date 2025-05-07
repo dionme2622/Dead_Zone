@@ -107,7 +107,6 @@ void GunWeapon::Update()
             _fireTimer = 0.0f;
     }
 
-    cout << _bulletNum << endl;
 }
 
 void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld)

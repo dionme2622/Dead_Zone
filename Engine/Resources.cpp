@@ -598,6 +598,30 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"DirLight", shader);
 	}
 
+	// SpotLight
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::LIGHTING,
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
+			BLEND_TYPE::ONE_TO_ONE_BLEND
+		};
+
+		ShaderArg arg =
+		{
+			"VS_SpotLight",
+			"",
+			"",
+			"",
+			"PS_SpotLight"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
+		Add<Shader>(L"SpotLight", shader);
+	}
+
 	// PointLight
 	{
 		ShaderInfo info =
@@ -772,6 +796,20 @@ void Resources::CreateDefaultMaterial()
 		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
 		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"NormalTarget"));
 		Add<Material>(L"DirLight", material);
+	}
+
+	// SpotLight
+	{
+		const WindowInfo& window = GEngine->GetWindow();
+		Vec2 resolution = { static_cast<float>(window.width), static_cast<float>(window.height) };
+
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"SpotLight");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
+		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"NormalTarget"));
+		material->SetVec2(0, resolution);
+		Add<Material>(L"SpotLight", material);
 	}
 
 	// PointLight

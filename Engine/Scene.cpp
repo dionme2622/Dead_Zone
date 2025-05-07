@@ -49,9 +49,9 @@ void Scene::FinalUpdate()
 
 void Scene::Render()
 {
-	PushLightData();
-
 	ClearRTV();
+
+	PushLightData();
 
 	RenderShadow();
 

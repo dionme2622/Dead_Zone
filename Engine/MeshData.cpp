@@ -10,7 +10,6 @@
 #include "TestAnimation.h"
 #include "BoxCollider.h"
 #include "RigidBody.h"
-#include "Transform.h"
 #include "MeshCollider.h"
 
 MeshData::MeshData() : Object(OBJECT_TYPE::MESH_DATA)

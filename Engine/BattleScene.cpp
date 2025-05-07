@@ -262,7 +262,7 @@ void BattleScene::LoadScene()
 			for (auto& gameObject : gameObjects)
 			{
 				gameObject->SetCheckFrustum(true);
-				gameObject->SetStatic(true);
+				gameObject->SetStatic(false);
 				AddGameObject(gameObject);
 			}
 
@@ -372,6 +372,26 @@ void BattleScene::LoadScene()
 
 #pragma endregion
 
+
+#pragma region Spot Light
+	{
+		_spotLight = make_shared<GameObject>();
+		_spotLight->AddComponent(make_shared<Transform>());
+		_spotLight->AddComponent(make_shared<Light>());
+		_spotLight->GetLight()->SetLightDirection(Vec3(0, -1.0, 0.f));
+		_spotLight->GetLight()->SetLightType(LIGHT_TYPE::SPOT_LIGHT);
+		_spotLight->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 0.f));  
+		_spotLight->GetLight()->SetAmbient(Vec3(0.5f, 0.5f, 0.5f));   
+		_spotLight->GetLight()->SetSpecular(Vec3(0.5f, 0.5f, 0.5f));  
+		_spotLight->GetLight()->SetLightRange(100.f);
+		_spotLight->GetLight()->SetLightAngle(XM_PI / 4);
+		_spotLight->GetTransform()->SetLocalPosition(Vec3(0,50,50));
+
+		AddGameObject(_spotLight);
+	}
+
+#pragma endregion
+
 }
 
 
@@ -387,6 +407,7 @@ void BattleScene::Update()
 	Scene::Update();
 	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
 	//UpdateSunOrbit();
+	//_spotLight->GetTransform()->SetLocalPosition(_playerCamera->GetTransform()->GetLocalPosition());
 
 
 	Vec3 direction = Vec3(0.f, 100.f, 100.f) - _mainLight->GetTransform()->GetLocalPosition();

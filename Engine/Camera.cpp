@@ -13,6 +13,8 @@
 #include "BaseCollider.h"
 #include "BoxCollider.h"
 #include "DebugRenderer.h"
+#include "Animator.h"
+
 Matrix Camera::S_MatView;
 Matrix Camera::S_MatProjection;
 
@@ -214,6 +216,8 @@ void Camera::Render_Shadow()
 
 	for (auto& gameObject : _vecShadow)
 	{
+		/*if(auto animator = gameObject->GetAnimator())
+			animator->PushData();*/
 		gameObject->GetMeshRenderer()->RenderShadow();
 	}
 }

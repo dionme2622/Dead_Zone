@@ -23,26 +23,29 @@ Light::~Light()
 
 void Light::FinalUpdate()
 {
-	//GetTransform()->SetLocalPosition(_sunObject->GetTransform()->GetLocalPosition());
+	_lightInfo.position = GetTransform()->GetWorldPosition();
 
-	_lightInfo.position = GetTransform()->GetLocalPosition();
+	if(static_cast<LIGHT_TYPE>(_lightInfo.lightType) == LIGHT_TYPE::DIRECTIONAL_LIGHT)
+	{
+		//GetTransform()->SetLocalPosition(_sunObject->GetTransform()->GetLocalPosition());
 
-	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+		_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetWorldPosition());
 
-	// 빛의 방향에 따라 그림자 카메라의 회전 설정
-	Vec3 lightDirection = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
-	lightDirection.Normalize();
+		// 빛의 방향에 따라 그림자 카메라의 회전 설정
+		Vec3 lightDirection = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
+		lightDirection.Normalize();
 
-	// 빛의 방향을 기준으로 회전 값 계산
-	float pitch = atan2f(lightDirection.y, sqrtf(lightDirection.x * lightDirection.x + lightDirection.z * lightDirection.z));
-	float yaw = atan2f(lightDirection.x, lightDirection.z);
+		// 빛의 방향을 기준으로 회전 값 계산
+		float pitch = atan2f(lightDirection.y, sqrtf(lightDirection.x * lightDirection.x + lightDirection.z * lightDirection.z));
+		float yaw = atan2f(lightDirection.x, lightDirection.z);
 
-	// 회전 값 적용
-	_shadowCamera->GetTransform()->SetLocalRotation(-Vec3(pitch * (180.0f / XM_PI), yaw * (180.0f / XM_PI), 0));
+		// 회전 값 적용
+		_shadowCamera->GetTransform()->SetLocalRotation(-Vec3(pitch * (180.0f / XM_PI), yaw * (180.0f / XM_PI), 0));
 
-	_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
+		_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
 
-	_shadowCamera->FinalUpdate();
+		_shadowCamera->FinalUpdate();
+	}
 }
 
 void Light::Render()
@@ -104,11 +107,11 @@ void Light::SetLightType(LIGHT_TYPE type)
 		break;
 	case LIGHT_TYPE::POINT_LIGHT:
 		_volumeMesh = GET_SINGLE(Resources)->Get<Mesh>(L"Sphere");
-		_lightMaterial = GET_SINGLE(Resources)->Get<Material>(L"PointLight");
+		_lightMaterial = GET_SINGLE(Resources)->Get<Material>(L"SpotLight");
 		break;
 	case LIGHT_TYPE::SPOT_LIGHT:
 		_volumeMesh = GET_SINGLE(Resources)->Get<Mesh>(L"Sphere");
-		_lightMaterial = GET_SINGLE(Resources)->Get<Material>(L"PointLight");
+		_lightMaterial = GET_SINGLE(Resources)->Get<Material>(L"SpotLight");
 		break;
 	}
 }

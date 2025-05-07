@@ -30,6 +30,7 @@ private:
 
 	vector<shared_ptr<GameObject>>	_player;
 	shared_ptr<GameObject>			_mainLight;
+	shared_ptr<GameObject>			_spotLight;
 	shared_ptr<GameObject>			_sunObject;
 	HWND _hwnd;
 

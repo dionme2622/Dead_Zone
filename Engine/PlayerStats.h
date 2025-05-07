@@ -8,6 +8,7 @@
 #include "MeshRenderer.h"
 
 class GameObject;
+
 class PlayerStats : public Component
 {
 public:
