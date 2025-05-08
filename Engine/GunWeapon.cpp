@@ -40,7 +40,7 @@ void GunWeapon::Attack()
         return;
     }
 
-    Beep(1000, 100);
+    //Beep(1000, 100);
 
 
     _fireTimer = 1.0f / _fireRate; // 다음 발사까지 대기 시간 설정
