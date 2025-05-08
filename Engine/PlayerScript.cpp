@@ -52,8 +52,14 @@ void PlayerScript::FinalUpdate()
 			auto [x, y, z, rx, ry, rz] = it->second; // 6개 값 받아오기
 			//std::cout << "Player 1 위치: (" << x << ", " << y << ", " << z << ") 회전: (" << rx << ", " << ry << ", " << rz << ")\n";
 
-			GetTransform()->SetLocalPosition(Vec3(x, y, z));
-			GetTransform()->SetLocalRotation(Vec3(rx, ry, rz)); // 추가된 회전 적용
+
+			////////
+			// 1) ghost 를 warp 시켜서 물리 위치 반영
+			btVector3 warpPos(x,
+				y + 1.5, // 키네마틱 오프셋
+				z);
+			_controller->GetController()->warp(warpPos);
+			GetTransform()->SetLocalRotation(Vec3(0, ry, 0)); // 추가된 회전 적용
 		}
 		else
 		{
@@ -132,13 +138,17 @@ void PlayerScript::UpdateKeyInput()
 
 
 	// TODO : Location, Rotation, Scale 값을 서버로 보낸다.
+	// ghost world transform 읽기
+	btTransform tf;
+	tf = _controller->GetGhostObject()->getWorldTransform();
+	btVector3 pos = tf.getOrigin();
 
 	ctos_packet_position ctos_pos{};
 	ctos_pos.size = sizeof(ctos_pos);
 	ctos_pos.type = CToS_PLAYER_POS;
-	ctos_pos.x = pos.x;
-	ctos_pos.y = pos.y;
-	ctos_pos.z = pos.z;
+	ctos_pos.x = pos.x();
+	ctos_pos.y = pos.y();
+	ctos_pos.z = pos.z();
 	ctos_pos.rx = rotation.x;
 	ctos_pos.ry = rotation.y;
 	ctos_pos.rz = rotation.z;
@@ -153,10 +163,7 @@ void PlayerScript::UpdateKeyInput()
 	// 5) Animator 에 전달
 	GetAnimator()->SetFloat("Speed", _speed);
 	GetAnimator()->SetBool("isJumping", !_controller->IsOnGround());
-	//printf("점프?: %d\n", !_controller->IsOnGround());
-	//printf("속도: %f\n", currentSpeed);
-	/*printf("이전: %f %f %f\n", _prevPosition.x, _prevPosition.y, _prevPosition.z);
-	printf("이후: %f %f %f\n", currentPos.x, currentPos.y, currentPos.z);*/
+
 
 	_prevPosition = currentPos;
 }
@@ -199,7 +206,7 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 	// Y축 회전 (Yaw, 좌우) - 캐릭터와 카메라 모두에 적용
 	_yaw += deltaX * sensitivity;
 
-	rotation.x = _pitch * 50;
+	rotation.x = 0;
 	rotation.y = _yaw * 50;
 	rotation.z = 0.0;
 
