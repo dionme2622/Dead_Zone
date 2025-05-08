@@ -12,6 +12,8 @@
 #include "InstancingManager.h"
 #include "BaseCollider.h"
 #include "BoxCollider.h"
+#include "DebugRenderer.h"
+#include "Animator.h"
 
 Matrix Camera::S_MatView;
 Matrix Camera::S_MatProjection;
@@ -35,21 +37,17 @@ void Camera::FinalUpdate()
 
 	if (_type == PROJECTION_TYPE::PERSPECTIVE)
 		_matProjection = ::XMMatrixPerspectiveFovLH(_fov, _width / _height, _near, _far);
-	else
+	else 
 		_matProjection = ::XMMatrixOrthographicLH(_width * _scale, _height * _scale, _near, _far);
 
 	_frustum.FinalUpdate();
 }
 
+
 void Camera::SortGameObject()
 {
 	S_MatView = _matView;
 	S_MatProjection = _matProjection;
-
-	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
-		S_MainMatView = _matView;
-		S_MainMatProjection = _matProjection;
-	}
 
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	const vector<shared_ptr<GameObject>>& gameObjects = scene->GetGameObjects();
@@ -58,10 +56,8 @@ void Camera::SortGameObject()
 	_vecDeferred.clear();
 	_vecParticle.clear();
 
-	int a = 0;
 	for (auto& gameObject : gameObjects)
 	{
-
 		if (gameObject->GetMeshRenderer() == nullptr && gameObject->GetParticleSystem() == nullptr) {
 			continue;
 		}
@@ -84,7 +80,7 @@ void Camera::SortGameObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 100) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 20) == false)
 				{
 					continue;
 				}
@@ -116,6 +112,9 @@ void Camera::SortShadowObject()
 	shared_ptr<Scene> scene = GET_SINGLE(SceneManager)->GetActiveScene();
 	const vector<shared_ptr<GameObject>>& gameObjects = scene->GetGameObjects();
 
+	S_MatView = _matView;
+	S_MatProjection = _matProjection;
+
 	_vecShadow.clear();
 
 	for (auto& gameObject : gameObjects)
@@ -143,7 +142,7 @@ void Camera::SortShadowObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 100) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 20) == false)
 				{
 					continue;
 				}
@@ -192,26 +191,23 @@ void Camera::Render_Forward()
 	}
 
 #endif
-	for (auto& gameObject : _vecParticle)
+	/*for (auto& gameObject : _vecParticle)
 	{
 		gameObject->GetParticleSystem()->Render();
-	}
-
-	// Bounding Box ±×¸®±â
-	/*for (auto& gameObject : _vecForward)
-	{
-		gameObject->GetCollider()->Render();
 	}*/
+
+	if (_DEBUG_COLLIDER)
+	{
+		GET_SINGLE(DebugRenderer)->Flush();
+		GET_SINGLE(DebugRenderer)->Clear();
+	}
 }
 
 
 void Camera::Render_Shadow()
 {
-
-	//if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
 	S_MatView = _matView;
 	S_MatProjection = _matProjection;
-	//}
 
 	if (GetProjectionType() == PROJECTION_TYPE::PERSPECTIVE) {
 		S_MainMatView = _matView;
@@ -220,6 +216,8 @@ void Camera::Render_Shadow()
 
 	for (auto& gameObject : _vecShadow)
 	{
+		/*if(auto animator = gameObject->GetAnimator())
+			animator->PushData();*/
 		gameObject->GetMeshRenderer()->RenderShadow();
 	}
 }

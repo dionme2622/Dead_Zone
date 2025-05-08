@@ -5,6 +5,7 @@
 #include "BinaryLoader.h"
 #include "StructuredBuffer.h"
 #include "InstancingBuffer.h"
+#include "Resources.h"
 
 Mesh::Mesh() : Object(OBJECT_TYPE::MESH)
 {
@@ -50,7 +51,7 @@ void Mesh::Render(shared_ptr<InstancingBuffer>& buffer, uint32 idx, bool isRende
 	}
 }
 
-shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLoader& loader)
+shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLoader& loader, int type)
 {
 	shared_ptr<Mesh> mesh = make_shared<Mesh>();
 	if (!meshInfo->vertices.empty())
@@ -73,7 +74,10 @@ shared_ptr<Mesh> Mesh::CreateFromBinary(const BinaryMeshInfo* meshInfo, BinaryLo
 	}
 
 	if (meshInfo->hasAnimation)
-		mesh->CreateBonesAndAnimations(loader);
+	{
+		mesh->CreateBonesAndAnimations(loader, type);
+		mesh->_hasAnimation = true;
+	}
 
 	return mesh;
 }
@@ -147,35 +151,35 @@ void Mesh::CreateIndexBuffer(const vector<uint32>& buffer)
 	_vecIndexInfo.push_back(info);
 }
 
-void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
+void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader, int type)
 {
 #pragma region AnimClip
 	uint32 frameCount = 0;
-	vector<shared_ptr<BinaryAnimClipInfo>>& animClips = loader.GetAnimClip();
+	vector<shared_ptr<BinaryAnimClipInfo>>& animClips = loader.GetAnimClip();			// Loader의 애니메이션 클립들을 가져온다.
 	for (shared_ptr<BinaryAnimClipInfo>& ac : animClips)
 	{
-		AnimClipInfo info = {};
+		shared_ptr<AnimClipInfo> info = make_shared<AnimClipInfo>();
 
-		info.animName = ac->name;
-		info.duration = ac->duration;
+		info->animName = ac->name;
+		info->duration = ac->duration;
 
-		info.frameCount = ac->frameCount;
+		info->frameCount = ac->frameCount;
 
-		info.keyFrames.resize(ac->keyFrames.size());
+		info->keyFrames.resize(ac->keyFrames.size());
 		const int32 keyFrameCount = static_cast<int32>(ac->keyFrames.size());
 		for (int32 f = 0; f < keyFrameCount; f++)
 		{
 			auto& vec = ac->keyFrames[f];
 
 			const int32 boneCount = vec.size();
-			info.keyFrames[f].resize(boneCount);
+			info->keyFrames[f].resize(boneCount);
 
 			for (int32 b = 0; b < boneCount; b++)
 			{
 				XMVECTOR scale, rotation, translation;
 				BinaryKeyFrameInfo& kf = vec[b]; // = ac->keyFrames[f][b]
 				// Binary에서 파싱한 정보들로 채워준다
-				KeyFrameInfo& kfInfo = info.keyFrames[f][b];
+				KeyFrameInfo& kfInfo = info->keyFrames[f][b];
 				kfInfo.boneName = kf.boneName;
 				kfInfo.time = kf.time;
 				XMMatrixDecompose(&scale, &rotation, &translation, kf.matTransform);
@@ -218,22 +222,18 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 		const int32 animCount = static_cast<int32>(_animClips.size());
 		for (int32 i = 0; i < animCount; i++)
 		{
-			AnimClipInfo& animClip = _animClips[i];
-
-			// 애니메이션 프레임 정보
-			//vector<Matrix> frameParams;
+			AnimClipInfo& animClip = *(_animClips[i]);
 
 			vector<AnimFrameParams> frameParams;
 			frameParams.resize(animClip.frameCount * _bones.size());
 
 			const int32 keyFrameCount = static_cast<int32>(animClip.frameCount);
-			for (int32 f = 0; f < keyFrameCount; f++)			// n번째 뼈에서 m번 프레임(시간)의 행렬들
-			{												// n번째 프레임에서 m번 뼈의 행렬들
+			for (int32 f = 0; f < keyFrameCount; f++)								// n번째 뼈에서 m번 프레임(시간)의 행렬들
+			{																		// n번째 프레임에서 m번 뼈의 행렬들
 				for (int32 b = 0; b < boneCount; b++)
 				{
-					int32 idx = static_cast<int32>(keyFrameCount * b + f);	// 0 / 71 / 142
+					int32 idx = static_cast<int32>(keyFrameCount * b + f);			// 0 / 71 / 142
 
-					//frameParams[idx] = animClip.keyFrames[f][b].matTransform;
 					frameParams[idx] = AnimFrameParams
 					{
 						// Debug
@@ -249,6 +249,40 @@ void Mesh::CreateBonesAndAnimations(class BinaryLoader& loader)
 			_frameBuffer.push_back(make_shared<StructuredBuffer>());
 			_frameBuffer.back()->Init(sizeof(AnimFrameParams), static_cast<uint32>(frameParams.size()), frameParams.data());
 
+		}
+	}
+#pragma endregion
+
+#pragma region AnimationClip
+	if (IsAnimMesh())
+	{	
+		// Resources로 Add한다.
+		switch (type)
+		{
+		case PLAYER:
+			GET_SINGLE(Resources)->AddAnimClip(L"Idle", _animClips[0]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Walk", _animClips[1]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Run", _animClips[2]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Jump", _animClips[3]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Death", _animClips[4]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Idle", _animClips[5]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Reload", _animClips[6]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Rifle_Shoot", _animClips[7]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Handgun_Idle", _animClips[8]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Handgun_Reload", _animClips[9]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Handgun_Shoot", _animClips[10]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Shotgun_Idle", _animClips[11]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Shotgun_Reload", _animClips[12]);
+			GET_SINGLE(Resources)->AddAnimClip(L"Shotgun_Shoot", _animClips[13]);
+			GET_SINGLE(Resources)->AddAnimClip(L"SubMachinegun_Idle", _animClips[14]);
+			GET_SINGLE(Resources)->AddAnimClip(L"SubMachinegun_Reload", _animClips[15]);
+			GET_SINGLE(Resources)->AddAnimClip(L"SubMachinegun_Shoot", _animClips[16]);
+			GET_SINGLE(Resources)->AddAnimClip(L"OneHand_Attack", _animClips[17]);
+			GET_SINGLE(Resources)->AddAnimClip(L"TwoHand_Attack", _animClips[18]);
+			break;
+		case ZOMBIE:
+			GET_SINGLE(Resources)->AddAnimClip(L"Zombie_Idle", _animClips[0]);
+			break;
 		}
 	}
 #pragma endregion

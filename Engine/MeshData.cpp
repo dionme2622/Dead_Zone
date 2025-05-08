@@ -9,6 +9,8 @@
 #include "Animator.h"
 #include "TestAnimation.h"
 #include "BoxCollider.h"
+#include "RigidBody.h"
+#include "MeshCollider.h"
 
 MeshData::MeshData() : Object(OBJECT_TYPE::MESH_DATA)
 {
@@ -18,7 +20,7 @@ MeshData::~MeshData()
 {
 }
 
-shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
+shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path, int type)
 {
 	BinaryLoader loader;
 	loader.LoadModelFromBinary(path);
@@ -32,11 +34,13 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		// Mesh
 		if (!loader.GetMesh(i).vertices.empty())
 		{
-			shared_ptr<Mesh> mesh = Mesh::CreateFromBinary(&loader.GetMesh(i), loader);
+			shared_ptr<Mesh> mesh = Mesh::CreateFromBinary(&loader.GetMesh(i), loader, type);
 			mesh->SetName(loader.GetMesh(i).meshName);
 			GET_SINGLE(Resources)->Add<Mesh>(mesh->GetName(), mesh);
 
+			shared_ptr<MeshCollider> meshCollider = make_shared<MeshCollider>(loader.GetMesh(i).btvertices, loader.GetMesh(i).indices[0], false);
 			info.mesh = GET_SINGLE(Resources)->Get<Mesh>(mesh->GetName());
+			info.meshCollider = meshCollider;
 		}
 
 		// Transform
@@ -62,7 +66,6 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 		info.transform = transform;
 		info.boxCollider = boxCollider;
 
-		
 
 		////////////////////////////////////////
 		meshData->_meshRenders.push_back(info);
@@ -72,7 +75,7 @@ shared_ptr<MeshData> MeshData::LoadModelFromBinary(const char* path)
 }
 
 
-vector<shared_ptr<GameObject>> MeshData::Instantiate()
+vector<shared_ptr<GameObject>> MeshData::Instantiate(int type, int collidertype)
 {
 	vector<shared_ptr<GameObject>> v;
 
@@ -88,45 +91,52 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate()
 			for (uint32 i = 0; i < info.materials.size(); i++)
 				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
 
-
+			
 			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
-			if (info.boxCollider != nullptr)
+			switch (collidertype)
 			{
-				shared_ptr<BoxCollider> collider = info.boxCollider;
-				gameObject->AddComponent(collider);
+			case NONE:
+				break;
+			case BOX:
+				if (info.boxCollider != nullptr)
+				{
+					shared_ptr<BoxCollider> collider = info.boxCollider;
+					gameObject->AddComponent(collider);
+					gameObject->AddComponent(make_shared<RigidBody>(gameObject, 0.0f, dynamic_pointer_cast<BoxCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix(), false));
+					gameObject->GetRigidBody()->OnEnable();
+				}
+				break;
+			case MESH:
+				if (info.meshCollider != nullptr)
+				{
+					shared_ptr<MeshCollider> collider = info.meshCollider;
+					gameObject->AddComponent(collider);
+					gameObject->AddComponent(make_shared<RigidBody>(gameObject, 0.0f, dynamic_pointer_cast<MeshCollider>(gameObject->GetCollider()), gameObject->GetTransform()->GetLocalMatrix() , false));
+					gameObject->GetRigidBody()->OnEnable();
 
-#ifdef _DEBUG_COLLIDER
-				shared_ptr<Mesh> mesh = gameObject->GetCollider()->GetColliderMesh();
-				GET_SINGLE(Resources)->Add<Mesh>(gameObject->GetMeshRenderer()->GetMesh()->GetName() + L"collider", mesh);
-
-				shared_ptr<GameObject> boundingBox = make_shared<GameObject>();
-				boundingBox->AddComponent(make_shared<Transform>());
-				boundingBox->AddComponent(make_shared<MeshRenderer>());
-				{
-					shared_ptr<Mesh> colliderMesh = GET_SINGLE(Resources)->Get<Mesh>(info.mesh->GetName() + L"collider");
-					boundingBox->GetMeshRenderer()->SetMesh(colliderMesh);
 				}
-				{
-					shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Collider");
-					shared_ptr<Material> material = make_shared<Material>();
-					material->SetShader(shader);
-					boundingBox->GetMeshRenderer()->SetMaterial(material);
-				}
-				boundingBox->GetTransform()->SetParent(gameObject->GetTransform());
-				v.push_back(boundingBox);
-				if (collider->DebugDraw())				// Collider를 그리는가?
-				{
-					
-				}
-#endif
+				break;
 			}
-			if (info.mesh->IsAnimMesh())				// Mesh가 애니메이션을 가지고 있다면?
+			
+			if (info.mesh->hasAnimation())				// Mesh가 애니메이션을 가지고 있다면?
 			{
-				shared_ptr<Animator> animator = make_shared<Animator>();
-				animator->SetBones(info.mesh->GetBones());
-				animator->SetAnimClip(info.mesh->GetAnimClip());
-				gameObject->AddComponent(animator);
-				gameObject->AddComponent(make_shared<TestAnimation>());
+				shared_ptr<Animator> animator = nullptr;
+				switch (type)
+				{
+				case PLAYER:
+					animator = make_shared<Animator>(GET_SINGLE(Resources)->LoadAnimatorPlayerController());
+					animator->SetBones(info.mesh->GetBones());
+					gameObject->AddComponent(animator);
+					break;
+				case ZOMBIE:
+					animator = make_shared<Animator>(GET_SINGLE(Resources)->LoadAnimatorZombieController());
+					animator->SetBones(info.mesh->GetBones());
+					gameObject->AddComponent(animator);
+					break;
+				default:
+					break;
+				}
+				
 			}
 		}
 		v.push_back(gameObject);

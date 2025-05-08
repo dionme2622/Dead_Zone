@@ -59,8 +59,8 @@ public:
 	void SetLightAngle(float angle) { _lightInfo.angle = angle; }
 
 	void SetLightIndex(int8 index) { _lightIndex = index; }
-
-
+	void SetSunObject(shared_ptr<GameObject> sunObject) { _sunObject = sunObject; }
+	shared_ptr<GameObject> GetShadowCamera() { return _shadowCamera; }
 private:
 	LightInfo _lightInfo = {};
 
@@ -69,5 +69,6 @@ private:
 	shared_ptr<class Material> _lightMaterial;
 
 	shared_ptr<GameObject> _shadowCamera;
+	shared_ptr<GameObject> _sunObject;
 };
 

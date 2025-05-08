@@ -11,6 +11,10 @@
 #include "MeshData.h"
 #include "Resources.h"
 
+#include "GunWeapon.h"
+#include "TwoHandedMeleeWeapon.h"
+
+
 WeaponManager::WeaponManager() : Component(COMPONENT_TYPE::WEAPONMANAGER)
 {
 	// TODO : 플레이어 캐릭터 생성 시 무기 객체도 같이 생성한다.
@@ -30,7 +34,7 @@ void WeaponManager::PushData()
 	for (auto& weapon : _currentWeapon)
 	{
 		weapon->GetWeapon()->SetCharacterMatrix(_characterWorldMat);							// Weapon 객체로 캐릭터의 월드 행렬을 보낸다.
-		weapon->GetWeapon()->SetBoneFinalMatrix(GetAnimator()->GetBoneKeyFrameMatirx());		// Weapon 객체로 뼈의 최종 행렬을 보낸다.
+		weapon->GetWeapon()->SetBoneFinalMatrix(GetAnimator()->GetBoneKeyFrameMatrix());		// Weapon 객체로 뼈의 최종 행렬을 보낸다.
 	}
 }
 
@@ -46,7 +50,7 @@ void WeaponManager::AddWeapon()
 
 	for (auto& gameObject : gameObjects)
 	{
-		shared_ptr<Weapon> weapon = make_shared<Weapon>();
+		shared_ptr<Weapon> weapon = make_shared<GunWeapon>();
 		gameObject->SetCheckFrustum(false);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
@@ -67,7 +71,7 @@ void WeaponManager::AddWeapon()
 
 	for (auto& gameObject : SMG)
 	{
-		shared_ptr<Weapon> weapon = make_shared<Weapon>();
+		shared_ptr<Weapon> weapon = make_shared<GunWeapon>();
 		gameObject->SetCheckFrustum(false);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
@@ -85,7 +89,7 @@ void WeaponManager::AddWeapon()
 
 	for (auto& gameObject : Bat)
 	{
-		shared_ptr<Weapon> weapon = make_shared<Weapon>();
+		shared_ptr<Weapon> weapon = make_shared<TwoHandedMeleeWeapon>();
 		gameObject->SetCheckFrustum(false);
 		gameObject->SetStatic(true);
 		gameObject->AddComponent(weapon);
@@ -97,13 +101,6 @@ void WeaponManager::AddWeapon()
 	Bat[0]->GetTransform()->SetLocalRotation(Vec3(0.0, 0.0f, 0.f));
 
 	_weaponInventory.push_back(Bat);
-	
-
-
-
-
-
-
 
 	EquipWeapon(0);
 
@@ -111,6 +108,9 @@ void WeaponManager::AddWeapon()
 
 void WeaponManager::EquipWeapon(int index)
 {
+	if (index > GetInventorySize() - 1)					// 바꾸려는 무기의 Index가 인벤토리 Size보다 작다면 중단한다.
+		return;
+
 	for (auto& weapon : _currentWeapon)				// 이전 무기는 장착 해제한다.
 	{
 		weapon->GetWeapon()->SetisEquipped(false);

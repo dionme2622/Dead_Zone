@@ -5,7 +5,6 @@
 #include "Engine.h"
 #include "ConstantBuffer.h"
 #include "Light.h"
-#include "Engine.h"
 #include "Resources.h"
 
 void Scene::Awake()
@@ -36,7 +35,7 @@ void Scene::LateUpdate()
 {
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-		gameObject->LateUpdate();
+		if(gameObject) gameObject->LateUpdate();
 	}
 }
 
@@ -44,15 +43,15 @@ void Scene::FinalUpdate()
 {
 	for (const shared_ptr<GameObject>& gameObject : _gameObjects)
 	{
-		gameObject->FinalUpdate();
+		if(gameObject) gameObject->FinalUpdate();
 	}
 }
 
 void Scene::Render()
 {
-	PushLightData();
-
 	ClearRTV();
+
+	PushLightData();
 
 	RenderShadow();
 
@@ -101,6 +100,7 @@ void Scene::RenderDeferred()
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->OMSetRenderTargets();
 
 	shared_ptr<Camera> mainCamera = _cameras[0];
+
 	mainCamera->SortGameObject();
 	mainCamera->Render_Deferred();
 
@@ -109,13 +109,6 @@ void Scene::RenderDeferred()
 
 void Scene::RenderLights()
 {
-	shared_ptr<Camera> mainCamera = _cameras[0];
-	Camera::S_MatView = mainCamera->GetViewMatrix();
-	Camera::S_MatProjection = mainCamera->GetProjectionMatrix();
-
-	Camera::S_MainMatView = mainCamera->GetViewMatrix();
-	Camera::S_MainMatProjection = mainCamera->GetProjectionMatrix();
-
 	GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->OMSetRenderTargets();
 
 	// 광원을 그린다.
@@ -202,7 +195,7 @@ void Scene::AddGameObject(shared_ptr<GameObject> gameObject)
 	{
 		_lights.push_back(gameObject->GetLight());
 	}
-
+	
 	_gameObjects.push_back(gameObject);
 }
 
@@ -210,18 +203,19 @@ void Scene::RemoveGameObject(shared_ptr<GameObject> gameObject)
 {
 	if (gameObject->GetCamera())
 	{
-		auto findIt = std::find(_cameras.begin(), _cameras.end(), gameObject->GetCamera());
+		auto findIt = find(_cameras.begin(), _cameras.end(), gameObject->GetCamera());
 		if (findIt != _cameras.end())
 			_cameras.erase(findIt);
 	}
 	else if (gameObject->GetLight())
 	{
-		auto findIt = std::find(_lights.begin(), _lights.end(), gameObject->GetLight());
+		auto findIt = find(_lights.begin(), _lights.end(), gameObject->GetLight());
 		if (findIt != _lights.end())
 			_lights.erase(findIt);
 	}
 
-	auto findIt = std::find(_gameObjects.begin(), _gameObjects.end(), gameObject);
+	auto findIt = find(_gameObjects.begin(), _gameObjects.end(), gameObject);
 	if (findIt != _gameObjects.end())
 		_gameObjects.erase(findIt);
+	
 }

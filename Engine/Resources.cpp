@@ -1,7 +1,9 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "Resources.h"
 #include "Engine.h"
 #include "MeshData.h"
+#include "AnimatorController.h"
+#include "AnimationState.h"
 
 void Resources::Init()
 {
@@ -39,7 +41,7 @@ shared_ptr<Mesh> Resources::LoadRectangleMesh()
 
 	vector<Vertex> vec(4);
 
-	// ¾Õ¸é
+	// ì•ë©´
 	vec[0] = Vertex(Vec3(-w2, -h2, 0), Vec2(0.0f, 1.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[1] = Vertex(Vec3(-w2, +h2, 0), Vec2(0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[2] = Vertex(Vec3(+w2, +h2, 0), Vec2(1.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
@@ -47,7 +49,7 @@ shared_ptr<Mesh> Resources::LoadRectangleMesh()
 
 	vector<uint32> idx(6);
 
-	// ¾Õ¸é
+	// ì•ë©´
 	idx[0] = 0; idx[1] = 1; idx[2] = 2;
 	idx[3] = 0; idx[4] = 2; idx[5] = 3;
 
@@ -70,32 +72,32 @@ shared_ptr<Mesh> Resources::LoadCubeMesh()
 
 	vector<Vertex> vec(24);
 
-	// ¾Õ¸é
+	// ì•ë©´
 	vec[0] = Vertex(Vec3(-w2, -h2, -d2), Vec2(0.0f, 1.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[1] = Vertex(Vec3(-w2, +h2, -d2), Vec2(0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[2] = Vertex(Vec3(+w2, +h2, -d2), Vec2(1.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[3] = Vertex(Vec3(+w2, -h2, -d2), Vec2(1.0f, 1.0f), Vec3(0.0f, 0.0f, -1.0f), Vec3(1.0f, 0.0f, 0.0f));
-	// µŞ¸é
+	// ë’·ë©´
 	vec[4] = Vertex(Vec3(-w2, -h2, +d2), Vec2(1.0f, 1.0f), Vec3(0.0f, 0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[5] = Vertex(Vec3(+w2, -h2, +d2), Vec2(0.0f, 1.0f), Vec3(0.0f, 0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[6] = Vertex(Vec3(+w2, +h2, +d2), Vec2(0.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[7] = Vertex(Vec3(-w2, +h2, +d2), Vec2(1.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f));
-	// À­¸é
+	// ìœ—ë©´
 	vec[8] = Vertex(Vec3(-w2, +h2, -d2), Vec2(0.0f, 1.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[9] = Vertex(Vec3(-w2, +h2, +d2), Vec2(0.0f, 0.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[10] = Vertex(Vec3(+w2, +h2, +d2), Vec2(1.0f, 0.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));
 	vec[11] = Vertex(Vec3(+w2, +h2, -d2), Vec2(1.0f, 1.0f), Vec3(0.0f, 1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f));
-	// ¾Æ·§¸é
+	// ì•„ë«ë©´
 	vec[12] = Vertex(Vec3(-w2, -h2, -d2), Vec2(1.0f, 1.0f), Vec3(0.0f, -1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[13] = Vertex(Vec3(+w2, -h2, -d2), Vec2(0.0f, 1.0f), Vec3(0.0f, -1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[14] = Vertex(Vec3(+w2, -h2, +d2), Vec2(0.0f, 0.0f), Vec3(0.0f, -1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));
 	vec[15] = Vertex(Vec3(-w2, -h2, +d2), Vec2(1.0f, 0.0f), Vec3(0.0f, -1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f));
-	// ¿ŞÂÊ¸é
+	// ì™¼ìª½ë©´
 	vec[16] = Vertex(Vec3(-w2, -h2, +d2), Vec2(0.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));
 	vec[17] = Vertex(Vec3(-w2, +h2, +d2), Vec2(0.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));
 	vec[18] = Vertex(Vec3(-w2, +h2, -d2), Vec2(1.0f, 0.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));
 	vec[19] = Vertex(Vec3(-w2, -h2, -d2), Vec2(1.0f, 1.0f), Vec3(-1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, -1.0f));
-	// ¿À¸¥ÂÊ¸é
+	// ì˜¤ë¥¸ìª½ë©´
 	vec[20] = Vertex(Vec3(+w2, -h2, -d2), Vec2(0.0f, 1.0f), Vec3(1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f));
 	vec[21] = Vertex(Vec3(+w2, +h2, -d2), Vec2(0.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f));
 	vec[22] = Vertex(Vec3(+w2, +h2, +d2), Vec2(1.0f, 0.0f), Vec3(1.0f, 0.0f, 0.0f), Vec3(0.0f, 0.0f, 1.0f));
@@ -103,22 +105,22 @@ shared_ptr<Mesh> Resources::LoadCubeMesh()
 
 	vector<uint32> idx(36);
 
-	// ¾Õ¸é
+	// ì•ë©´
 	idx[0] = 0; idx[1] = 1; idx[2] = 2;
 	idx[3] = 0; idx[4] = 2; idx[5] = 3;
-	// µŞ¸é
+	// ë’·ë©´
 	idx[6] = 4; idx[7] = 5; idx[8] = 6;
 	idx[9] = 4; idx[10] = 6; idx[11] = 7;
-	// À­¸é
+	// ìœ—ë©´
 	idx[12] = 8; idx[13] = 9; idx[14] = 10;
 	idx[15] = 8; idx[16] = 10; idx[17] = 11;
-	// ¾Æ·§¸é
+	// ì•„ë«ë©´
 	idx[18] = 12; idx[19] = 13; idx[20] = 14;
 	idx[21] = 12; idx[22] = 14; idx[23] = 15;
-	// ¿ŞÂÊ¸é
+	// ì™¼ìª½ë©´
 	idx[24] = 16; idx[25] = 17; idx[26] = 18;
 	idx[27] = 16; idx[28] = 18; idx[29] = 19;
-	// ¿À¸¥ÂÊ¸é
+	// ì˜¤ë¥¸ìª½ë©´
 	idx[30] = 20; idx[31] = 21; idx[32] = 22;
 	idx[33] = 20; idx[34] = 22; idx[35] = 23;
 
@@ -135,15 +137,15 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 	if (findMesh)
 		return findMesh;
 
-	float radius = 0.5f; // ±¸ÀÇ ¹İÁö¸§
-	uint32 stackCount = 20; // °¡·Î ºĞÇÒ
-	uint32 sliceCount = 20; // ¼¼·Î ºĞÇÒ
+	float radius = 0.5f; // êµ¬ì˜ ë°˜ì§€ë¦„
+	uint32 stackCount = 20; // ê°€ë¡œ ë¶„í• 
+	uint32 sliceCount = 20; // ì„¸ë¡œ ë¶„í• 
 
 	vector<Vertex> vec;
 
 	Vertex v;
 
-	// ºÏ±Ø
+	// ë¶ê·¹
 	v.pos = Vec3(0.0f, radius, 0.0f);
 	v.uv = Vec2(0.5f, 0.0f);
 	v.normal = v.pos;
@@ -157,12 +159,12 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 	float deltaU = 1.f / static_cast<float>(sliceCount);
 	float deltaV = 1.f / static_cast<float>(stackCount);
 
-	// °í¸®¸¶´Ù µ¹¸é¼­ Á¤Á¡À» °è»êÇÑ´Ù (ºÏ±Ø/³²±Ø ´ÜÀÏÁ¡Àº °í¸®°¡ X)
+	// ê³ ë¦¬ë§ˆë‹¤ ëŒë©´ì„œ ì •ì ì„ ê³„ì‚°í•œë‹¤ (ë¶ê·¹/ë‚¨ê·¹ ë‹¨ì¼ì ì€ ê³ ë¦¬ê°€ X)
 	for (uint32 y = 1; y <= stackCount - 1; ++y)
 	{
 		float phi = y * stackAngle;
 
-		// °í¸®¿¡ À§Ä¡ÇÑ Á¤Á¡
+		// ê³ ë¦¬ì— ìœ„ì¹˜í•œ ì •ì 
 		for (uint32 x = 0; x <= sliceCount; ++x)
 		{
 			float theta = x * sliceAngle;
@@ -185,7 +187,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 		}
 	}
 
-	// ³²±Ø
+	// ë‚¨ê·¹
 	v.pos = Vec3(0.0f, -radius, 0.0f);
 	v.uv = Vec2(0.5f, 1.0f);
 	v.normal = v.pos;
@@ -195,7 +197,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 
 	vector<uint32> idx(36);
 
-	// ºÏ±Ø ÀÎµ¦½º
+	// ë¶ê·¹ ì¸ë±ìŠ¤
 	for (uint32 i = 0; i <= sliceCount; ++i)
 	{
 		//  [0]
@@ -206,7 +208,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 		idx.push_back(i + 1);
 	}
 
-	// ¸öÅë ÀÎµ¦½º
+	// ëª¸í†µ ì¸ë±ìŠ¤
 	uint32 ringVertexCount = sliceCount + 1;
 	for (uint32 y = 0; y < stackCount - 2; ++y)
 	{
@@ -227,7 +229,7 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 		}
 	}
 
-	// ³²±Ø ÀÎµ¦½º
+	// ë‚¨ê·¹ ì¸ë±ìŠ¤
 	uint32 bottomIndex = static_cast<uint32>(vec.size()) - 1;
 	uint32 lastRingStartIndex = bottomIndex - ringVertexCount;
 	for (uint32 i = 0; i < sliceCount; ++i)
@@ -247,29 +249,192 @@ shared_ptr<Mesh> Resources::LoadSphereMesh()
 	return mesh;
 }
 
-shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path)
+shared_ptr<MeshData> Resources::LoadModelFromBinary(const wstring& path, int type)
 {
 	wstring key = path;
 
-	shared_ptr<MeshData> meshData = Get<MeshData>(key);
-	if (meshData)
-		return meshData;
+	//shared_ptr<MeshData> meshData = Get<MeshData>(key);
+	//if (meshData)
+	//	return meshData;
 
 	// TODO: wstring -> char
 	const string& spath = ws2s(path);
 	const char* Filepath = spath.c_str();
 
-	meshData = MeshData::LoadModelFromBinary(Filepath);
+	shared_ptr<MeshData> meshData = MeshData::LoadModelFromBinary(Filepath, type);
 	meshData->SetName(key);
 	Add(key, meshData);
 
 	return meshData;
 }
 
+shared_ptr<AnimatorController> Resources::LoadAnimatorPlayerController()
+{
+	// 1) Controller ìƒì„±
+	auto controller = make_shared<AnimatorController>();
+
+	// 2) íŒŒë¼ë¯¸í„° ì •ì˜: Speed (float)
+	AnimatorParameter speedParam{ "Speed", ParameterType::Float , 0.1f };
+	controller->AddParameter(speedParam);
+
+	// 2) íŒŒë¼ë¯¸í„° ì •ì˜: isJumping (bool)
+	AnimatorParameter isJumpingParam{ "isJumping" , ParameterType::Bool, 0.0 };
+	controller->AddParameter(isJumpingParam);
+
+	// 3) ìŠ¤í…Œì´íŠ¸ ìƒì„± (ì´ë¦„, í´ë¦½, í´ë¦½ ì¸ë±ìŠ¤, ì†ë„, loop)
+	auto Idle = make_shared<AnimationState>(L"Idle", GetAnimClip(L"Idle"), 0, 1.0f, true);
+	auto Walk = make_shared<AnimationState>(L"Walk", GetAnimClip(L"Walk"), 1, 1.0f, true);
+	auto Run = make_shared<AnimationState>(L"Run", GetAnimClip(L"Run"), 2, 1.0f, true);
+	auto Jump = make_shared<AnimationState>(L"Jump", GetAnimClip(L"Jump"), 3, 1.0f, true);
+	auto Death = make_shared<AnimationState>(L"Death", GetAnimClip(L"Death"), 4, 1.0f, true);
+	auto Rifle_Idle = make_shared<AnimationState>(L"Rifle_Idle", GetAnimClip(L"Rifle_Idle"), 5, 1.0f, true);
+	auto Rifle_Reload = make_shared<AnimationState>(L"Rifle_Reload", GetAnimClip(L"Rifle_Reload"), 6, 1.0f, true);
+	auto Rifle_Shoot = make_shared<AnimationState>(L"Rifle_Shoot", GetAnimClip(L"Rifle_Shoot"), 7, 1.0f, true);
+	auto Handgun_Idle = make_shared<AnimationState>(L"Handgun_Idle", GetAnimClip(L"Handgun_Idle"), 8, 1.0f, true);
+	auto Handgun_Reload = make_shared<AnimationState>(L"Handgun_Reload", GetAnimClip(L"Handgun_Reload"), 9, 1.0f, true);
+	auto Handgun_Shoot = make_shared<AnimationState>(L"Handgun_Shoot", GetAnimClip(L"Handgun_Shoot"), 10, 1.0f, true);
+	auto Shotgun_Idle = make_shared<AnimationState>(L"Shotgun_Idle", GetAnimClip(L"Shotgun_Idle"), 11, 1.0f, true);
+	auto Shotgun_Reload = make_shared<AnimationState>(L"Shotgun_Reload", GetAnimClip(L"Shotgun_Reload"), 12, 1.0f, true);
+	auto Shotgun_Shoot = make_shared<AnimationState>(L"Shotgun_Shoot", GetAnimClip(L"Shotgun_Shoot"), 13, 1.0f, true);
+	auto SubMachinegun_Idle = make_shared<AnimationState>(L"SubMachinegun_Idle", GetAnimClip(L"SubMachinegun_Idle"), 14, 1.0f, true);
+	auto SubMachinegun_Reload = make_shared<AnimationState>(L"SubMachinegun_Reload", GetAnimClip(L"SubMachinegun_Reload"), 15, 1.0f, true);
+	auto SubMachinegun_Shoot = make_shared<AnimationState>(L"SubMachinegun_Shoot", GetAnimClip(L"SubMachinegun_Shoot"), 16, 1.0f, true);
+	auto OneHand_Attack = make_shared<AnimationState>(L"OneHand_Attack", GetAnimClip(L"OneHand_Attack"), 17, 1.0f, true);
+	auto TwoHand_Attack = make_shared<AnimationState>(L"TwoHand_Attack", GetAnimClip(L"TwoHand_Attack"), 18, 1.0f, true);
+	controller->AddState(Idle);
+	controller->AddState(Walk);
+	controller->AddState(Run);
+	controller->AddState(Jump);
+
+	controller->AddState(Rifle_Shoot);
+
+	int speedIdx = controller->GetParamIndex("Speed");
+	int isJumpingIdx = controller->GetParamIndex("isJumping");
+
+	// 4) Idle â†’ Walk ì „ì´ ì¶”ê°€ (Speed > 0.1)
+	{
+		auto t = make_shared<Transition>(Walk);
+		t->AddCondition(
+			/*paramIndex=*/speedIdx,
+			ParameterType::Float,
+			ConditionMode::Greater,
+			/*threshold=*/4.0f,
+			/*exitTime=*/0.0f,
+			/*duration=*/0.0f
+		);
+		Idle->AddTransition(t);
+	}
+
+	// 5) Walk â†’ Idle ì „ì´ ì¶”ê°€ (Speed < 0.05)
+	{
+		auto t = make_shared<Transition>(Run);
+		t->AddCondition(
+			/*paramIndex=*/speedIdx,
+			ParameterType::Float,
+			ConditionMode::Greater,
+			/*threshold=*/8.0f,
+			/*exitTime=*/0.0f,
+			/*duration=*/0.0f
+		);
+		Walk->AddTransition(t);
+	}
+	{
+		auto t = make_shared<Transition>(Idle);
+		t->AddCondition(
+			/*paramIndex=*/speedIdx,
+			ParameterType::Float,
+			ConditionMode::Less,
+			/*threshold=*/4.0f,
+			/*exitTime=*/0.0f,
+			/*duration=*/0.0f
+		);
+		Walk->AddTransition(t);
+	}
+	{
+		auto t = make_shared<Transition>(Walk);
+		t->AddCondition(
+			/*paramIndex=*/speedIdx,
+			ParameterType::Float,
+			ConditionMode::Less,
+			/*threshold=*/8.0f,
+			/*exitTime=*/0.0f,
+			/*duration=*/0.0f
+		);
+		Run->AddTransition(t);
+	}
+
+	// â–¡ Idle/Walk/Run â†’ Jump
+	for (auto baseState : { Idle, Walk, Run })
+	{
+		auto t = make_shared<Transition>(Jump);
+		// isJumping == true ì¼ ë•Œ ì „í™˜
+		t->AddCondition(
+			/*paramIndex=*/ isJumpingIdx,
+			ParameterType::Bool,
+			/*mode=*/       ConditionMode::Equals,
+			/*threshold=*/  1.0f,       // Bool:true â†’ 1.0
+			/*exitTime=*/   0.0f,
+			/*duration=*/   0.1f        // ë¶€ë“œëŸ¬ìš´ í˜ì´ë“œ íƒ€ì„
+		);
+		baseState->AddTransition(t);
+	}
+
+	// â–¡ Jump â†’ Idle (ì°©ì§€ ì‹œ ìë™ ë³µê·€)
+	{
+		auto t = make_shared<Transition>(Idle);
+		// isJumping == false ì¼ ë•Œ ì „í™˜
+		t->AddCondition(
+			/*paramIndex=*/ isJumpingIdx,
+			ParameterType::Bool,
+			/*mode=*/       ConditionMode::Equals,
+			/*threshold=*/  0.0f,       // Bool:false â†’ 0.0
+			/*exitTime=*/   0.0f,
+			/*duration=*/   0.1f
+		);
+		Jump->AddTransition(t);
+	}
+
+	// 4) í´ë¦­ ì‹œ Shoot ìƒíƒœë¡œ ì „ì´
+	//for (auto baseState : { Idle, Walk, Run })
+	//{
+	//	auto t = make_shared<Transition>(Rifle_Shoot);
+	//	t->AddCondition(shootIdx, ConditionMode::Equals, 1.0f, /*exitTime=*/0.0f, /*fade=*/0.1f);
+	//	baseState->AddTransition(t);
+	//}
+
+	//// 5) Shoot ëë‚˜ë©´ Idleë¡œ ë³µê·€ (exitTime=1.0f)
+	//{
+	//	auto t = make_shared<Transition>(Idle);
+	//	t->AddCondition(shootIdx, ConditionMode::Equals, 1.0f, /*exitTime=*/0.0f, /*fade=*/0.1f);
+	//	Rifle_Shoot->AddTransition(t);
+	//}
+
+
+	// 6) Entry State ì„¤ì •
+	controller->SetEntryState(L"Idle");
+
+	return controller;
+}
+
+shared_ptr<class AnimatorController> Resources::LoadAnimatorZombieController()
+{
+	// 1) Controller ìƒì„±
+	auto controller = make_shared<AnimatorController>();
+
+	// 3) ìŠ¤í…Œì´íŠ¸ ìƒì„± (ì´ë¦„, í´ë¦½, í´ë¦½ ì¸ë±ìŠ¤, ì†ë„, loop)
+	auto idle = make_shared<AnimationState>(L"Zombie_Idle", GetAnimClip(L"Zombie_Idle"), 0, 1.0f, true);
+
+
+	controller->AddState(idle);
+	// 6) Entry State ì„¤ì •
+	controller->SetEntryState(L"Zombie_Idle");
+	return controller;
+}
+
 //void Resources::LoadSceneFromBinary(const wstring& path)
 //{
 //	wstring name;
-//	for (; ;)		// °´Ã¼ ¼ö ¸¸Å­
+//	for (; ;)		// ê°ì²´ ìˆ˜ ë§Œí¼
 //	{
 //		LoadModelFromBinary(L"..\\Resources\\Model\\" + name + L".bin");
 //	}
@@ -295,6 +460,20 @@ shared_ptr<Texture> Resources::CreateTextureFromResource(const wstring& name, Co
 	return texture;
 }
 
+void Resources::AddAnimClip(const wstring& key, shared_ptr<AnimClipInfo> clip)
+{
+	_animClips[key] = clip;
+}
+
+shared_ptr<AnimClipInfo> Resources::GetAnimClip(const wstring& key) const
+{
+	auto it = _animClips.find(key);
+	if (it != _animClips.end())
+		return it->second;
+	return nullptr;
+}
+
+
 void Resources::CreateDefaultShader()
 {
 	// Skybox
@@ -316,7 +495,7 @@ void Resources::CreateDefaultShader()
 		ShaderInfo info =
 		{
 			SHADER_TYPE::DEFERRED,
-			RASTERIZER_TYPE::CULL_NONE
+			RASTERIZER_TYPE::CULL_BACK
 		};
 
 		shared_ptr<Shader> shader = make_shared<Shader>();
@@ -324,7 +503,7 @@ void Resources::CreateDefaultShader()
 		Add<Shader>(L"Deferred", shader);
 	}
 
-	// Deferred (Deferred)
+	// Deferred Wireframe (Deferred)
 	{
 		ShaderInfo info =
 		{
@@ -417,6 +596,30 @@ void Resources::CreateDefaultShader()
 		shared_ptr<Shader> shader = make_shared<Shader>();
 		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
 		Add<Shader>(L"DirLight", shader);
+	}
+
+	// SpotLight
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::LIGHTING,
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
+			BLEND_TYPE::ONE_TO_ONE_BLEND
+		};
+
+		ShaderArg arg =
+		{
+			"VS_SpotLight",
+			"",
+			"",
+			"",
+			"PS_SpotLight"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\lighting.fx", info, arg);
+		Add<Shader>(L"SpotLight", shader);
 	}
 
 	// PointLight
@@ -530,7 +733,10 @@ void Resources::CreateDefaultShader()
 		ShaderInfo info =
 		{
 			SHADER_TYPE::FORWARD,
-			RASTERIZER_TYPE::WIREFRAME
+			RASTERIZER_TYPE::WIREFRAME,
+			DEPTH_STENCIL_TYPE::LESS,
+			BLEND_TYPE::DEFAULT,
+			D3D_PRIMITIVE_TOPOLOGY_LINELIST
 		};
 
 		ShaderArg arg =
@@ -592,6 +798,20 @@ void Resources::CreateDefaultMaterial()
 		Add<Material>(L"DirLight", material);
 	}
 
+	// SpotLight
+	{
+		const WindowInfo& window = GEngine->GetWindow();
+		Vec2 resolution = { static_cast<float>(window.width), static_cast<float>(window.height) };
+
+		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"SpotLight");
+		shared_ptr<Material> material = make_shared<Material>();
+		material->SetShader(shader);
+		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"PositionTarget"));
+		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"NormalTarget"));
+		material->SetVec2(0, resolution);
+		Add<Material>(L"SpotLight", material);
+	}
+
 	// PointLight
 	{
 		const WindowInfo& window = GEngine->GetWindow();
@@ -614,6 +834,7 @@ void Resources::CreateDefaultMaterial()
 		material->SetTexture(0, GET_SINGLE(Resources)->Get<Texture>(L"DiffuseTarget"));
 		material->SetTexture(1, GET_SINGLE(Resources)->Get<Texture>(L"DiffuseLightTarget"));
 		material->SetTexture(2, GET_SINGLE(Resources)->Get<Texture>(L"SpecularLightTarget"));
+		material->SetTexture(3, GET_SINGLE(Resources)->Get<Texture>(L"MetallicLightTarget"));
 		Add<Material>(L"Final", material);
 	}
 

@@ -11,6 +11,9 @@ public:
 	virtual void FinalUpdate() override;
 	Matrix GetToRootTransform();
 	Matrix GetLocalMatrix();
+	Matrix GetLocalMatrix2();
+	void SetNo(bool no) { _no = no; }
+	bool _no = false;
 	void PushData();
 
 public:
@@ -24,6 +27,7 @@ public:
 
 	const Matrix& GetLocalToWorldMatrix() { return _matWorld; }
 	Vec3 GetWorldPosition() { return _matWorld.Translation(); }
+	Vec3 GetPrevWorldPosition() { return _matPrevWorld.Translation(); }
 
 	Vec3 GetRight() { return _matWorld.Right(); }
 	Vec3 GetUp() { return _matWorld.Up(); }
@@ -32,11 +36,13 @@ public:
 	void SetLocalPosition(const Vec3& position) { _localPosition = position; }
 	void SetLocalRotation(const Vec3& rotation) { _localRotation = rotation; }
 	void SetLocalScale(const Vec3& scale) { _localScale = scale; }
-	void SetLocalMatrix(Matrix& matrix) { _matLocal = matrix;  _bManualMatrix = true;}
+	void SetLocalMatrix(Matrix& matrix) { _matLocal = matrix;}
 	void LookAt(const Vec3& dir);
 
-	static bool CloseEnough(const float& a, const float& b, const float& epsilon = std::numeric_limits<float>::epsilon());
+	static bool CloseEnough(const float& a, const float& b, const float& epsilon = numeric_limits<float>::epsilon());
 	static Vec3 DecomposeRotationMatrix(const Matrix& rotation);
+
+	shared_ptr<Transform> Clone();
 
 public:
 	void SetParent(shared_ptr<Transform> parent) { _parent = parent; }
@@ -50,9 +56,15 @@ private:
 
 	Matrix _matLocal = {};
 	Matrix _matWorld = {};
-	// 추가: 수동 설정된 Local Matrix를 사용할지 여부 플래그
-	bool _bManualMatrix = false;
+	Matrix _matPrevWorld = {};
 
 	weak_ptr<Transform> _parent;
+
+
+
+
+	// 디버그
+public:
+	bool debug = false;
 };
 

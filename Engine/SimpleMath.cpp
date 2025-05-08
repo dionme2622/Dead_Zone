@@ -122,10 +122,10 @@ RECT DirectX::SimpleMath::Viewport::ComputeDisplayArea(DXGI_SCALING scaling, UIN
             rct.bottom = static_cast<LONG>(offsetY + scaledHeight);
 
             // Clip to display window
-            rct.left = std::max<LONG>(0, rct.left);
-            rct.top = std::max<LONG>(0, rct.top);
-            rct.right = std::min<LONG>(outputWidth, rct.right);
-            rct.bottom = std::min<LONG>(outputHeight, rct.bottom);
+            rct.left = max<LONG>(0, rct.left);
+            rct.top = max<LONG>(0, rct.top);
+            rct.right = min<LONG>(outputWidth, rct.right);
+            rct.bottom = min<LONG>(outputHeight, rct.bottom);
         }
         break;
 
@@ -134,8 +134,8 @@ RECT DirectX::SimpleMath::Viewport::ComputeDisplayArea(DXGI_SCALING scaling, UIN
             // Output is displayed in the upper left corner of the window area
             rct.top = 0;
             rct.left = 0;
-            rct.right = std::min<LONG>(static_cast<LONG>(backBufferWidth), outputWidth);
-            rct.bottom = std::min<LONG>(static_cast<LONG>(backBufferHeight), outputHeight);
+            rct.right = min<LONG>(static_cast<LONG>(backBufferWidth), outputWidth);
+            rct.bottom = min<LONG>(static_cast<LONG>(backBufferHeight), outputHeight);
             break;
     }
 

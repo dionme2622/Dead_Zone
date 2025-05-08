@@ -12,15 +12,33 @@ public:
 	virtual void LoadScene();
 	virtual void Update();
 
+
+public:
+	void CreateZombie();
+	
+	void UpdateSunOrbit();
+
+	static bool isPlayerGrounded;
+	vector<shared_ptr<GameObject>> GetPlayers() { return _player; };
+
+public:
+
 private:
-	//shared_ptr<Player>			_player;
+	shared_ptr<GameObject>			player1;
 	shared_ptr<GameObject>			_playerCamera;
 	shared_ptr<GameObject>			_uiCamera;
 
 	vector<shared_ptr<GameObject>>	_player;
+	shared_ptr<GameObject>			_mainLight;
+	shared_ptr<GameObject>			_spotLight;
+	shared_ptr<GameObject>			_sunObject;
 	HWND _hwnd;
 
-public:
+
+private:
+	vector<vector<shared_ptr<GameObject>>> _zombies;
+
+
 
 };
 

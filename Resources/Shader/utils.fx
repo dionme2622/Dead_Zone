@@ -13,6 +13,9 @@ LightColor CalculateLightColor(int lightIndex, float3 viewNormal, float3 viewPos
     float specularRatio = 0.f;
     float distanceRatio = 1.f;
 
+    // 메탈릭 값 가져오기 (0.0 ~ 1.0)
+    float metallic = g_float_2;
+
     if (g_light[lightIndex].lightType == 0)
     {
         // Directional Light
@@ -62,14 +65,19 @@ LightColor CalculateLightColor(int lightIndex, float3 viewNormal, float3 viewPos
         }
     }
 
+    // 스페큘러 계산
     float3 reflectionDir = normalize(viewLightDir + 2 * (saturate(dot(-viewLightDir, viewNormal)) * viewNormal));
     float3 eyeDir = normalize(viewPos);
     specularRatio = saturate(dot(-eyeDir, reflectionDir));
     specularRatio = pow(specularRatio, 2);
 
-    color.diffuse = g_light[lightIndex].color.diffuse * diffuseRatio * distanceRatio;
+    // 메탈릭에 따라 디퓨즈와 스페큘러 조정
+    float diffuseFactor = 1.0f - metallic; // 메탈릭이 높을수록 디퓨즈 감소
+    float specularFactor = 1.0f + metallic; // 메탈릭이 높을수록 스페큘러 강화
+
+    color.diffuse = g_light[lightIndex].color.diffuse * diffuseRatio * distanceRatio * diffuseFactor;
     color.ambient = g_light[lightIndex].color.ambient * distanceRatio;
-    color.specular = g_light[lightIndex].color.specular * specularRatio * distanceRatio;
+    color.specular = g_light[lightIndex].color.specular * specularRatio * distanceRatio * specularFactor;
 
     return color;
 }

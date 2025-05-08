@@ -1,6 +1,6 @@
 #pragma once
 
-// std::byte 사용하지 않음
+// byte 사용하지 않음
 #define _HAS_STD_BYTE 0
 
 #define NOMINMAX       // 이미 있으면 OK
@@ -34,7 +34,7 @@
 using namespace std;
 
 #include <filesystem>
-namespace fs = std::filesystem;
+namespace fs = filesystem;
 
 #include "d3dx12.h"
 #include "SimpleMath.h"
@@ -51,23 +51,28 @@ using namespace Microsoft::WRL;
 
 #include <DirectXTex/DirectXTex.h>
 #include <DirectXTex/DirectXTex.inl>
-
 // 각종 lib
 #pragma comment(lib, "d3d12")
 #pragma comment(lib, "dxgi")
 #pragma comment(lib, "dxguid")
 #pragma comment(lib, "d3dcompiler")
+
 #ifdef _DEBUG
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #pragma comment(lib, "DirectXTex\\DirectXTex_debug.lib")
+#pragma comment(lib, "bullet3\\BulletCollision_Debug.lib")
+#pragma comment(lib, "bullet3\\BulletDynamics_Debug.lib")
+#pragma comment(lib, "bullet3\\LinearMath_Debug.lib")
 #else
 #pragma comment(lib, "DirectXTex\\DirectXTex.lib")
+#pragma comment(lib, "bullet3\\BulletCollision.lib")
+#pragma comment(lib, "bullet3\\BulletDynamics.lib")
+#pragma comment(lib, "bullet3\\LinearMath.lib")
 #endif
 
-//#define _DEBUG_COLLIDER
 #define _INSTANCING_MODE
 extern bool _WIRE_FRAME_MODE;
-
+extern bool _DEBUG_COLLIDER;
 // 각종 typedef
 using int8 = __int8;
 using int16 = __int16;
@@ -210,49 +215,12 @@ BYTE ReadStringFromFile(FILE* pInFile, char* pstrToken);
 
 extern unique_ptr<class Engine> GEngine;
 
+enum
+{
+	OBJECT = 0, PLAYER = 1, ZOMBIE = 2
+};
 
-
-//Vec3 QuaternionToEulerAngles(const & Quatern) {
-//	Vector3 euler;
-//
-//	// roll (x-axis rotation)
-//	float sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
-//	float cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
-//	euler.x = std::atan2(sinr_cosp, cosr_cosp);
-//
-//	// pitch (y-axis rotation)
-//	float sinp = 2 * (q.w * q.y - q.z * q.x);
-//	if (std::abs(sinp) >= 1)
-//		euler.y = std::copysign(DirectX::XM_PIDIV2, sinp); // 90도 클램핑
-//	else
-//		euler.y = std::asin(sinp);
-//
-//	// yaw (z-axis rotation)
-//	float siny_cosp = 2 * (q.w * q.z + q.x * q.y);
-//	float cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
-//	euler.z = std::atan2(siny_cosp, cosy_cosp);
-//
-//	return euler;
-//}
-//
-//void DecomposeMatrix(const Matrix& mat, Vector3& outTranslation, Vector3& outScale, Quaternion& outRotation, Vector3& outEulerAngles) {
-//	// 1. Translation
-//	outTranslation = Vector3(mat._41, mat._42, mat._43);
-//
-//	// 2. Scale
-//	outScale.x = Vector3(mat._11, mat._12, mat._13).Length();
-//	outScale.y = Vector3(mat._21, mat._22, mat._23).Length();
-//	outScale.z = Vector3(mat._31, mat._32, mat._33).Length();
-//
-//	// 3. Rotation Matrix (스케일 제거)
-//	Matrix rotMat = mat;
-//	rotMat._11 /= outScale.x; rotMat._12 /= outScale.x; rotMat._13 /= outScale.x;
-//	rotMat._21 /= outScale.y; rotMat._22 /= outScale.y; rotMat._23 /= outScale.y;
-//	rotMat._31 /= outScale.z; rotMat._32 /= outScale.z; rotMat._33 /= outScale.z;
-//
-//	// Quaternion으로 회전 추출
-//	outRotation = Quaternion::CreateFromRotationMatrix(rotMat);
-//
-//	// Euler 각도(Yaw, Pitch, Roll)로 변환
-//	outEulerAngles = QuaternionToEulerAngles(outRotation);
-//}
+enum
+{
+	NONE = 0, BOX = 1, MESH = 2
+};

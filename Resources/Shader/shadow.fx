@@ -11,7 +11,7 @@ struct VS_IN
 struct VS_OUT
 {
     float4 pos : SV_Position;
-    float4 clipPos : POSITION;
+    float4 clipPos : POSITION; 
 };
 
 VS_OUT VS_Main(VS_IN input)
@@ -26,7 +26,7 @@ VS_OUT VS_Main(VS_IN input)
 
 float4 PS_Main(VS_OUT input) : SV_Target
 {
-    return float4(input.clipPos.z / input.clipPos.w, 0.f, 0.f, 0.f);
+    return float4(input.clipPos.z, 0.f, 0.f, 0.f);
 }
 
 #endif

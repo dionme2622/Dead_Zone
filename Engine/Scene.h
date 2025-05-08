@@ -1,11 +1,14 @@
 #pragma once
 
 class GameObject;
+class Camera;
 
 enum
 {
 	MAX_LAYER = 32
 };
+
+
 
 class Scene
 {
@@ -16,8 +19,8 @@ public:
 	void Awake();
 	void Start();
 	virtual void Update();
-	void LateUpdate();
-	void FinalUpdate();
+	virtual void LateUpdate();
+	virtual void FinalUpdate();
 
 	void Render();
 
@@ -43,6 +46,11 @@ public:
 	const vector<shared_ptr<GameObject>>& GetGameObjects() { return _gameObjects; }
 
 	virtual void LoadScene() = 0;
+
+public:
+	shared_ptr<Camera> GetMainCamera() { return _cameras[0]; }
+
+
 
 private:
 	vector<shared_ptr<GameObject>>		_gameObjects;

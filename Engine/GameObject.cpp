@@ -8,9 +8,12 @@
 #include "ParticleSystem.h"
 #include "Animator.h"
 #include "BaseCollider.h"
+#include "CapsuleCollider.h"
 #include "WeaponManager.h"
 #include "Weapon.h"
+#include "Bullet.h"
 #include "PlayerStats.h"
+#include "RigidBody.h"
 
 GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 {
@@ -19,7 +22,7 @@ GameObject::GameObject() : Object(OBJECT_TYPE::GAMEOBJECT)
 
 GameObject::~GameObject()
 {
-
+	RemoveAllComponent();
 }
 
 void GameObject::Awake()
@@ -85,6 +88,10 @@ void GameObject::FinalUpdate()
 		if (component)
 			component->FinalUpdate();
 	}
+	for (shared_ptr<MonoBehaviour>& script : _scripts)
+	{
+		script->FinalUpdate();
+	}
 }
 
 shared_ptr<Component> GameObject::GetFixedComponent(COMPONENT_TYPE type)
@@ -124,10 +131,28 @@ shared_ptr<Weapon> GameObject::GetWeapon()
 	return static_pointer_cast<Weapon>(component);
 }
 
+shared_ptr<Bullet> GameObject::GetBullet()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::BULLET);
+	return static_pointer_cast<Bullet>(component);
+}
+
 shared_ptr<PlayerStats> GameObject::GetPlayerStats()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::PLAYERSTATS);
 	return static_pointer_cast<PlayerStats>(component);
+}
+
+shared_ptr<RigidBody> GameObject::GetRigidBody()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::RIGIDBODY);
+	return static_pointer_cast<RigidBody>(component);
+}
+
+shared_ptr<CharacterController> GameObject::GetCharacterController()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::CHARACTER_CONTROLLER);
+	return static_pointer_cast<CharacterController>(component);
 }
 
 shared_ptr<Camera> GameObject::GetCamera()
@@ -146,6 +171,12 @@ shared_ptr<BaseCollider> GameObject::GetCollider()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::COLLIDER);
 	return static_pointer_cast<BaseCollider>(component);
+}
+
+shared_ptr<CapsuleCollider> GameObject::GetCapsuleCollider()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::COLLIDER);
+	return static_pointer_cast<CapsuleCollider>(component);
 }
 
 shared_ptr<ParticleSystem> GameObject::GetParticleSystem()
@@ -167,4 +198,16 @@ void GameObject::AddComponent(shared_ptr<Component> component)
 	{
 		_scripts.push_back(dynamic_pointer_cast<MonoBehaviour>(component));
 	}
+}
+
+void GameObject::RemoveAllComponent()
+{
+	for (auto& component : _components)
+	{
+		if (component)
+		{
+			component = nullptr;
+		}
+	}
+	_scripts.clear();
 }

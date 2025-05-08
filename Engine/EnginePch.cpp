@@ -2,6 +2,7 @@
 #include "EnginePch.h"
 #include "Engine.h"
 
+bool _DEBUG_COLLIDER = false;
 unique_ptr<Engine> GEngine = make_unique<Engine>();
 
 wstring s2ws(const string& s)

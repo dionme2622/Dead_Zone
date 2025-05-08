@@ -20,6 +20,11 @@ void PlayerStats::FinalUpdate()
 	
 }
 
+void PlayerStats::ApplyDamage(float damage)
+{
+	_hp -= damage;
+}
+
 
 
 

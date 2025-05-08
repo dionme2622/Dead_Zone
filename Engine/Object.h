@@ -10,7 +10,6 @@ enum class OBJECT_TYPE : uint8
 	MESH_DATA,
 	SHADER,
 	TEXTURE,
-
 	END
 };
 
@@ -28,7 +27,7 @@ public:
 	OBJECT_TYPE GetType() { return _objectType; }
 
 	void SetName(const wstring& name) { _name = name; }
-	const wstring& GetName() { return _name; }
+	const wstring GetName() { return _name; }
 
 	// TODO : Instantiate
 	uint32 GetID() { return _id; }

@@ -75,5 +75,8 @@ public:
 
 	static Matrix S_MainMatView;
 	static Matrix S_MainMatProjection;
+
+
+
 };
 

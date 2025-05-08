@@ -10,7 +10,8 @@
 #include "Light.h"
 #include "Resources.h"
 #include "InstancingManager.h"
-
+#include "PhysicsSystem.h"
+#include "DebugRenderer.h"
 void Engine::Init(const WindowInfo& info)
 {
 	_window = info;
@@ -24,12 +25,12 @@ void Engine::Init(const WindowInfo& info)
 	_computeCmdQueue->Init(_device->GetDevice());
 	_swapChain->Init(_window, _device->GetDevice(), _device->GetDXGI(), _graphicsCmdQueue->GetCmdQueue());
 	_rootSignature->Init();
-	_graphicsDescHeap->Init(6000);
+	_graphicsDescHeap->Init(256 * 30);
 	_computeDescHeap->Init();
 
 	CreateConstantBuffer(CBV_REGISTER::b0, sizeof(LightParams), 1);
-	CreateConstantBuffer(CBV_REGISTER::b1, sizeof(TransformParams), 6000);
-	CreateConstantBuffer(CBV_REGISTER::b2, sizeof(MaterialParams), 6000);
+	CreateConstantBuffer(CBV_REGISTER::b1, sizeof(TransformParams), 256 * 30);
+	CreateConstantBuffer(CBV_REGISTER::b2, sizeof(MaterialParams), 256 * 30);
 
 	CreateRenderTargetGroups();
 
@@ -38,6 +39,8 @@ void Engine::Init(const WindowInfo& info)
 	GET_SINGLE(KeyInput)->Init(_window.hwnd);
 	GET_SINGLE(Timer)->Init();
 	GET_SINGLE(Resources)->Init();
+	GET_SINGLE(PhysicsSystem)->Init();
+	GET_SINGLE(DebugRenderer)->Init(DEVICE, 100000);
 }
 
 void Engine::Update()
@@ -116,7 +119,7 @@ void Engine::CreateRenderTargetGroups()
 
 		for (uint32 i = 0; i < SWAP_CHAIN_BUFFER_COUNT; ++i)
 		{
-			wstring name = L"SwapChainTarget_" + std::to_wstring(i);
+			wstring name = L"SwapChainTarget_" + to_wstring(i);
 			ComPtr<ID3D12Resource> resource;
 			_swapChain->GetSwapChain()->GetBuffer(i, IID_PPV_ARGS(&resource));
 			rtVec[i].target = GET_SINGLE(Resources)->CreateTextureFromResource(name, resource);
@@ -177,6 +180,11 @@ void Engine::CreateRenderTargetGroups()
 			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
 
 		rtVec[1].target = GET_SINGLE(Resources)->CreateTexture(L"SpecularLightTarget",
+			DXGI_FORMAT_R8G8B8A8_UNORM, _window.width, _window.height,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+
+		rtVec[2].target = GET_SINGLE(Resources)->CreateTexture(L"MetallicLightTarget",
 			DXGI_FORMAT_R8G8B8A8_UNORM, _window.width, _window.height,
 			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);

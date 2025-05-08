@@ -7,35 +7,31 @@
 #include "MouseInput.h"
 #include "Timer.h"
 #include "Engine.h"
+#include "BoxCollider.h"
+#include "SceneManager.h"
+#include "BattleScene.h"
 #include "WeaponManager.h"
-
-
-PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId)
+#include "Weapon.h"
+#include "Animator.h"
+#include "RigidBody.h"
+#include "PhysicsSystem.h"
+PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<CharacterController> controller)
 {
 	_hwnd = hwnd;
 	_isLocal = isLocal;
 	_playerId = playerId;
+	_controller = controller;
 	// Player에 대한 정보 초기화 단계
 
-	_speed = 50.0f;
-	_jumpVelocity = 500.0f;
-	_currentVelocity = 0.0f;
-	_gravity = 9.8f;
-	_isGrounded = true;
-
-
+	_speed = 0.0f;
 }
 
 PlayerScript::~PlayerScript()
 {
 }
 
-void PlayerScript::LateUpdate()
+void PlayerScript::FinalUpdate()
 {
-	
-
-	//UpdatePlayerOnTerrain();
-
 	if (_isLocal)
 	{
 		// 1) 로컬 입력 읽어서 내 캐릭터 움직임 계산 → 클라이언트 예측
@@ -77,45 +73,62 @@ void PlayerScript::LateUpdate()
 void PlayerScript::UpdatePlayerInput()
 {
 	UpdateKeyInput();
-
+	
 	UpdateMouseInput();
 }
 
 void PlayerScript::UpdateKeyInput()
 {
-	Vec3 pos = GetTransform()->GetLocalPosition();
-	Vec3 rotation = GetTransform()->GetLocalRotation();
+	_speed = 0.f;
+	// 1) 이전 위치 저장
+	Vec3 currentPos = GetTransform()->GetLocalPosition();
 
-	if (INPUT->GetButton(KEY_TYPE::W))
-		pos += GetTransform()->GetLook() * _speed * DELTA_TIME;
+	// 2) WASD 입력에 따른 방향(dir) 계산
+	Vec3 dir(0, 0, 0);
+	if (INPUT->GetButton(KEY_TYPE::W)) dir += GetTransform()->GetLook(), _speed = 5.0f;
+	if (INPUT->GetButton(KEY_TYPE::S)) dir -= GetTransform()->GetLook(), _speed = 5.0f;
+	if (INPUT->GetButton(KEY_TYPE::A)) dir -= GetTransform()->GetRight(), _speed = 5.0f;
+	if (INPUT->GetButton(KEY_TYPE::D)) dir += GetTransform()->GetRight(), _speed = 5.0f;
+	if (INPUT->GetButton(KEY_TYPE::SHIFT) && _speed > 1.0f) _speed = 10.f;
+	if (dir.LengthSquared() > 0.0f)
+		dir.Normalize();
 
-	if (INPUT->GetButton(KEY_TYPE::S))
-		pos -= GetTransform()->GetLook() * _speed * DELTA_TIME;
+	const float fixedStep = 1.0f / 60.0f;
+	_controller->Move(dir * _speed * fixedStep);
 
-	if (INPUT->GetButton(KEY_TYPE::A))
-		pos -= GetTransform()->GetRight() * _speed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::D))
-		pos += GetTransform()->GetRight() * _speed * DELTA_TIME;
-
-	if (INPUT->GetButton(KEY_TYPE::CTRL))
-		pos -= GetTransform()->GetUp() * _speed * DELTA_TIME;
-
-	if (_isGrounded && INPUT->GetButtonDown(KEY_TYPE::SPACE))
+	// 3) 땅에 붙어 있을 때만 점프
+	if (INPUT->GetButtonDown(KEY_TYPE::SPACE) && _controller->IsOnGround())
 	{
-		_currentVelocity = _jumpVelocity;
-		pos.y += _currentVelocity * DELTA_TIME;
-		_isGrounded = false;
+		_controller->Jump();
 	}
-
+	
 	if (INPUT->GetButton(KEY_TYPE::KEY_1))
+	{
 		GetWeaponManager()->EquipWeapon(0);
+	}
 	
 	if (INPUT->GetButton(KEY_TYPE::KEY_2))
+	{
 		GetWeaponManager()->EquipWeapon(1);
+	}
 	
 	if (INPUT->GetButton(KEY_TYPE::KEY_3))
+	{	
 		GetWeaponManager()->EquipWeapon(2);
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::LEFTCLICK))
+	{
+		// Shoot 애니메이션 트리거
+		GetAnimator()->SetTrigger("Shoot");
+
+		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
+		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
+		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
+	}
+	Vec3 delta = currentPos - _prevPosition;
+	delta.y = 0;
+	float currentSpeed = delta.Length() / DELTA_TIME;
 
 
 	// TODO : Location, Rotation, Scale 값을 서버로 보낸다.
@@ -137,14 +150,21 @@ void PlayerScript::UpdateKeyInput()
 	 //
 	
 
+	// 5) Animator 에 전달
+	GetAnimator()->SetFloat("Speed", _speed);
+	GetAnimator()->SetBool("isJumping", !_controller->IsOnGround());
+	//printf("점프?: %d\n", !_controller->IsOnGround());
+	//printf("속도: %f\n", currentSpeed);
+	/*printf("이전: %f %f %f\n", _prevPosition.x, _prevPosition.y, _prevPosition.z);
+	printf("이후: %f %f %f\n", currentPos.x, currentPos.y, currentPos.z);*/
 
-	GetTransform()->SetLocalPosition(pos);
+	_prevPosition = currentPos;
 }
 
 
 void PlayerScript::UpdateMouseInput()
 {
-	if (INPUT->GetButtonDown(KEY_TYPE::SHIFT))
+	if (INPUT->GetButtonDown(KEY_TYPE::Q))
 		_mouseMove = !_mouseMove;
 
 	POINT mousePos;
@@ -167,18 +187,16 @@ void PlayerScript::UpdateMouseInput()
 		POINT screenCenter = { center.x, center.y };
 		ClientToScreen(_hwnd, &screenCenter);
 		SetCursorPos(screenCenter.x, screenCenter.y);
-
 	}
-
 }
-
 
 void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 {
-	// X축 회전 (Pitch, 위아래)
+	// X축 회전 (Pitch, 위아래) - 카메라에만 적용
 	_pitch += deltaY * sensitivity;
 	_pitch = max(-90 * XM_PI / 180, min(90 * XM_PI / 180, _pitch));
 
+	// Y축 회전 (Yaw, 좌우) - 캐릭터와 카메라 모두에 적용
 	_yaw += deltaX * sensitivity;
 
 	rotation.x = _pitch * 50;
@@ -187,27 +205,3 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 
 	GetTransform()->SetLocalRotation(rotation);
 }
-
-void PlayerScript::UpdatePlayerOnTerrain()
-{
-	Vec3 pos = GetTransform()->GetLocalPosition();
-	float terrainHeight = -130.f;  // 수정해야됨
-
-	if (pos.y <= terrainHeight)
-	{
-		pos.y = terrainHeight;
-		_currentVelocity = 0.0f;
-		_isGrounded = true;
-	}
-	else
-	{
-		_currentVelocity -= _gravity * DELTA_TIME * 100;
-		pos.y += _currentVelocity * DELTA_TIME;
-		_isGrounded = false;
-	}
-	GetTransform()->SetLocalPosition(pos);
-}
-
-
-
-

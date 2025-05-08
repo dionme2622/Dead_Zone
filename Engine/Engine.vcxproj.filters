@@ -193,8 +193,24 @@
       <Filter>Object\Component\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="WeaponManager.h">
-      <Filter>Object\Component</Filter>
+      <Filter>Object\Component\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Object\Component\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimatorController.h" />
+    <ClInclude Include="AnimationState.h" />
+    <ClInclude Include="AnimatorParameter.h" />
+    <ClInclude Include="Transition.h" />
+    <ClInclude Include="CapsuleCollider.h">
+      <Filter>Object\Component\Colider</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h" />
+    <ClInclude Include="PhysicsSystem.h" />
+    <ClInclude Include="MeshCollider.h">
+      <Filter>Object\Component\Colider</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderer.h" />
     <ClInclude Include="game_header.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -354,8 +370,23 @@
       <Filter>Object\Component\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="WeaponManager.cpp">
-      <Filter>Object\Component</Filter>
+      <Filter>Object\Component\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Object\Component\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimatorController.cpp" />
+    <ClCompile Include="AnimationState.cpp" />
+    <ClCompile Include="Transition.cpp" />
+    <ClCompile Include="CapsuleCollider.cpp">
+      <Filter>Object\Component\Colider</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBody.cpp" />
+    <ClCompile Include="PhysicsSystem.cpp" />
+    <ClCompile Include="MeshCollider.cpp">
+      <Filter>Object\Component\Colider</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderer.cpp" />
     <ClCompile Include="NetworkClient.cpp">
       <Filter>Utils</Filter>
     </ClCompile>

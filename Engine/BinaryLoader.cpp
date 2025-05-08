@@ -4,6 +4,9 @@
 #include "Material.h"
 #include "Transform.h"
 #include "Resources.h"
+#include <bullet3/btBulletDynamicsCommon.h>
+#include "PhysicsSystem.h"
+
 
 BinaryLoader::BinaryLoader()
 {
@@ -144,6 +147,7 @@ void BinaryLoader::LoadMeshFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 	UINT nReads = (UINT)::fread(&vertexCount, sizeof(int), 1, pInFile);
 
 	meshes.vertices.resize(vertexCount);
+	meshes.btvertices.resize(vertexCount);
 	::ReadStringFromFile(pInFile, pstrToken);			// Mesh의 이름 저장
 	string name(pstrToken);
 	meshes.meshName = s2ws(pstrToken);
@@ -172,6 +176,8 @@ void BinaryLoader::LoadMeshFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 					meshes.vertices[i].pos.x = static_cast<float>(m_pxmf3Positions[i].x);
 					meshes.vertices[i].pos.y = static_cast<float>(m_pxmf3Positions[i].y);
 					meshes.vertices[i].pos.z = static_cast<float>(m_pxmf3Positions[i].z);
+
+					meshes.btvertices[i] = ToBt(meshes.vertices[i].pos);
 				}
 
 				delete[] m_pxmf3Positions;
@@ -467,7 +473,7 @@ void BinaryLoader::LoadSkinInfoFromFile(BinaryMeshInfo& meshes, FILE* pInFile)
 
 				for (int i = 0; i < nSkinningBones; ++i) {
 					char name[64] = {};
-					_bones[i] = std::make_shared<BinaryBoneInfo>();
+					_bones[i] = make_shared<BinaryBoneInfo>();
 					::ReadStringFromFile(pInFile, name);
 					string sboneName(name);
 					_bones[i]->boneName = s2ws(sboneName);
@@ -667,6 +673,10 @@ void BinaryLoader::CreateMaterials()
 						material->SetTexture(0, texture);
 				}
 
+				{
+					float metalic = _meshes[i].materials[j].metalic;
+					material->SetFloat(2, metalic);
+				}
 				GET_SINGLE(Resources)->Add<Material>(material->GetName(), material);
 			}
 		}

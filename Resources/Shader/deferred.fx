@@ -15,6 +15,8 @@ struct VS_IN
     float4 indices : INDICES;
 
     row_major matrix matWorld : W;
+    row_major matrix matView : V;
+    row_major matrix matProjection : P;
     row_major matrix matWV : WV;
     row_major matrix matWVP : WVP;
     uint instanceID : SV_InstanceID;
@@ -35,33 +37,41 @@ VS_OUT VS_Main(VS_IN input)
 {
     VS_OUT output = (VS_OUT) 0;
 
+    row_major matrix rightHandMatrix = g_mat_bone[15]; // 오른손 뼈
+    row_major matrix characterWorldMatrix = g_mat_0;
+    row_major matrix weaponOffsetMatrix;
+    
     if (g_int_0 == 1)           // Instancing이 적용되었는가?
     {
         if (g_int_1 == 1)       // Skinning이 적용되었는가?
             Skinning(input.pos, input.normal, input.tangent, input.weight, input.indices);
         
- 
-       
-        output.pos = mul(float4(input.pos, 1.f), input.matWVP);
-        output.uv = input.uv;
+        if (g_int_2 == 1)       // 무기인가?
+        {
+            weaponOffsetMatrix = input.matWorld;
+            row_major matrix finalMat = mul(mul(weaponOffsetMatrix, rightHandMatrix), characterWorldMatrix);
+            row_major matrix weaponWVP = mul(mul(finalMat, input.matView), input.matProjection);
+            output.pos = mul(float4(input.pos, 1.f), input.matWVP);
+        }
+       else
+        {
+            output.pos = mul(float4(input.pos, 1.f), input.matWVP);
+            output.uv = input.uv;
 
-        output.viewPos = mul(float4(input.pos, 1.f), input.matWV).xyz;
-        output.viewNormal = normalize(mul(float4(input.normal, 0.f), input.matWV).xyz);
-        output.viewTangent = normalize(mul(float4(input.tangent, 0.f), input.matWV).xyz);
-        output.viewBinormal = normalize(cross(output.viewTangent, output.viewNormal));
+            output.viewPos = mul(float4(input.pos, 1.f), input.matWV).xyz;
+            output.viewNormal = normalize(mul(float4(input.normal, 0.f), input.matWV).xyz);
+            output.viewTangent = normalize(mul(float4(input.tangent, 0.f), input.matWV).xyz);
+            output.viewBinormal = normalize(cross(output.viewTangent, output.viewNormal));
+        }
     }
-    
     else
     {
         if (g_int_1 == 1)
             Skinning(input.pos, input.normal, input.tangent, input.weight, input.indices);
         
-        row_major matrix rightHandMatrix = g_mat_bone[15]; // 오른손 뼈
-        row_major matrix characterWorldMatrix = g_mat_0;
-        row_major matrix weaponOffsetMatrix = g_matWorld;
-        
         if (g_int_2 == 1)
         {  
+            weaponOffsetMatrix = g_matWorld;
             row_major matrix finalMat = mul(mul(weaponOffsetMatrix, rightHandMatrix), characterWorldMatrix);
             row_major matrix weaponWVP = mul(mul(finalMat, g_matView), g_matProjection);
             output.pos = mul(float4(input.pos, 1.f), weaponWVP);
@@ -85,7 +95,7 @@ struct PS_OUT
 {
     float4 position : SV_Target0;
     float4 normal : SV_Target1;
-    float4 color : SV_Target2;            
+    float4 color : SV_Target2;         
 };
 
 
