@@ -44,20 +44,20 @@ void BattleScene::LoadScene()
 
 
 #pragma region DebugCamera
-	//{
-	//	_playerCamera = make_shared<GameObject>();
-	//	_playerCamera->SetName(L"Debug_Camera");
-	//	_playerCamera->AddComponent(make_shared<Transform>());
-	//	_playerCamera->AddComponent(make_shared<Camera>());
-	//	_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
+	{
+		_playerCamera = make_shared<GameObject>();
+		_playerCamera->SetName(L"Debug_Camera");
+		_playerCamera->AddComponent(make_shared<Transform>());
+		_playerCamera->AddComponent(make_shared<Camera>());
+		_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
 
-	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
-	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-	//	_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
-	//	uint8 layerIndex = LayerNameToIndex(L"UI");
-	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI¥¬ æ» ¬Ô¿Ω
-	//	AddGameObject(_playerCamera);
-	//}
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
+		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+		_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI¥¬ æ» ¬Ô¿Ω
+		AddGameObject(_playerCamera);
+	}
 #pragma endregion
 
 #pragma region SkyBox
@@ -147,18 +147,18 @@ void BattleScene::LoadScene()
 
 
 #pragma region PlayerCamera
-	{
-		_playerCamera = make_shared<GameObject>();
-		_playerCamera->SetName(L"Main_Camera");
-		_playerCamera->AddComponent(make_shared<Transform>());
-		_playerCamera->AddComponent(make_shared<Camera>());
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.01f, 2.03f, -6.65f));
-		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-		uint8 layerIndex = LayerNameToIndex(L"UI");
-		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI¥¬ æ» ¬Ô¿Ω
-		AddGameObject(_playerCamera);
-	}
-	_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Playerø°∞‘ Camera ∏¶ ∫Ÿ¿Œ¥Ÿ.
+	//{
+	//	_playerCamera = make_shared<GameObject>();
+	//	_playerCamera->SetName(L"Main_Camera");
+	//	_playerCamera->AddComponent(make_shared<Transform>());
+	//	_playerCamera->AddComponent(make_shared<Camera>());
+	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.01f, 2.03f, -6.65f));
+	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+	//	uint8 layerIndex = LayerNameToIndex(L"UI");
+	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI¥¬ æ» ¬Ô¿Ω
+	//	AddGameObject(_playerCamera);
+	//}
+	//_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Playerø°∞‘ Camera ∏¶ ∫Ÿ¿Œ¥Ÿ.
 
 #pragma endregion
 
@@ -347,6 +347,37 @@ void BattleScene::LoadScene()
 		// ¿Ã∑∏∞‘ «ÿæﬂ ∏ ¿« ¡ﬂæ”¿ª ∫Ω
 		//_sunObject->GetTransform()->SetLocalRotation(Vec3(-45, 225, 0));
 	}
+
+	{
+		// ∞°∑ŒµÓ ø¿∫Í¡ß∆Æ
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\SpotLight.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
+		int spotLightIndex = 0;
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(true);
+			gameObject->SetStatic(true);
+			gameObject->AddComponent(make_shared<Light>());
+			gameObject->GetLight()->SetLightDirection(Vec3(0, -1.0f, 0.f));
+			gameObject->GetLight()->SetLightType(LIGHT_TYPE::SPOT_LIGHT);
+			gameObject->GetLight()->GetTransform()->SetLocalPosition(Vec3(83, 70, 83));
+
+			gameObject->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
+			gameObject->GetLight()->SetAmbient(Vec3(0.2f, 0.2f, 0.2f));
+			gameObject->GetLight()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
+			gameObject->GetLight()->SetLightRange(20.f);
+			gameObject->GetLight()->SetLightAngle(XM_PI / 2);
+			gameObject->GetLight()->SetLightIndex(spotLightIndex + 1);
+			++spotLightIndex;
+			AddGameObject(gameObject);
+			/*if (gameObject->GetName() == L"Sun_1")
+				_sunObject = gameObject*/;
+		}
+
+		// ¿Ã∑∏∞‘ «ÿæﬂ ∏ ¿« ¡ﬂæ”¿ª ∫Ω
+		//_sunObject->GetTransform()->SetLocalRotation(Vec3(-45, 225, 0));
+	}
 #pragma endregion
 
 
@@ -367,7 +398,7 @@ void BattleScene::LoadScene()
 		_mainLight->AddComponent(make_shared<Light>());
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, 0.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		_mainLight->GetLight()->SetDiffuse(Vec3(1.0f, 1.0f, 1.0f));   // π‡¿∫ »Úªˆ
+		_mainLight->GetLight()->SetDiffuse(Vec3(0.1f, 0.1f, 0.1f));   // π‡¿∫ »Úªˆ
 		_mainLight->GetLight()->SetAmbient(Vec3(0.3f, 0.3f, 0.3f));   // ¿˚¥Á«— »Ø∞Ê±§
 		_mainLight->GetLight()->SetSpecular(Vec3(0.5f, 0.5f, 0.5f));  // Ω∫∆Â≈ß∑Ø ∞≠¡∂
 
@@ -384,7 +415,7 @@ void BattleScene::LoadScene()
 
 
 #pragma region Spot Light
-	AddSpotLights();
+	//AddSpotLights();
 
 #pragma endregion
 
@@ -409,6 +440,9 @@ void BattleScene::Update()
 	direction.Normalize();
 
 	_mainLight->GetLight()->SetLightDirection(Vec3(direction));
+
+	Vec3 pos = _playerCamera->GetTransform()->GetLocalPosition();
+	cout << pos.x << " " << pos.y << " " << pos.z << endl;
 }
 
 
