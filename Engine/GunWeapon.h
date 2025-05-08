@@ -18,7 +18,7 @@ public:
 
 
 private:
-    void ApplyDamageToHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld);
+    void ApplyDamageToHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& hitPoint);
 
 private:
     btVector3   _bulletPosition;    // 레이 시작점

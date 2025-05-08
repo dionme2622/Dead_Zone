@@ -44,20 +44,20 @@ void BattleScene::LoadScene()
 
 
 #pragma region DebugCamera
-	{
-		_playerCamera = make_shared<GameObject>();
-		_playerCamera->SetName(L"Debug_Camera");
-		_playerCamera->AddComponent(make_shared<Transform>());
-		_playerCamera->AddComponent(make_shared<Camera>());
-		_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
+	//{
+	//	_playerCamera = make_shared<GameObject>();
+	//	_playerCamera->SetName(L"Debug_Camera");
+	//	_playerCamera->AddComponent(make_shared<Transform>());
+	//	_playerCamera->AddComponent(make_shared<Camera>());
+	//	_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
 
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
-		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-		_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
-		uint8 layerIndex = LayerNameToIndex(L"UI");
-		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
-		AddGameObject(_playerCamera);
-	}
+	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
+	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+	//	_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
+	//	uint8 layerIndex = LayerNameToIndex(L"UI");
+	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
+	//	AddGameObject(_playerCamera);
+	//}
 #pragma endregion
 
 #pragma region SkyBox
@@ -147,18 +147,18 @@ void BattleScene::LoadScene()
 
 
 #pragma region PlayerCamera
-	//{
-	//	_playerCamera = make_shared<GameObject>();
-	//	_playerCamera->SetName(L"Main_Camera");
-	//	_playerCamera->AddComponent(make_shared<Transform>());
-	//	_playerCamera->AddComponent(make_shared<Camera>());
-	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.01f, 2.03f, -6.65f));
-	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-	//	uint8 layerIndex = LayerNameToIndex(L"UI");
-	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
-	//	AddGameObject(_playerCamera);
-	//}
-	//_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player에게 Camera 를 붙인다.
+	{
+		_playerCamera = make_shared<GameObject>();
+		_playerCamera->SetName(L"Main_Camera");
+		_playerCamera->AddComponent(make_shared<Transform>());
+		_playerCamera->AddComponent(make_shared<Camera>());
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(1.2f, 3.03f, -6.65f));
+		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
+		AddGameObject(_playerCamera);
+	}
+	_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player에게 Camera 를 붙인다.
 
 #pragma endregion
 
@@ -400,16 +400,6 @@ void BattleScene::LoadScene()
 	}
 #pragma endregion
 
-
-
-	int i = 0;
-	for (auto& gameObject : GetGameObjects()) {
-		std::wstring objectName = gameObject->GetName();
-		if (objectName.find(L"SA_Prop_StreetLamp_") != std::wstring::npos) {
-			wcout << objectName << endl;
-		}
-	}
-
 #pragma region Directional Light
 	{
 		// 태양 오브젝트 이름 : Sun_1
@@ -418,7 +408,7 @@ void BattleScene::LoadScene()
 		_mainLight->AddComponent(make_shared<Light>());
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, 0.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		_mainLight->GetLight()->SetDiffuse(Vec3(0.0f, 0.0f, 0.0f));   // 밝은 흰색
+		_mainLight->GetLight()->SetDiffuse(Vec3(0.4f, 0.4f, 0.4f));   // 밝은 흰색
 		_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // 적당한 환경광
 		_mainLight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));  // 스펙큘러 강조
 
@@ -435,7 +425,6 @@ void BattleScene::LoadScene()
 
 
 #pragma region Spot Light
-	//AddSpotLights();
 
 #pragma endregion
 
@@ -460,9 +449,24 @@ void BattleScene::Update()
 	direction.Normalize();
 
 	_mainLight->GetLight()->SetLightDirection(Vec3(direction));
+	
 
-	Vec3 pos = _playerCamera->GetTransform()->GetLocalPosition();
-	cout << pos.x << " " << pos.y << " " << pos.z << endl;
+	// CTRL 키 입력 처리
+	if (INPUT->GetButton(KEY_TYPE::CTRL)) {
+		_isAiming = true;
+		_targetCameraPos = Vec3(1.01f, 1.83f, -3.55f); // 조준 시 위치
+	}
+	else if (INPUT->GetButtonUp(KEY_TYPE::CTRL)) {
+		_isAiming = false;
+		_targetCameraPos = Vec3(1.2f, 3.03f, -6.65f); // 기본 위치
+	}
+	// 카메라 위치 부드럽게 보간
+	Vec3 currentPos = _playerCamera->GetTransform()->GetLocalPosition();
+	Vec3 newPos = Vec3::Lerp(currentPos, _targetCameraPos, _lerpSpeed * DELTA_TIME);
+	_playerCamera->GetTransform()->SetLocalPosition(newPos);
+
+	// 카메라 부모 유지
+	_playerCamera->GetTransform()->SetParent(_player[0]->GetTransform());
 }
 
 
@@ -505,48 +509,3 @@ void BattleScene::UpdateSunOrbit()
 }
 
 
-void BattleScene::AddSpotLights() {
-	// 12개의 GameObject를 저장할 배열
-	std::array<std::shared_ptr<GameObject>, 12> spotLights;
-	int spotLightIndex = 0;
-
-	// "SA_Prop_StreetLamp_"로 시작하는 오브젝트를 찾아 처리
-	for (auto& gameObject : GetGameObjects()) {
-		std::wstring objectName = gameObject->GetName();
-		if (objectName.find(L"SA_Prop_StreetLamp_") != std::wstring::npos && spotLightIndex < 12) {
-			// 새로운 GameObject 생성 또는 기존 오브젝트 사용
-			auto spotLight = make_shared<GameObject>();
-			spotLight->SetName(objectName); // 기존 이름 유지
-
-			spotLight->AddComponent(std::make_shared<Transform>());
-
-			Vec3 pos = gameObject->GetTransform()->GetLocalPosition();
-			pos.y += 100;
-			spotLight->GetTransform()->SetLocalPosition(pos);
-
-			spotLight->AddComponent(std::make_shared<Light>());
-			spotLight->GetLight()->SetLightDirection(Vec3(0, -1.0f, 0.f));
-			spotLight->GetLight()->SetLightType(LIGHT_TYPE::SPOT_LIGHT);
-			spotLight->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
-			spotLight->GetLight()->SetAmbient(Vec3(0.2f, 0.2f, 0.2f));
-			spotLight->GetLight()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
-			spotLight->GetLight()->SetLightRange(100.f);
-			spotLight->GetLight()->SetLightAngle(XM_PI / 4);
-			spotLight->GetLight()->SetLightIndex(spotLightIndex + 1);
-			// 배열에 추가
-			spotLights[spotLightIndex] = spotLight;
-			spotLightIndex++;
-
-			// 게임 월드에 추가
-			AddGameObject(spotLight);
-
-			// _spotLights 리스트에 추가
-			_spotLights.push_back(spotLight);
-		}
-	}
-
-	// 배열이 12개 미만으로 채워진 경우 나머지 nullptr로 초기화
-	for (; spotLightIndex < 12; ++spotLightIndex) {
-		spotLights[spotLightIndex] = nullptr;
-	}
-}

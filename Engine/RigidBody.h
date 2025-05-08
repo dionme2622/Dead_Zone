@@ -53,12 +53,20 @@ public:
     bool IsOnGround() const {
         return _controller->onGround();
     }
+
+    void  SetPushTimer(float pushTimer) { _pushTimer = pushTimer; }
+    void  SetIsPushing(bool isPushing) { _isPushing = isPushing; }
+    void  SetPushDirection(const btVector3& direction) { _pushDirection = direction; }
 private:
     float _radius, _height, _stepHeight;
 
-    std::shared_ptr<btPairCachingGhostObject>    _ghost;
-    std::shared_ptr<btCapsuleShape>              _shape;
-    std::shared_ptr<btKinematicCharacterController> _controller;
+    float _pushTimer;
+    bool  _isPushing;
+    btVector3 _pushDirection;
+
+    shared_ptr<btPairCachingGhostObject>    _ghost;
+    shared_ptr<btCapsuleShape>              _shape;
+    shared_ptr<btKinematicCharacterController> _controller;
 
     weak_ptr<GameObject>                _weakGameObject;        // 이 컴포넌트를 가진 객체
 };

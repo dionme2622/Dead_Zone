@@ -13,12 +13,12 @@ public:
 	virtual void Update();
 
 
+
 public:
 	void CreateZombie();
 	
 	void UpdateSunOrbit();
 
-	void AddSpotLights();
 
 	static bool isPlayerGrounded;
 	vector<shared_ptr<GameObject>> GetPlayers() { return _player; };
@@ -42,7 +42,8 @@ private:
 private:
 	vector<vector<shared_ptr<GameObject>>> _zombies;
 
-
-
+	bool _isAiming = false;
+	Vec3 _targetCameraPos = Vec3(1.2f, 3.03f, -6.65f);
+	float _lerpSpeed = 10.0;
 };
 

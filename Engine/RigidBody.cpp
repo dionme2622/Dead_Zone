@@ -155,7 +155,10 @@ void CharacterController::Move(const Vec3& direction)
 {
     // direction.y 무시, 속도는 외부에서 곱해서 넘겨 주세요
     btVector3 dir(direction.x, 0.0f, direction.z);
-    _controller->setWalkDirection(dir);
+    if (!_isPushing)
+    {
+        _controller->setWalkDirection(dir);
+    }
 }
 
 void CharacterController::Jump()
@@ -223,7 +226,22 @@ void CharacterController::FinalUpdate()
         // _controller->setFallSpeed(550.0f );
     }
 
-    // 3) Transform에 반영
+    // 3) 밀림 효과 관리
+    if (_isPushing && _pushTimer > 0.0f)
+    {
+        _pushTimer -= DELTA_TIME;
+
+        _controller->setWalkDirection(_pushDirection);
+
+        if (_pushTimer <= 0.0f)
+        {
+            _controller->setWalkDirection(btVector3(0, 0, 0)); // 밀림 종료
+            _isPushing = false;
+            _pushDirection = btVector3(0, 0, 0); // 방향 초기화
+        }
+    }
+
+    // 4) Transform에 반영
     GetTransform()->SetNo(true);
     GetTransform()->SetLocalPosition(worldPos);
 
