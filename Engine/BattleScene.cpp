@@ -44,20 +44,20 @@ void BattleScene::LoadScene()
 
 
 #pragma region DebugCamera
-	//{
-	//	_playerCamera = make_shared<GameObject>();
-	//	_playerCamera->SetName(L"Debug_Camera");
-	//	_playerCamera->AddComponent(make_shared<Transform>());
-	//	_playerCamera->AddComponent(make_shared<Camera>());
-	//	_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
+	{
+		_playerCamera = make_shared<GameObject>();
+		_playerCamera->SetName(L"Debug_Camera");
+		_playerCamera->AddComponent(make_shared<Transform>());
+		_playerCamera->AddComponent(make_shared<Camera>());
+		_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
 
-	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
-	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-	//	_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
-	//	uint8 layerIndex = LayerNameToIndex(L"UI");
-	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
-	//	AddGameObject(_playerCamera);
-	//}
+		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
+		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+		_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
+		uint8 layerIndex = LayerNameToIndex(L"UI");
+		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
+		AddGameObject(_playerCamera);
+	}
 #pragma endregion
 
 #pragma region SkyBox
@@ -117,31 +117,31 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Player2
-	_theirID = 2;
-	islocal = (_theirID == _myID);
+	//_theirID = 2;
+	//islocal = (_theirID == _myID);
 
-	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
+	//shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
 
-	vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
+	//vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
 
-	shared_ptr<GameObject> player2 = FemaleHero[23];
-	for (auto& gameObject : FemaleHero)
-	{	
-		//gameObject->SetName(L"FemaleSoldier");
-		gameObject->SetCheckFrustum(false);
-		gameObject->SetStatic(true);
-		gameObject->GetTransform()->FinalUpdate();
-		AddGameObject(gameObject);
-	}
+	//shared_ptr<GameObject> player2 = FemaleHero[23];
+	//for (auto& gameObject : FemaleHero)
+	//{	
+	//	//gameObject->SetName(L"FemaleSoldier");
+	//	gameObject->SetCheckFrustum(false);
+	//	gameObject->SetStatic(true);
+	//	gameObject->GetTransform()->FinalUpdate();
+	//	AddGameObject(gameObject);
+	//}
 
-	player2->GetTransform()->SetLocalPosition(Vec3(20, 300.f, 0));
-	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
-	player2->AddComponent(make_shared<PlayerStats>());
-	player2->AddComponent(make_shared<CharacterController>(player2, 0.5, 3.0, 0.3f));
-	player2->GetCharacterController()->OnEnable();
-	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
+	//player2->GetTransform()->SetLocalPosition(Vec3(20, 300.f, 0));
+	////player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
+	//player2->AddComponent(make_shared<PlayerStats>());
+	//player2->AddComponent(make_shared<CharacterController>(player2, 0.5, 3.0, 0.3f));
+	//player2->GetCharacterController()->OnEnable();
+	//player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
 
-	_player.push_back(player2);
+	//_player.push_back(player2);
 
 #pragma endregion 
 
@@ -359,18 +359,17 @@ void BattleScene::LoadScene()
 
 		// 조명 위치
 		array<Vec3, 9> spotLightPos = {
-			Vec3(83, 70, 83),
-			Vec3(59, 70, 83),
-			Vec3(5, 70, 83),
-			Vec3(-70, 70, 83),
-			Vec3(-86, 70, 83),
-			Vec3(-125, 70, 83),
-			Vec3(-86.9, 70.6, 28.9),
-			Vec3(-70.7, 70.5, 28.9),
-			Vec3(-125.9, 70.5, 28.8),
+			Vec3(83, 72, 83),
+			Vec3(59, 72, 83),
+			Vec3(5, 72, 83),
+			Vec3(-70, 72, 83),
+			Vec3(-86, 72, 83),
+			Vec3(-125, 72, 83),
+			Vec3(-86.9, 72, 28.9),
+			Vec3(-70.7, 72, 28.9),
+			Vec3(-125.9, 72, 28.8),
 
 		};
-
 
 		for (int i=0;i<9;++i)
 		{
@@ -386,8 +385,8 @@ void BattleScene::LoadScene()
 			gameObject->GetLight()->GetTransform()->SetLocalPosition(pos);
 
 			gameObject->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));
-			gameObject->GetLight()->SetAmbient(Vec3(0.2f, 0.2f, 0.2f));
-			gameObject->GetLight()->SetSpecular(Vec3(0.3f, 0.3f, 0.3f));
+			gameObject->GetLight()->SetAmbient(Vec3(0.8f, 0.8f, 0.8f));
+			gameObject->GetLight()->SetSpecular(Vec3(0.8f, 0.8f, 0.8f));
 			gameObject->GetLight()->SetLightRange(20.f);
 			gameObject->GetLight()->SetLightAngle(XM_PI / 1.5);
 			gameObject->GetLight()->SetLightIndex(spotLightIndex + 1);
