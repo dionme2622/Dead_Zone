@@ -268,8 +268,10 @@ void BattleScene::LoadScene()
 
 			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 80.0f, 0.0f));
 			gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
+			gameObjects[23]->GetCharacterController()->SetIsPushing(false);
 			gameObjects[23]->AddComponent(make_shared<PlayerStats>());
 			gameObjects[23]->GetCharacterController()->OnEnable();
+			_zombies.push_back(gameObjects);
 		}
 	}
 
@@ -430,9 +432,6 @@ void BattleScene::LoadScene()
 
 }
 
-
-
-
 void BattleScene::Update()
 {
 	/*Vec3 pos = _player[1]->GetTransform()->GetLocalPosition();
@@ -441,6 +440,7 @@ void BattleScene::Update()
 
 
 	Scene::Update();
+	UpdateZombieMove();
 	GET_SINGLE(PhysicsSystem)->Update(DELTA_TIME);
 	//UpdateSunOrbit();
 
@@ -451,29 +451,25 @@ void BattleScene::Update()
 	_mainLight->GetLight()->SetLightDirection(Vec3(direction));
 	
 
-	// CTRL 키 입력 처리
-	if (INPUT->GetButton(KEY_TYPE::CTRL)) {
-		_isAiming = true;
-		_targetCameraPos = Vec3(1.01f, 1.83f, -3.55f); // 조준 시 위치
+	// 카메라 줌
+	{
+		// CTRL 키 입력 처리
+		if (INPUT->GetButton(KEY_TYPE::CTRL)) {
+			_isAiming = true;
+			_targetCameraPos = Vec3(1.01f, 1.83f, -3.55f); // 조준 시 위치
+		}
+		else if (INPUT->GetButtonUp(KEY_TYPE::CTRL)) {
+			_isAiming = false;
+			_targetCameraPos = Vec3(1.2f, 3.03f, -6.65f); // 기본 위치
+		}
+		// 카메라 위치 부드럽게 보간
+		Vec3 currentPos = _playerCamera->GetTransform()->GetLocalPosition();
+		Vec3 newPos = Vec3::Lerp(currentPos, _targetCameraPos, _lerpSpeed * DELTA_TIME);
+		_playerCamera->GetTransform()->SetLocalPosition(newPos);
+
+		// 카메라 부모 유지
+		_playerCamera->GetTransform()->SetParent(_player[0]->GetTransform());
 	}
-	else if (INPUT->GetButtonUp(KEY_TYPE::CTRL)) {
-		_isAiming = false;
-		_targetCameraPos = Vec3(1.2f, 3.03f, -6.65f); // 기본 위치
-	}
-	// 카메라 위치 부드럽게 보간
-	Vec3 currentPos = _playerCamera->GetTransform()->GetLocalPosition();
-	Vec3 newPos = Vec3::Lerp(currentPos, _targetCameraPos, _lerpSpeed * DELTA_TIME);
-	_playerCamera->GetTransform()->SetLocalPosition(newPos);
-
-	// 카메라 부모 유지
-	_playerCamera->GetTransform()->SetParent(_player[0]->GetTransform());
-}
-
-
-
-void BattleScene::CreateZombie()
-{
-	
 }
 
 void BattleScene::UpdateSunOrbit()
@@ -508,4 +504,36 @@ void BattleScene::UpdateSunOrbit()
 	_sunObject->GetTransform()->LookAt(center);
 }
 
+
+void BattleScene::UpdateZombieMove()
+{
+	Vec3 playerPosition = _player[0]->GetTransform()->GetLocalPosition();
+
+	// 좀비 이동 처리
+	for (auto& zombie : _zombies)
+	{
+		// 좀비의 현재 위치
+		Vec3 zombiePosition = zombie[23]->GetTransform()->GetLocalPosition();
+
+		// 플레이어를 향한 방향 계산
+		Vec3 direction = playerPosition - zombiePosition;
+		if (direction.LengthSquared() > 0.0f)
+			direction.Normalize();
+
+		// 이동 속도 설정
+		float zombieSpeed = 2.0f; // 초당 2 유닛 이동
+		Vec3 moveVector = direction * zombieSpeed * DELTA_TIME;
+
+		cout << moveVector.x << "," << moveVector.y << ", " << moveVector.z << endl;
+
+		bool p = zombie[23]->GetCharacterController()->GetIsPushing();
+
+		// CharacterController를 사용하여 이동
+		zombie[23]->GetCharacterController()->Move(moveVector);
+
+
+		// 좀비가 플레이어를 바라보도록 설정
+		zombie[23]->GetTransform()->LookAt(playerPosition);
+	}
+}
 

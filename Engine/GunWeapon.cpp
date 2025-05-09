@@ -142,7 +142,6 @@ void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDis
 
             if (playerStats->IsDead())
             {
-                //characterController->OnDisable();
                 GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObjectPtr);
             }
         }

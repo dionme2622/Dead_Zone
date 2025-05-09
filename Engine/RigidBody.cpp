@@ -153,8 +153,8 @@ CharacterController::~CharacterController()
 
 void CharacterController::Move(const Vec3& direction)
 {
-    // direction.y 무시, 속도는 외부에서 곱해서 넘겨 주세요
     btVector3 dir(direction.x, 0.0f, direction.z);
+
     if (!_isPushing)
     {
         _controller->setWalkDirection(dir);

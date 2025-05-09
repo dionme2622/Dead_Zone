@@ -57,6 +57,9 @@ public:
     void  SetPushTimer(float pushTimer) { _pushTimer = pushTimer; }
     void  SetIsPushing(bool isPushing) { _isPushing = isPushing; }
     void  SetPushDirection(const btVector3& direction) { _pushDirection = direction; }
+
+   bool GetIsPushing() { return _isPushing; }
+
 private:
     float _radius, _height, _stepHeight;
 
