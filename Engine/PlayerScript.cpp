@@ -49,17 +49,20 @@ void PlayerScript::FinalUpdate()
 		auto it = g_otherPlayerPositions.find(key);
 		if (it != g_otherPlayerPositions.end())
 		{
-			auto [x, y, z, rx, ry, rz] = it->second; // 6개 값 받아오기
+			auto [x, y, z, rx, ry, rz, speed, isJumping ] = it->second; // 6개 값 받아오기
 			//std::cout << "Player 1 위치: (" << x << ", " << y << ", " << z << ") 회전: (" << rx << ", " << ry << ", " << rz << ")\n";
 
 
 			////////
 			// 1) ghost 를 warp 시켜서 물리 위치 반영
 			btVector3 warpPos(x,
-				y + 1.5, // 키네마틱 오프셋
+				y, // 키네마틱 오프셋
 				z);
 			_controller->GetController()->warp(warpPos);
 			GetTransform()->SetLocalRotation(Vec3(0, ry, 0)); // 추가된 회전 적용
+			GetAnimator()->SetFloat("Speed", speed);
+			GetAnimator()->SetBool("isJumping", isJumping);
+
 		}
 		else
 		{
@@ -154,12 +157,13 @@ void PlayerScript::UpdateKeyInput()
 	ctos_pos.rx = rotation.x;
 	ctos_pos.ry = rotation.y;
 	ctos_pos.rz = rotation.z;
+	ctos_pos.speed = _speed;
+	ctos_pos.isJumping = !_controller->IsOnGround();
 
 
 
 	send(sock, reinterpret_cast<char*>(&ctos_pos), sizeof(ctos_pos), 0);
 	
-	 //
 	
 
 	// 5) Animator 에 전달

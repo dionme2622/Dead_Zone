@@ -60,6 +60,8 @@ struct stoc_packet_all_position {
 		long long id;
 		float x, y, z;
 		float rx, ry, rz;
+		float speed;
+		bool isJumping;
 	} players[10];
 };
 
@@ -75,6 +77,8 @@ struct ctos_packet_position {
 	char type;
 	float x, y, z;
 	float rx, ry, rz;
+	float speed;
+	bool isJumping;
 };
 
 #pragma pack (pop)

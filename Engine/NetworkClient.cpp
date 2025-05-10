@@ -6,7 +6,7 @@ std::atomic<bool> running{ true };
 bool g_receivedMyInfo = false;
 stoc_packet_player_info g_myInfo;
 
-std::unordered_map<long long, std::tuple<float, float, float, float, float, float>> g_otherPlayerPositions;
+std::unordered_map<long long, std::tuple<float, float, float, float, float, float, float, bool>> g_otherPlayerPositions;
 std::mutex g_posMutex;
 
 bool ConnectAndLogin()
@@ -102,7 +102,9 @@ void recv_thread(SOCKET sock) {
                         p->players[i].z,
                         p->players[i].rx,
                         p->players[i].ry,
-                        p->players[i].rz
+                        p->players[i].rz,
+                        p->players[i].speed,
+                        p->players[i].isJumping
                     );
                 }
                 break;
