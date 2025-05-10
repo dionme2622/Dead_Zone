@@ -63,6 +63,8 @@ public:
 
 	float _x = 0.0f, _y = 0.0f, _z = 0.0f;
 	float _rx = 0.0f, _ry = 0.0f, _rz = 0.0f;
+	float _speed;
+	bool _isJumping;
 	std::string		_name;
 
 
@@ -181,6 +183,8 @@ public:
 			_rx = packet->rx;
 			_ry = packet->ry;
 			_rz = packet->rz;
+			_speed = packet->speed;
+			_isJumping = packet->isJumping;
 			break;
 		}
 
@@ -214,10 +218,9 @@ void pos_sender_thread() {
 			p.players[i].rx = session._rx; 
 			p.players[i].ry = session._ry; 
 			p.players[i].rz = session._rz;
+			p.players[i].speed = session._speed;
+			p.players[i].isJumping = session._isJumping;
 			++i;
-			std::cout << "ID: " << id
-				<< " | Pos: (" << session._x << ", " << session._y << ", " << session._z << ")"
-				<< " | Rot: (" << session._rx << ", " << session._ry << ", " << session._rz << ")\n";
 		}
 
 		p.count = i;
