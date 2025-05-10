@@ -26,6 +26,7 @@ bool ConnectAndLogin()
     SOCKADDR_IN serverAddr{};
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(GAME_PORT);
+
     inet_pton(AF_INET, "172.30.1.78", &serverAddr.sin_addr);
 
     if (connect(sock, reinterpret_cast<SOCKADDR*>(&serverAddr), sizeof(serverAddr)) == SOCKET_ERROR) {
