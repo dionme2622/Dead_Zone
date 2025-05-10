@@ -296,7 +296,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\EnvDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -309,7 +309,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -322,7 +322,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\PropDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
