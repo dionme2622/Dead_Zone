@@ -131,31 +131,31 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Player2
-	//_theirID = 2;
-	//islocal = (_theirID == _myID);
+	_theirID = 2;
+	islocal = (_theirID == _myID);
 
-	//shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
+	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
 
-	//vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
+	vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
 
-	//shared_ptr<GameObject> player2 = FemaleHero[23];
-	//for (auto& gameObject : FemaleHero)
-	//{	
-	//	//gameObject->SetName(L"FemaleSoldier");
-	//	gameObject->SetCheckFrustum(false);
-	//	gameObject->SetStatic(true);
-	//	gameObject->GetTransform()->FinalUpdate();
-	//	AddGameObject(gameObject);
-	//}
+	shared_ptr<GameObject> player2 = FemaleHero[23];
+	for (auto& gameObject : FemaleHero)
+	{	
+		//gameObject->SetName(L"FemaleSoldier");
+		gameObject->SetCheckFrustum(false);
+		gameObject->SetStatic(true);
+		gameObject->GetTransform()->FinalUpdate();
+		AddGameObject(gameObject);
+	}
 
-	//player2->GetTransform()->SetLocalPosition(Vec3(20, 300.f, 0));
-	////player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
-	//player2->AddComponent(make_shared<PlayerStats>());
-	//player2->AddComponent(make_shared<CharacterController>(player2, 0.5, 3.0, 0.3f));
-	//player2->GetCharacterController()->OnEnable();
-	//player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
+	player2->GetTransform()->SetLocalPosition(Vec3(20, 300.f, 0));
+	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
+	player2->AddComponent(make_shared<PlayerStats>());
+	player2->AddComponent(make_shared<CharacterController>(player2, 0.5, 3.0, 0.3f));
+	player2->GetCharacterController()->OnEnable();
+	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
 
-	//_player.push_back(player2);
+	_player.push_back(player2);
 
 #pragma endregion 
 

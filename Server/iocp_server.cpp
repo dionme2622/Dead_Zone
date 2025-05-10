@@ -207,7 +207,6 @@ void pos_sender_thread() {
 
 		short i = 0;
 		for (auto& [id, session] : g_users) {
-			if (i >= 64) break;
 			p.players[i].id = id;
 			p.players[i].x = session._x;
 			p.players[i].y = session._y;
@@ -216,6 +215,9 @@ void pos_sender_thread() {
 			p.players[i].ry = session._ry; 
 			p.players[i].rz = session._rz;
 			++i;
+			std::cout << "ID: " << id
+				<< " | Pos: (" << session._x << ", " << session._y << ", " << session._z << ")"
+				<< " | Rot: (" << session._rx << ", " << session._ry << ", " << session._rz << ")\n";
 		}
 
 		p.count = i;
