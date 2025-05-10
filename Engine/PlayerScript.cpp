@@ -128,7 +128,7 @@ void PlayerScript::UpdateKeyInput()
 		// Shoot 애니메이션 트리거
 		GetAnimator()->SetTrigger("Shoot");
 
-		if (GetWeaponManager()->GetCurrentWeapon()[0]) {
+		if (GetWeaponManager()) {
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
