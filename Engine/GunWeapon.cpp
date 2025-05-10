@@ -8,6 +8,7 @@
 #include "PhysicsSystem.h"
 #include "PlayerStats.h"
 #include <bullet3\btBulletDynamicsCommon.h>
+#include "RigidBody.h"
 
 // Vector3를 btVector3로 변환하는 유틸리티 함수
 inline btVector3 ToBtVector3(const Vec3& vec)
@@ -40,7 +41,7 @@ void GunWeapon::Attack()
         return;
     }
 
-    Beep(1000, 100);
+    //Beep(1000, 100);
 
 
     _fireTimer = 1.0f / _fireRate; // 다음 발사까지 대기 시간 설정
@@ -64,7 +65,7 @@ void GunWeapon::Attack()
     if (rayCallback.hasHit())
     {
         const btCollisionObject* hitObject = rayCallback.m_collisionObject;
-        ApplyDamageToHitObject(hitObject, dynamicsWorld);
+        ApplyDamageToHitObject(hitObject, dynamicsWorld, rayCallback.m_hitPointWorld);
     }
 }
 
@@ -109,7 +110,7 @@ void GunWeapon::Update()
 
 }
 
-void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld)
+void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDiscreteDynamicsWorld* dynamicsWorld, const btVector3& hitPoint)
 {
     if (!hitObject || !hitObject->getUserPointer())
     {
@@ -118,15 +119,7 @@ void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDis
 
     GameObject* hitGameObject = static_cast<GameObject*>(hitObject->getUserPointer());
     shared_ptr<GameObject> gameObjectPtr;
-    try
-    {
-        gameObjectPtr = hitGameObject->shared_from_this();
-    }
-    catch (const std::bad_weak_ptr&)
-    {
-        std::cerr << "Error: GameObject is not managed by shared_ptr" << std::endl;
-        return;
-    }
+    gameObjectPtr = hitGameObject->shared_from_this();
 
     // CharacterController가 있는 경우
     if (auto characterController = gameObjectPtr->GetCharacterController())
@@ -135,9 +128,20 @@ void GunWeapon::ApplyDamageToHitObject(const btCollisionObject* hitObject, btDis
         if (auto playerStats = gameObjectPtr->GetPlayerStats())
         {
             playerStats->ApplyDamage(40.0f);
+            // 총알 방향에 따라 뒤로 밀림 효과 적용
+            btVector3 pushDirection = _bulletDirection.normalized(); // 총알 반대 방향
+            float pushSpeed = 0.5f; // 밀림 속도 (조정 가능)
+            float pushDuration = 0.05f; // 밀림 지속 시간 (초)
+
+            // 밀림 효과 적용
+            Vec3 walkDirection(pushDirection.x(), 0.0f, pushDirection.z()); // Y축 무시
+            characterController->Move(walkDirection * pushSpeed); // Move 호출
+            characterController->SetPushDirection(btVector3(walkDirection.x * pushSpeed, 0.0f, walkDirection.z * pushSpeed)); // 밀림 방향 저장
+            characterController->SetPushTimer(pushDuration); // 밀림 타이머 설정
+            characterController->SetIsPushing(true); // 밀림 상태 활성화
+
             if (playerStats->IsDead())
             {
-                //characterController->OnDisable();
                 GET_SINGLE(SceneManager)->GetActiveScene()->RemoveGameObject(gameObjectPtr);
             }
         }
