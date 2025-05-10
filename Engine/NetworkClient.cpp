@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "NetworkClient.h"
 
-float my_x = 4.001f, my_y = 4.002f, my_z = 4.003f;
 SOCKET sock;
 std::atomic<bool> running{ true };
 bool g_receivedMyInfo = false;
@@ -27,7 +26,7 @@ bool ConnectAndLogin()
     SOCKADDR_IN serverAddr{};
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(GAME_PORT);
-    inet_pton(AF_INET, "172.30.1.78", &serverAddr.sin_addr);
+    inet_pton(AF_INET, "127.0.0.1", &serverAddr.sin_addr);
 
     if (connect(sock, reinterpret_cast<SOCKADDR*>(&serverAddr), sizeof(serverAddr)) == SOCKET_ERROR) {
         std::cout << "서버 연결 실패\n";
@@ -121,17 +120,3 @@ void recv_thread(SOCKET sock) {
         }
     }
 }
-
-
-//void pos_sender_thread(SOCKET sock) {
-//    while (running) {
-//        ctos_packet_position pos{};
-//        pos.size = sizeof(pos);
-//        pos.type = CToS_PLAYER_POS;
-//        pos.x = my_x;
-//        pos.y = my_y;
-//        pos.z = my_z;
-//        send(sock, reinterpret_cast<char*>(&pos), sizeof(pos), 0);
-//        std::this_thread::sleep_for(std::chrono::seconds(1));
-//    }
-//}

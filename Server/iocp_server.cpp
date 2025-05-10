@@ -10,8 +10,6 @@
 #pragma comment (lib, "WS2_32.LIB")
 #pragma comment (lib, "MSWSock.LIB")
 
-constexpr short SERVER_PORT = 3000;
-
 enum IO_OP { IO_RECV, IO_SEND, IO_ACCEPT };
 
 HANDLE g_hIOCP;
@@ -183,21 +181,6 @@ public:
 			_rx = packet->rx;
 			_ry = packet->ry;
 			_rz = packet->rz;
-
-			//std::cout << "[서버 로그] ID: " << _id
-				//<< " → 위치: (" << _x << ", " << _y << ", " << _z << ")"
-				//<< " 회전: (" << _rx << ", " << _ry << ", " << _rz << ")\n";
-
-			/*send_count++;
-			auto now = std::chrono::high_resolution_clock::now();
-			std::chrono::duration<double> elapsed = now - last_time;
-			if (elapsed.count() >= 1.0)
-			{
-				std::cout << "[INFO] send 호출 횟수: " << send_count << " 회/초" << std::endl;
-				send_count = 0;
-				last_time = now;
-			}*/
-
 			break;
 		}
 
@@ -260,7 +243,7 @@ int main()
 
 	SOCKADDR_IN addr;
 	addr.sin_family = AF_INET;
-	addr.sin_port = htons(SERVER_PORT);
+	addr.sin_port = htons(GAME_PORT);
 	addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	bind(s_socket, reinterpret_cast<sockaddr*>(&addr), sizeof(SOCKADDR_IN));
 	listen(s_socket, SOMAXCONN);

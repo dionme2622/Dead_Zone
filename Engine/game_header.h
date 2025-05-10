@@ -12,7 +12,6 @@ constexpr char SToC_ALL_POSITION = 9;
 constexpr char CToS_PLAYER_LOGIN = 5;
 constexpr char CToS_PLAYER_POS = 6;
 
-
 constexpr char MAX_ID_LENGTH = 20;
 
 constexpr char MOVE_UP = 1;
@@ -61,7 +60,7 @@ struct stoc_packet_all_position {
 		long long id;
 		float x, y, z;
 		float rx, ry, rz;
-	} players[64];  // √÷¥Î 64∏Ì
+	} players[10];
 };
 
 //Packet - ctos

@@ -6,15 +6,11 @@
 
 void Game::Init(const WindowInfo& info)
 {
-    // 서버 연결 및 로그인 처리
     if (!ConnectAndLogin()) {
         std::cout << "서버 연결 또는 로그인 실패\n";
         return;
     }
-    // 수신 쓰레드 시작
     std::thread(recv_thread, sock).detach();
-    // 위치 송신 쓰레드 시작
-    //std::thread(pos_sender_thread, sock).detach();
 
 	GEngine->Init(info);
 	
