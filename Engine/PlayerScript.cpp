@@ -208,7 +208,7 @@ void PlayerScript::UpdateRotation(float deltaX, float deltaY)
 	// Y축 회전 (Yaw, 좌우) - 캐릭터와 카메라 모두에 적용
 	_yaw += deltaX * sensitivity;
 
-	rotation.x = 0;
+	rotation.x = _pitch * 50;
 	rotation.y = _yaw * 50;
 	rotation.z = 0.0;
 
