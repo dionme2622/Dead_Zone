@@ -128,9 +128,11 @@ void PlayerScript::UpdateKeyInput()
 		// Shoot 애니메이션 트리거
 		GetAnimator()->SetTrigger("Shoot");
 
-		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
-		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
-		GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
+		if (GetWeaponManager()->GetCurrentWeapon()[0]) {
+			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
+			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
+			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
+		}
 	}
 	Vec3 delta = currentPos - _prevPosition;
 	delta.y = 0;
