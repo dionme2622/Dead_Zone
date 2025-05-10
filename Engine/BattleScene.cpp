@@ -44,20 +44,20 @@ void BattleScene::LoadScene()
 
 
 #pragma region DebugCamera
-	{
-		_playerCamera = make_shared<GameObject>();
-		_playerCamera->SetName(L"Debug_Camera");
-		_playerCamera->AddComponent(make_shared<Transform>());
-		_playerCamera->AddComponent(make_shared<Camera>());
-		_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
+	//{
+	//	_playerCamera = make_shared<GameObject>();
+	//	_playerCamera->SetName(L"Debug_Camera");
+	//	_playerCamera->AddComponent(make_shared<Transform>());
+	//	_playerCamera->AddComponent(make_shared<Camera>());
+	//	_playerCamera->AddComponent(make_shared<TestAnimation>(_hwnd));
 
-		_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
-		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
-		_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
-		uint8 layerIndex = LayerNameToIndex(L"UI");
-		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
-		AddGameObject(_playerCamera);
-	}
+	//	_playerCamera->GetTransform()->SetLocalPosition(Vec3(0.0f, 100.0f, 100.f));
+	//	_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
+	//	_playerCamera->GetTransform()->SetLocalRotation(Vec3(0.f, 180.f, 0.f));
+	//	uint8 layerIndex = LayerNameToIndex(L"UI");
+	//	_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
+	//	AddGameObject(_playerCamera);
+	//}
 #pragma endregion
 
 #pragma region SkyBox
@@ -407,11 +407,11 @@ void BattleScene::LoadScene()
 		_mainLight = make_shared<GameObject>();
 		_mainLight->AddComponent(make_shared<Transform>());
 		_mainLight->AddComponent(make_shared<Light>());
-		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, 0.f));
+		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, -1.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		_mainLight->GetLight()->SetDiffuse(Vec3(0.4f, 0.4f, 0.4f));   // ¹àÀº Èò»ö
+		_mainLight->GetLight()->SetDiffuse(Vec3(0.2f, 0.2f, 0.2f));   // ¹àÀº Èò»ö
 		_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // Àû´çÇÑ È¯°æ±¤
-		_mainLight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));  // ½ºÆåÅ§·¯ °­Á¶
+		_mainLight->GetLight()->SetSpecular(Vec3(0.6f, 0.6f, 0.6f));  // ½ºÆåÅ§·¯ °­Á¶
 
 
 		_mainLight->GetLight()->SetSunObject(_sunObject);
