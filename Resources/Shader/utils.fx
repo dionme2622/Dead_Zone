@@ -73,7 +73,7 @@ LightColor CalculateLightColor(int lightIndex, float3 viewNormal, float3 viewPos
             else if (lightAngle < outerAngle)
             {
                 float t = (outerAngle - lightAngle) / (outerAngle - innerAngle);
-                angleAttenuation = saturate(pow(t, 3.0f)); // ´õ ºÎµå·¯¿î Á¦°ö °¨¼è
+                angleAttenuation = saturate(pow(t, 8.0f)); // ´õ ºÎµå·¯¿î Á¦°ö °¨¼è
             }
             else
                 angleAttenuation = 0.f;

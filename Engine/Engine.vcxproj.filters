@@ -421,5 +421,8 @@
     <FxCompile Include="..\Resources\Shader\math.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+    <FxCompile Include="..\Resources\Shader\postprocess.fx">
+      <Filter>Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -68,7 +68,7 @@ float4 PS_Main(VS_OUT input) : SV_Target
         + totalColor.ambient.xyz * color.xyz
         + totalColor.specular.xyz;
 
-    return color;
+    return (0,0,0,0);
 }
 
 // [Texture Shader]
@@ -98,9 +98,7 @@ VS_TEX_OUT VS_Tex(VS_TEX_IN input)
 
 float4 PS_Tex(VS_TEX_OUT input) : SV_Target
 {
-    float4 color = float4(1.f, 1.f, 1.f, 1.f);
-    if (g_tex_on_0)
-        color = g_tex_0.Sample(g_sam_0, input.uv);
+    float4 color = g_tex_0.Sample(g_sam_0, input.uv);
 
     return color;
 }
@@ -117,9 +115,7 @@ VS_TEX_OUT VS_UI(VS_TEX_IN input)
 
 float4 PS_UI(VS_TEX_OUT input) : SV_Target
 {
-    float4 color = float4(1.f, 1.f, 1.f, 1.f);
-    if (g_tex_on_0)
-        color = g_tex_0.Sample(g_sam_0, input.uv);
+    float4 color = g_tex_0.Sample(g_sam_0, input.uv);
         
     if (color.a == 0.f)
         discard;

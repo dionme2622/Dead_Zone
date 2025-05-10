@@ -193,6 +193,20 @@ void Engine::CreateRenderTargetGroups()
 		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::LIGHTING)]->Create(RENDER_TARGET_GROUP_TYPE::LIGHTING, rtVec, dsTexture);
 	}
 
+	// Post Processing Group
+	{
+		vector<RenderTarget> rtVec(RENDER_TARGET_POST_PROCCESING_GROUP_MEMBER_COUNT);
+
+		rtVec[0].target = GET_SINGLE(Resources)->CreateTexture(L"PostProcessTarget",
+			DXGI_FORMAT_R8G8B8A8_UNORM, _window.width, _window.height,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+
+		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::POST_PROCESSING)] = make_shared<RenderTargetGroup>();
+		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::POST_PROCESSING)]->Create(RENDER_TARGET_GROUP_TYPE::POST_PROCESSING, rtVec, dsTexture);
+	}
+
+
 	//// Final Render Group
 	//{
 	//	vector<RenderTarget> rtVec(RENDER_TARGET_BLUR_GROUP_MEMBER_COUNT);

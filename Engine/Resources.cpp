@@ -754,6 +754,30 @@ void Resources::CreateDefaultShader()
 	}
 
 
+	// Final
+	{
+		ShaderInfo info =
+		{
+			SHADER_TYPE::POSTPROCCESS,
+			RASTERIZER_TYPE::CULL_NONE,
+			DEPTH_STENCIL_TYPE::NO_DEPTH_TEST_NO_WRITE,
+		};
+
+		ShaderArg arg =
+		{
+			"VS_PostProccessing",
+			"",
+			"",
+			"",
+			"PS_PostProccessing"
+		};
+
+		shared_ptr<Shader> shader = make_shared<Shader>();
+		shader->CreateGraphicsShader(L"..\\Resources\\Shader\\postprocess.fx", info, arg);
+		Add<Shader>(L"PostProcess", shader);
+	}
+
+
 	//// SwapChain
 	//{
 	//	ShaderInfo info =
