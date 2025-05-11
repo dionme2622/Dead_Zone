@@ -22,7 +22,6 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<Cha
 	_playerId = playerId;
 	_controller = controller;
 	// Player에 대한 정보 초기화 단계
-
 	_speed = 0.0f;
 }
 

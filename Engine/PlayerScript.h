@@ -19,6 +19,12 @@ public:
 
 	void UpdateMouseInput();
 
+	
+public:
+	void SetCameraTransform(shared_ptr<Transform> cameraTransform){
+		_cameraTransform = cameraTransform;
+	}
+
 private:
 	HWND _hwnd;
 	bool _isLocal;

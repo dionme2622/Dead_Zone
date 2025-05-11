@@ -65,3 +65,10 @@ shared_ptr<CharacterController> Component::GetCharacterController()
 {
 	return _gameObject.lock()->GetCharacterController();
 }
+
+shared_ptr<MonoBehaviour> Component::GetMonoBehaviour()
+{
+	return _gameObject.lock()->GetMonoBehaviour();
+}
+
+

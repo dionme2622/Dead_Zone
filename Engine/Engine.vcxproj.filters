@@ -211,6 +211,7 @@
       <Filter>Object\Component\Colider</Filter>
     </ClInclude>
     <ClInclude Include="DebugRenderer.h" />
+    <ClInclude Include="CameraScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -381,6 +382,7 @@
       <Filter>Object\Component\Colider</Filter>
     </ClCompile>
     <ClCompile Include="DebugRenderer.cpp" />
+    <ClCompile Include="CameraScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">

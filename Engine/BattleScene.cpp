@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "PlayerScript.h"
+#include "CameraScript.h"
 #include "Engine.h"
 #include "Resources.h"
 #include "MeshData.h"
@@ -107,7 +108,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(25, 250.f, 20));
+	player1->GetTransform()->SetLocalPosition(Vec3(25, 100.f, 15));
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
 	player1->AddComponent(make_shared<CharacterController>(player1, 0.5, 3.0, 0.3f));
@@ -152,14 +153,15 @@ void BattleScene::LoadScene()
 		_playerCamera->SetName(L"Main_Camera");
 		_playerCamera->AddComponent(make_shared<Transform>());
 		_playerCamera->AddComponent(make_shared<Camera>());
+		//_playerCamera->AddComponent(make_shared<CameraScript>(_hwnd));
 		_playerCamera->GetTransform()->SetLocalPosition(Vec3(1.2f, 3.03f, -6.65f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI´Â ¾È ÂïÀ½
 		AddGameObject(_playerCamera);
 	}
-	_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player¿¡°Ô Camera ¸¦ ºÙÀÎ´Ù.
-	
+	//_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player¿¡°Ô Camera ¸¦ ºÙÀÎ´Ù.
+
 #pragma endregion
 	
 
@@ -409,9 +411,13 @@ void BattleScene::LoadScene()
 		_mainLight->AddComponent(make_shared<Light>());
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, -1.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		_mainLight->GetLight()->SetDiffuse(Vec3(0.2f, 0.2f, 0.2f));   // ¹àÀº Èò»ö
+		//_mainLight->GetLight()->SetDiffuse(Vec3(0.2f, 0.2f, 0.2f));   // ¹àÀº Èò»ö
+		//_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // Àû´çÇÑ È¯°æ±¤
+		//_mainLight->GetLight()->SetSpecular(Vec3(0.6f, 0.6f, 0.6f));  // ½ºÆåÅ§·¯ °­Á¶
+
+		_mainLight->GetLight()->SetDiffuse(Vec3(1.0, 1.0, 1.0));   // ¹àÀº Èò»ö
 		_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // Àû´çÇÑ È¯°æ±¤
-		_mainLight->GetLight()->SetSpecular(Vec3(0.6f, 0.6f, 0.6f));  // ½ºÆåÅ§·¯ °­Á¶
+		_mainLight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));  // ½ºÆåÅ§·¯ °­Á¶
 
 
 		_mainLight->GetLight()->SetSunObject(_sunObject);

@@ -155,6 +155,12 @@ shared_ptr<CharacterController> GameObject::GetCharacterController()
 	return static_pointer_cast<CharacterController>(component);
 }
 
+shared_ptr<MonoBehaviour> GameObject::GetMonoBehaviour()
+{
+	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::MONO_BEHAVIOUR);
+	return static_pointer_cast<MonoBehaviour>(component);
+}
+
 shared_ptr<Camera> GameObject::GetCamera()
 {
 	shared_ptr<Component> component = GetFixedComponent(COMPONENT_TYPE::CAMERA);
