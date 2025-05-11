@@ -22,7 +22,6 @@ PlayerScript::PlayerScript(HWND hwnd, bool isLocal, int playerId, shared_ptr<Cha
 	_playerId = playerId;
 	_controller = controller;
 	// Player에 대한 정보 초기화 단계
-
 	_speed = 0.0f;
 }
 
@@ -131,14 +130,28 @@ void PlayerScript::UpdateKeyInput()
 	if (INPUT->GetButton(KEY_TYPE::LEFTCLICK))
 	{
 		// Shoot 애니메이션 트리거
-		GetAnimator()->SetTrigger("Shoot");
-
 		if (GetWeaponManager()) {
+			GetAnimator()->SetTrigger("Shoot");
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
+			_isShoot = true;
 		}
 	}
+
+	if (INPUT->GetButtonUp(KEY_TYPE::LEFTCLICK))
+	{
+		_isShoot = false;
+	}
+
+	if (INPUT->GetButton(KEY_TYPE::CTRL)) {
+		_isAiming = true;
+
+	}
+	else if (INPUT->GetButtonUp(KEY_TYPE::CTRL)) {
+		_isAiming = false;
+	}
+
 	Vec3 delta = currentPos - _prevPosition;
 	delta.y = 0;
 	float currentSpeed = delta.Length() / DELTA_TIME;
@@ -172,7 +185,13 @@ void PlayerScript::UpdateKeyInput()
 	// 5) Animator 에 전달
 	GetAnimator()->SetFloat("Speed", _speed);
 	GetAnimator()->SetBool("isJumping", !_controller->IsOnGround());
+	GetAnimator()->SetBool("isAiming", _isAiming);
+	GetAnimator()->SetBool("isShooting", _isShoot);
 
+	//printf("점프?: %d\n", !_controller->IsOnGround());
+	//printf("속도: %f\n", currentSpeed);
+	/*printf("이전: %f %f %f\n", _prevPosition.x, _prevPosition.y, _prevPosition.z);
+	printf("이후: %f %f %f\n", currentPos.x, currentPos.y, currentPos.z);*/
 
 	_prevPosition = currentPos;
 }

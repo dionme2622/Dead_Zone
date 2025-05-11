@@ -281,6 +281,14 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorPlayerController()
 	AnimatorParameter isJumpingParam{ "isJumping" , ParameterType::Bool, 0.0 };
 	controller->AddParameter(isJumpingParam);
 
+	// 2) 파라미터 정의: isAiming (bool)
+	AnimatorParameter isAimingParam{ "isAiming" , ParameterType::Bool, 0.0 };
+	controller->AddParameter(isAimingParam);
+
+	// 2) 파라미터 정의: isShooting (bool)
+	AnimatorParameter isShootingaram{ "isShooting" , ParameterType::Bool, 0.0 };
+	controller->AddParameter(isShootingaram);
+
 	// 3) 스테이트 생성 (이름, 클립, 클립 인덱스, 속도, loop)
 	auto Idle = make_shared<AnimationState>(L"Idle", GetAnimClip(L"Idle"), 0, 1.0f, true);
 	auto Walk = make_shared<AnimationState>(L"Walk", GetAnimClip(L"Walk"), 1, 1.0f, true);
@@ -310,6 +318,9 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorPlayerController()
 
 	int speedIdx = controller->GetParamIndex("Speed");
 	int isJumpingIdx = controller->GetParamIndex("isJumping");
+	int isAimingIdx = controller->GetParamIndex("isAiming");
+	int isShootingIdx = controller->GetParamIndex("isShooting");
+
 
 	// 4) Idle → Walk 전이 추가 (Speed > 0.1)
 	{
@@ -394,6 +405,67 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorPlayerController()
 		Jump->AddTransition(t);
 	}
 
+	// □ Idle/Walk/Run → Aiming
+	for (auto baseState : { Idle, Walk, Run })
+	{
+		auto t = make_shared<Transition>(Rifle_Idle);
+		// isJumping == true 일 때 전환
+		t->AddCondition(
+			/*paramIndex=*/ isAimingIdx,
+			ParameterType::Bool,
+			/*mode=*/       ConditionMode::Equals,
+			/*threshold=*/  1.0f,       // Bool:true → 1.0
+			/*exitTime=*/   0.0f,
+			/*duration=*/   0.1f        // 부드러운 페이드 타임
+		);
+		baseState->AddTransition(t);
+	}
+
+	// □ Aiming → Idle (착지 시 자동 복귀)
+	{
+		auto t = make_shared<Transition>(Idle);
+		// isJumping == false 일 때 전환
+		t->AddCondition(
+			/*paramIndex=*/ isAimingIdx,
+			ParameterType::Bool,
+			/*mode=*/       ConditionMode::Equals,
+			/*threshold=*/  0.0f,       // Bool:false → 0.0
+			/*exitTime=*/   0.0f,
+			/*duration=*/   0.1f
+		);
+		Rifle_Idle->AddTransition(t);
+	}
+
+	// □ Aiming → Shoot
+	{
+		auto t = make_shared<Transition>(Rifle_Shoot);
+		// isJumping == true 일 때 전환
+		t->AddCondition(
+			/*paramIndex=*/ isShootingIdx,
+			ParameterType::Bool,
+			/*mode=*/       ConditionMode::Equals,
+			/*threshold=*/  1.0f,       // Bool:true → 1.0
+			/*exitTime=*/   0.0f,
+			/*duration=*/   0.1f        // 부드러운 페이드 타임
+		);
+		Rifle_Idle->AddTransition(t);
+	}
+
+	// □ Shoot → Aiming
+	{
+		auto t = make_shared<Transition>(Rifle_Idle);
+		// isJumping == true 일 때 전환
+		t->AddCondition(
+			/*paramIndex=*/ isShootingIdx,
+			ParameterType::Bool,
+			/*mode=*/       ConditionMode::Equals,
+			/*threshold=*/  0.0f,       // Bool:true → 1.0
+			/*exitTime=*/   0.0f,
+			/*duration=*/   0.1f        // 부드러운 페이드 타임
+		);
+		Rifle_Shoot->AddTransition(t);
+	}
+
 	// 4) 클릭 시 Shoot 상태로 전이
 	//for (auto baseState : { Idle, Walk, Run })
 	//{
@@ -423,11 +495,14 @@ shared_ptr<class AnimatorController> Resources::LoadAnimatorZombieController()
 
 	// 3) 스테이트 생성 (이름, 클립, 클립 인덱스, 속도, loop)
 	auto idle = make_shared<AnimationState>(L"Zombie_Idle", GetAnimClip(L"Zombie_Idle"), 0, 1.0f, true);
+	auto walk = make_shared<AnimationState>(L"Zombie_Walk", GetAnimClip(L"Zombie_Walk"), 1, 1.0f, true);
 
 
 	controller->AddState(idle);
+	controller->AddState(walk);
+
 	// 6) Entry State 설정
-	controller->SetEntryState(L"Zombie_Idle");
+	controller->SetEntryState(L"Zombie_Walk");
 	return controller;
 }
 

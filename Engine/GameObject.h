@@ -38,7 +38,7 @@ public:
 	shared_ptr<PlayerStats> GetPlayerStats();
 	shared_ptr<RigidBody> GetRigidBody();
 	shared_ptr<CharacterController> GetCharacterController();
-
+	shared_ptr<MonoBehaviour> GetMonoBehaviour();
 
 	shared_ptr<Camera> GetCamera();
 	shared_ptr<Light> GetLight();

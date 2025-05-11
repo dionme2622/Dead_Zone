@@ -16,6 +16,8 @@ LightColor CalculateLightColor(int lightIndex, float3 viewNormal, float3 viewPos
 
     // 메탈릭 값 가져오기 (0.0 ~ 1.0)
     float metallic = g_float_2;
+    
+    metallic = (metallic < 0.0f || metallic > 1.0f) ? 0.0f : metallic; // 기본값 0.1
 
     if (g_light[lightIndex].lightType == 0)
     {

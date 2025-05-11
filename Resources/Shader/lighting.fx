@@ -71,7 +71,7 @@ PS_OUT PS_DirLight(VS_OUT input)
         if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
         {
             float shadowDepth = g_tex_2.Sample(g_sam_0, uv).x;
-            if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
+            if (shadowDepth > 0 && depth > shadowDepth + 0.5f)
             {
                 color.diffuse *= 0.5f;
                 color.specular = (float4) 0.f;
@@ -80,6 +80,7 @@ PS_OUT PS_DirLight(VS_OUT input)
     }
      // 메탈릭 값 계산 (예: 노멀의 z값을 기반으로 메탈릭 정도를 설정)
     float metalicFactor = saturate(viewNormal.z); // 0 ~ 1 범위로 제한
+    
     
     output.diffuse = color.diffuse + color.ambient;
     output.specular = color.specular;
@@ -203,6 +204,9 @@ float4 PS_Final(VS_OUT input) : SV_Target
     float4 specular = g_tex_2.Sample(g_sam_0, input.uv);
     float4 metalic = g_tex_3.Sample(g_sam_0, input.uv);
 
+    metalic = (metalic < 0.0f || metalic > 1.0f) ? 0.0f : metalic; // 기본값 0.1
+    
+    
     // 메탈릭 값에 따라 디퓨즈와 스페큘러 조정
     float metalicFactor = metalic.r; // 메탈릭은 단일 채널로 가정
     float diffuseFactor = 1.0f - metalicFactor; // 메탈릭이 높을수록 디퓨즈 감소

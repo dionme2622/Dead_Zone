@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Light.h"
 #include "PlayerScript.h"
+#include "CameraScript.h"
 #include "Engine.h"
 #include "Resources.h"
 #include "MeshData.h"
@@ -121,7 +122,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(15, 250.f, 0));
+	player1->GetTransform()->SetLocalPosition(Vec3(25, 100.f, 15));
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
 	player1->AddComponent(make_shared<CharacterController>(player1, 0.5, 3.0, 0.3f));
@@ -166,16 +167,17 @@ void BattleScene::LoadScene()
 		_playerCamera->SetName(L"Main_Camera");
 		_playerCamera->AddComponent(make_shared<Transform>());
 		_playerCamera->AddComponent(make_shared<Camera>());
+		//_playerCamera->AddComponent(make_shared<CameraScript>(_hwnd));
 		_playerCamera->GetTransform()->SetLocalPosition(Vec3(1.2f, 3.03f, -6.65f));
 		_playerCamera->GetTransform()->LookAt(Vec3(0.f, 0.f, 1.f));
 		uint8 layerIndex = LayerNameToIndex(L"UI");
 		_playerCamera->GetCamera()->SetCullingMaskLayerOnOff(layerIndex, true); // UI는 안 찍음
 		AddGameObject(_playerCamera);
 	}
-	_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player에게 Camera 를 붙인다.
+	//_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player에게 Camera 를 붙인다.
 
 #pragma endregion
-
+	
 
 #pragma region UI_Camera
 	{
@@ -267,7 +269,7 @@ void BattleScene::LoadScene()
 
 #pragma region Zombie
 	{
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
 			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
 
@@ -421,11 +423,15 @@ void BattleScene::LoadScene()
 		_mainLight = make_shared<GameObject>();
 		_mainLight->AddComponent(make_shared<Transform>());
 		_mainLight->AddComponent(make_shared<Light>());
-		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, 0.f));
+		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, -1.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		_mainLight->GetLight()->SetDiffuse(Vec3(0.4f, 0.4f, 0.4f));   // 밝은 흰색
-		_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // 적당한 환경광
-		_mainLight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));  // 스펙큘러 강조
+		_mainLight->GetLight()->SetDiffuse(Vec3(0.3f, 0.3f, 0.3f));   // 밝은 흰색
+		_mainLight->GetLight()->SetAmbient(Vec3(0.2f, 0.2f, 0.2f));   // 적당한 환경광
+		_mainLight->GetLight()->SetSpecular(Vec3(0.4f, 0.4f, 0.4f));  // 스펙큘러 강조
+
+		//_mainLight->GetLight()->SetDiffuse(Vec3(1.0, 1.0, 1.0));   // 밝은 흰색
+		//_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // 적당한 환경광
+		//_mainLight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));  // 스펙큘러 강조
 
 
 		_mainLight->GetLight()->SetSunObject(_sunObject);
@@ -520,21 +526,36 @@ void BattleScene::UpdateSunOrbit()
 
 void BattleScene::UpdateZombieMove()
 {
-	Vec3 playerPosition = _player[0]->GetTransform()->GetLocalPosition();
-
 	// 좀비 이동 처리
 	for (auto& zombie : _zombies)
 	{
 		// 좀비의 현재 위치
 		Vec3 zombiePosition = zombie[23]->GetTransform()->GetLocalPosition();
 
+
+		// 가장 가까운 플레이어 찾기
+		Vec3 closestPlayerPosition;
+		float minDistanceSquared = FLT_MAX;
+		for (const auto& player : _player)
+		{
+			Vec3 playerPosition = player->GetTransform()->GetLocalPosition();
+			Vec3 distanceVector = playerPosition - zombiePosition;
+			float distanceSquared = distanceVector.LengthSquared();
+
+			if (distanceSquared < minDistanceSquared)
+			{
+				minDistanceSquared = distanceSquared;
+				closestPlayerPosition = playerPosition;
+			}
+		}
+
 		// 플레이어를 향한 방향 계산
-		Vec3 direction = playerPosition - zombiePosition;
+		Vec3 direction = closestPlayerPosition - zombiePosition;
 		if (direction.LengthSquared() > 0.0f)
 			direction.Normalize();
 
 		// 이동 속도 설정
-		float zombieSpeed = 2.0f; // 초당 2 유닛 이동
+		float zombieSpeed = 0.5f; // 초당 2 유닛 이동
 		Vec3 moveVector = direction * zombieSpeed * DELTA_TIME;
 
 		bool p = zombie[23]->GetCharacterController()->GetIsPushing();
@@ -542,9 +563,16 @@ void BattleScene::UpdateZombieMove()
 		// CharacterController를 사용하여 이동
 		zombie[23]->GetCharacterController()->Move(moveVector);
 
+		// 좀비가 가장 가까운 플레이어를 바라보도록 Yaw 회전 설정
+		if (direction.LengthSquared() > 0.0f)
+		{
+			// XZ 평면에서 방향 벡터의 Yaw 각도 계산
+			float yaw = atan2(direction.x, direction.z); // 라디안 단위
+			Vec3 currentRotation = zombie[23]->GetTransform()->GetLocalRotation();
+			currentRotation.y = yaw * (180.0f / XM_PI); // 도 단위로 변환
+			zombie[23]->GetTransform()->SetLocalRotation(currentRotation);
+		}
 
-		// 좀비가 플레이어를 바라보도록 설정
-		zombie[23]->GetTransform()->LookAt(playerPosition);
 	}
 }
 
