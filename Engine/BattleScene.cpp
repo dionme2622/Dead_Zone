@@ -107,7 +107,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(15, 250.f, 0));
+	player1->GetTransform()->SetLocalPosition(Vec3(25, 250.f, 20));
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
 	player1->AddComponent(make_shared<CharacterController>(player1, 0.5, 3.0, 0.3f));
@@ -159,9 +159,9 @@ void BattleScene::LoadScene()
 		AddGameObject(_playerCamera);
 	}
 	_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Player에게 Camera 를 붙인다.
-
+	
 #pragma endregion
-
+	
 
 #pragma region UI_Camera
 	{
@@ -506,16 +506,31 @@ void BattleScene::UpdateSunOrbit()
 
 void BattleScene::UpdateZombieMove()
 {
-	Vec3 playerPosition = _player[0]->GetTransform()->GetLocalPosition();
-
 	// 좀비 이동 처리
 	for (auto& zombie : _zombies)
 	{
 		// 좀비의 현재 위치
 		Vec3 zombiePosition = zombie[23]->GetTransform()->GetLocalPosition();
 
+
+		// 가장 가까운 플레이어 찾기
+		Vec3 closestPlayerPosition;
+		float minDistanceSquared = FLT_MAX;
+		for (const auto& player : _player)
+		{
+			Vec3 playerPosition = player->GetTransform()->GetLocalPosition();
+			Vec3 distanceVector = playerPosition - zombiePosition;
+			float distanceSquared = distanceVector.LengthSquared();
+
+			if (distanceSquared < minDistanceSquared)
+			{
+				minDistanceSquared = distanceSquared;
+				closestPlayerPosition = playerPosition;
+			}
+		}
+
 		// 플레이어를 향한 방향 계산
-		Vec3 direction = playerPosition - zombiePosition;
+		Vec3 direction = closestPlayerPosition - zombiePosition;
 		if (direction.LengthSquared() > 0.0f)
 			direction.Normalize();
 
@@ -530,9 +545,16 @@ void BattleScene::UpdateZombieMove()
 		// CharacterController를 사용하여 이동
 		zombie[23]->GetCharacterController()->Move(moveVector);
 
+		// 좀비가 가장 가까운 플레이어를 바라보도록 Yaw 회전 설정
+		if (direction.LengthSquared() > 0.0f)
+		{
+			// XZ 평면에서 방향 벡터의 Yaw 각도 계산
+			float yaw = atan2(direction.x, direction.z); // 라디안 단위
+			Vec3 currentRotation = zombie[23]->GetTransform()->GetLocalRotation();
+			currentRotation.y = yaw * (180.0f / XM_PI); // 도 단위로 변환
+			zombie[23]->GetTransform()->SetLocalRotation(currentRotation);
+		}
 
-		// 좀비가 플레이어를 바라보도록 설정
-		zombie[23]->GetTransform()->LookAt(playerPosition);
 	}
 }
 
