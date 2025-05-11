@@ -27,7 +27,7 @@ bool ConnectAndLogin()
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(GAME_PORT);
 
-    inet_pton(AF_INET, "172.30.1.78", &serverAddr.sin_addr);
+    inet_pton(AF_INET, "127.0.0.1", &serverAddr.sin_addr);
 
     if (connect(sock, reinterpret_cast<SOCKADDR*>(&serverAddr), sizeof(serverAddr)) == SOCKET_ERROR) {
         std::cout << "서버 연결 실패\n";
@@ -35,12 +35,12 @@ bool ConnectAndLogin()
         return false;
     }
 
-    std::cout << "서버에 접속되었습니다.\n";
+    std::cout << "Connected to the server.\n";
 
     ctos_packet_login login{};
     login.size = sizeof(login);
     login.type = CToS_PLAYER_LOGIN;
-    std::cout << "닉네임 입력: ";
+    std::cout << "ID : ";
     std::cin.getline(login.name, MAX_ID_LENGTH);
     send(sock, reinterpret_cast<char*>(&login), sizeof(login), 0);
 
@@ -75,20 +75,20 @@ void recv_thread(SOCKET sock) {
             switch (type) {
             case SToC_PLAYER_INFO: {
                 auto* p = reinterpret_cast<stoc_packet_player_info*>(&buffer[offset]);
-                std::cout << "[내 정보] ID: " << p->id << " 위치: (" << p->x << ", " << p->y << ", " << p->z << ")\n";
+                std::cout << "[MY INFORMATION] ID: " << p->id << " 위치: (" << p->x << ", " << p->y << ", " << p->z << ")\n";
                 g_myInfo = *p;
                 g_receivedMyInfo = true;
                 break;
             }
             case SToC_PLAYER_ENTER: {
                 auto* p = reinterpret_cast<stoc_packet_enter*>(&buffer[offset]);
-                std::cout << "[입장] ID: " << p->id << " 이름: " << p->name
+                std::cout << "[ENTER] ID: " << p->id << " 이름: " << p->name
                     << " 위치: (" << p->x << ", " << p->y << ", " << p->z << ")\n";
                 break;
             }
             case SToC_PLAYER_LEAVE: {
                 auto* p = reinterpret_cast<stoc_packet_leave*>(&buffer[offset]);
-                std::cout << "[퇴장] ID: " << p->id << "\n";
+                std::cout << "[LEAVE] ID: " << p->id << "\n";
                 break;
             }
             case SToC_ALL_POSITION: {
