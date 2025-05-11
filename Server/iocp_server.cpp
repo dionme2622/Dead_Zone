@@ -14,9 +14,6 @@ enum IO_OP { IO_RECV, IO_SEND, IO_ACCEPT };
 
 HANDLE g_hIOCP;
 
-int send_count = 0;
-auto last_time = std::chrono::high_resolution_clock::now();
-
 
 class EXP_OVER
 {
@@ -65,6 +62,8 @@ public:
 	float _rx = 0.0f, _ry = 0.0f, _rz = 0.0f;
 	float _speed;
 	bool _isJumping;
+	bool _aaa;
+	bool _bbb;
 	std::string		_name;
 
 
@@ -185,6 +184,8 @@ public:
 			_rz = packet->rz;
 			_speed = packet->speed;
 			_isJumping = packet->isJumping;
+			_aaa = packet->aaa;
+			_bbb = packet->bbb;
 			break;
 		}
 
@@ -220,6 +221,8 @@ void pos_sender_thread() {
 			p.players[i].rz = session._rz;
 			p.players[i].speed = session._speed;
 			p.players[i].isJumping = session._isJumping;
+			p.players[i].aaa = session._aaa;
+			p.players[i].bbb = session._bbb;
 			++i;
 		}
 

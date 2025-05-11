@@ -47,7 +47,7 @@ void BattleScene::LoadScene()
 		_myID = g_myInfo.id + 1;
 	else
 		_myID = 2;
-	std::cout << "[BattleScene] 내 ID는 " << _myID << ", 위치는 ("
+	std::cout << "[BattleScene] My ID : " << _myID << ", Position is  ("
 		<< g_myInfo.x << ", " << g_myInfo.y << ", " << g_myInfo.z << ")\n";
 	
 	

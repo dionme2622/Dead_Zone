@@ -62,6 +62,8 @@ struct stoc_packet_all_position {
 		float rx, ry, rz;
 		float speed;
 		bool isJumping;
+		bool aaa;
+		bool bbb;
 	} players[10];
 };
 
@@ -79,6 +81,8 @@ struct ctos_packet_position {
 	float rx, ry, rz;
 	float speed;
 	bool isJumping;
+	bool aaa;
+	bool bbb;
 };
 
 #pragma pack (pop)

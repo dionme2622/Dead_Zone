@@ -49,7 +49,7 @@ void PlayerScript::FinalUpdate()
 		auto it = g_otherPlayerPositions.find(key);
 		if (it != g_otherPlayerPositions.end())
 		{
-			auto [x, y, z, rx, ry, rz, speed, isJumping ] = it->second; // 6개 값 받아오기
+			auto [x, y, z, rx, ry, rz, speed, isJumping, aaa, bbb ] = it->second; // 6개 값 받아오기
 			//std::cout << "Player 1 위치: (" << x << ", " << y << ", " << z << ") 회전: (" << rx << ", " << ry << ", " << rz << ")\n";
 
 
@@ -62,6 +62,8 @@ void PlayerScript::FinalUpdate()
 			GetTransform()->SetLocalRotation(Vec3(0, ry, 0)); // 추가된 회전 적용
 			GetAnimator()->SetFloat("Speed", speed);
 			GetAnimator()->SetBool("isJumping", isJumping);
+
+			std::cout << aaa << "," << bbb << std::endl;
 
 		}
 		else
@@ -159,8 +161,9 @@ void PlayerScript::UpdateKeyInput()
 	ctos_pos.rz = rotation.z;
 	ctos_pos.speed = _speed;
 	ctos_pos.isJumping = !_controller->IsOnGround();
-
-
+	//ctos_pos.aaa
+	//ctos_pos.bbb
+	std::cout << ctos_pos.aaa << "," << ctos_pos.bbb << std::endl;
 
 	send(sock, reinterpret_cast<char*>(&ctos_pos), sizeof(ctos_pos), 0);
 	
