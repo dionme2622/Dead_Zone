@@ -255,7 +255,7 @@ void BattleScene::LoadScene()
 
 #pragma region Zombie
 	{
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
 			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
 
@@ -284,7 +284,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\EnvDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -310,7 +310,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\PropDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -541,7 +541,7 @@ void BattleScene::UpdateZombieMove()
 			direction.Normalize();
 
 		// 이동 속도 설정
-		float zombieSpeed = 2.0f; // 초당 2 유닛 이동
+		float zombieSpeed = 0.5f; // 초당 2 유닛 이동
 		Vec3 moveVector = direction * zombieSpeed * DELTA_TIME;
 
 		cout << moveVector.x << "," << moveVector.y << ", " << moveVector.z << endl;

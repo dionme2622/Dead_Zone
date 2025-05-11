@@ -48,14 +48,14 @@ bool MeshCollider::Intersects(const Vec4& rayOrigin, const Vec4& rayDir, float& 
 void MeshCollider::FinalUpdate() {
     // 디버그용으로 메시 에지(Line) 그리기
     //DirectX::XMMATRIX world = GetTransform()->GetWorldMatrix();
-    for (size_t i = 0; i + 2 < _inds.size(); i += 3) {
+   /* for (size_t i = 0; i + 2 < _inds.size(); i += 3) {
         btVector3 v0 = _verts[_inds[i + 0]];
         btVector3 v1 = _verts[_inds[i + 1]];
         btVector3 v2 = _verts[_inds[i + 2]];
         GET_SINGLE(DebugRenderer)->AddLine({ v0.x(), v0.y(), v0.z() }, { v1.x(), v1.y(), v1.z() }, { 1,1,0,1 });
         GET_SINGLE(DebugRenderer)->AddLine({ v1.x(), v1.y(), v1.z() }, { v2.x(), v2.y(), v2.z() }, { 1,1,0,1 });
         GET_SINGLE(DebugRenderer)->AddLine({ v2.x(), v2.y(), v2.z() }, { v0.x(), v0.y(), v0.z() }, { 1,1,0,1 });
-    }
+    }*/
 }
 
 std::shared_ptr<Mesh> MeshCollider::GetColliderMesh() {

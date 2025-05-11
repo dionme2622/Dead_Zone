@@ -106,7 +106,13 @@ void PlayerScript::UpdateKeyInput()
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
+			_isShoot = true;
 		}
+	}
+
+	if (INPUT->GetButtonUp(KEY_TYPE::LEFTCLICK))
+	{
+		_isShoot = false;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::CTRL)) {
@@ -125,6 +131,7 @@ void PlayerScript::UpdateKeyInput()
 	GetAnimator()->SetFloat("Speed", _speed);
 	GetAnimator()->SetBool("isJumping", !_controller->IsOnGround());
 	GetAnimator()->SetBool("isAiming", _isAiming);
+	GetAnimator()->SetBool("isShooting", _isShoot);
 
 	//printf("점프?: %d\n", !_controller->IsOnGround());
 	//printf("속도: %f\n", currentSpeed);
