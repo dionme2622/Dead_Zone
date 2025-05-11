@@ -105,8 +105,8 @@ void recv_thread(SOCKET sock) {
                         p->players[i].rz,
                         p->players[i].speed,
                         p->players[i].isJumping,
-                        p->players[i].aaa,
-                        p->players[i].bbb
+                        p->players[i].isAiming,
+                        p->players[i].isShooting
                     );
                 }
                 break;

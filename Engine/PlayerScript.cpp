@@ -48,7 +48,7 @@ void PlayerScript::FinalUpdate()
 		auto it = g_otherPlayerPositions.find(key);
 		if (it != g_otherPlayerPositions.end())
 		{
-			auto [x, y, z, rx, ry, rz, speed, isJumping, aaa, bbb ] = it->second; // 6개 값 받아오기
+			auto [x, y, z, rx, ry, rz, speed, isJumping, isAiming, isShooting ] = it->second; // 6개 값 받아오기
 			//std::cout << "Player 1 위치: (" << x << ", " << y << ", " << z << ") 회전: (" << rx << ", " << ry << ", " << rz << ")\n";
 
 
@@ -61,8 +61,8 @@ void PlayerScript::FinalUpdate()
 			GetTransform()->SetLocalRotation(Vec3(0, ry, 0)); // 추가된 회전 적용
 			GetAnimator()->SetFloat("Speed", speed);
 			GetAnimator()->SetBool("isJumping", isJumping);
-
-			std::cout << aaa << "," << bbb << std::endl;
+			GetAnimator()->SetBool("isAiming", isAiming);
+			GetAnimator()->SetBool("isShooting", isShooting);
 
 		}
 		else
@@ -135,13 +135,13 @@ void PlayerScript::UpdateKeyInput()
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletPosition();
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->SetBulletDirection();
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
-			_isShoot = true;
+			_isShooting = true;
 		}
 	}
 
 	if (INPUT->GetButtonUp(KEY_TYPE::LEFTCLICK))
 	{
-		_isShoot = false;
+		_isShooting = false;
 	}
 
 	if (INPUT->GetButton(KEY_TYPE::CTRL)) {
@@ -152,9 +152,9 @@ void PlayerScript::UpdateKeyInput()
 		_isAiming = false;
 	}
 
-	Vec3 delta = currentPos - _prevPosition;
+	/*Vec3 delta = currentPos - _prevPosition;
 	delta.y = 0;
-	float currentSpeed = delta.Length() / DELTA_TIME;
+	float currentSpeed = delta.Length() / DELTA_TIME;*/
 
 
 	// TODO : Location, Rotation, Scale 값을 서버로 보낸다.
@@ -174,9 +174,8 @@ void PlayerScript::UpdateKeyInput()
 	ctos_pos.rz = rotation.z;
 	ctos_pos.speed = _speed;
 	ctos_pos.isJumping = !_controller->IsOnGround();
-	//ctos_pos.aaa
-	//ctos_pos.bbb
-	std::cout << ctos_pos.aaa << "," << ctos_pos.bbb << std::endl;
+	ctos_pos.isAiming = _isAiming;
+	ctos_pos.isShooting = _isShooting;
 
 	send(sock, reinterpret_cast<char*>(&ctos_pos), sizeof(ctos_pos), 0);
 	
@@ -186,14 +185,9 @@ void PlayerScript::UpdateKeyInput()
 	GetAnimator()->SetFloat("Speed", _speed);
 	GetAnimator()->SetBool("isJumping", !_controller->IsOnGround());
 	GetAnimator()->SetBool("isAiming", _isAiming);
-	GetAnimator()->SetBool("isShooting", _isShoot);
+	GetAnimator()->SetBool("isShooting", _isShooting);
 
-	//printf("점프?: %d\n", !_controller->IsOnGround());
-	//printf("속도: %f\n", currentSpeed);
-	/*printf("이전: %f %f %f\n", _prevPosition.x, _prevPosition.y, _prevPosition.z);
-	printf("이후: %f %f %f\n", currentPos.x, currentPos.y, currentPos.z);*/
-
-	_prevPosition = currentPos;
+	//_prevPosition = currentPos;
 }
 
 
