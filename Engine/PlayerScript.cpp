@@ -108,6 +108,15 @@ void PlayerScript::UpdateKeyInput()
 			GetWeaponManager()->GetCurrentWeapon()[0]->GetWeapon()->Attack();
 		}
 	}
+
+	if (INPUT->GetButton(KEY_TYPE::CTRL)) {
+		_isAiming = true;
+
+	}
+	else if (INPUT->GetButtonUp(KEY_TYPE::CTRL)) {
+		_isAiming = false;
+	}
+
 	Vec3 delta = currentPos - _prevPosition;
 	delta.y = 0;
 	float currentSpeed = delta.Length() / DELTA_TIME;
@@ -115,6 +124,8 @@ void PlayerScript::UpdateKeyInput()
 	// 5) Animator 에 전달
 	GetAnimator()->SetFloat("Speed", _speed);
 	GetAnimator()->SetBool("isJumping", !_controller->IsOnGround());
+	GetAnimator()->SetBool("isAiming", _isAiming);
+
 	//printf("점프?: %d\n", !_controller->IsOnGround());
 	//printf("속도: %f\n", currentSpeed);
 	/*printf("이전: %f %f %f\n", _prevPosition.x, _prevPosition.y, _prevPosition.z);
