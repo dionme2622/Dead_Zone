@@ -356,7 +356,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -382,7 +382,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\Wall.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -400,7 +400,7 @@ void BattleScene::LoadScene()
 
 		for (auto& gameObject : gameObjects)
 		{
-			gameObject->SetCheckFrustum(true);
+			gameObject->SetCheckFrustum(false);
 			gameObject->SetStatic(true);
 			AddGameObject(gameObject);
 			/*if (gameObject->GetName() == L"Sun_1")
@@ -470,9 +470,9 @@ void BattleScene::LoadScene()
 		_mainLight->AddComponent(make_shared<Light>());
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, -1.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		_mainLight->GetLight()->SetDiffuse(Vec3(0.3f, 0.3f, 0.3f));   // ¹àÀº Èò»ö
-		_mainLight->GetLight()->SetAmbient(Vec3(0.2f, 0.2f, 0.2f));   // Àû´çÇÑ È¯°æ±¤
-		_mainLight->GetLight()->SetSpecular(Vec3(0.4f, 0.4f, 0.4f));  // ½ºÆåÅ§·¯ °­Á¶
+		_mainLight->GetLight()->SetDiffuse(Vec3(0.2f, 0.2f, 0.2f));   // ¹àÀº Èò»ö
+		_mainLight->GetLight()->SetAmbient(Vec3(0.3f, 0.3f, 0.3f));   // Àû´çÇÑ È¯°æ±¤
+		_mainLight->GetLight()->SetSpecular(Vec3(0.6f, 0.6f, 0.6f));  // ½ºÆåÅ§·¯ °­Á¶
 
 		//_mainLight->GetLight()->SetDiffuse(Vec3(1.0, 1.0, 1.0));   // ¹àÀº Èò»ö
 		//_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // Àû´çÇÑ È¯°æ±¤
