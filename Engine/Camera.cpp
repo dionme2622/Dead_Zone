@@ -12,6 +12,7 @@
 #include "InstancingManager.h"
 #include "BaseCollider.h"
 #include "BoxCollider.h"
+#include "MeshCollider.h"
 #include "DebugRenderer.h"
 #include "Animator.h"
 
@@ -68,8 +69,9 @@ void Camera::SortGameObject()
 
 		if (gameObject->GetCheckFrustum())
 		{
-			shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
+			/*shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
 			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);
+			shared_ptr<MeshCollider> meshCollider = dynamic_pointer_cast<MeshCollider>(baseCollider);
 
 			if (boxCollider) {
 
@@ -80,10 +82,18 @@ void Camera::SortGameObject()
 
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
-					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 20) == false)
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ)) == false)
 				{
 					continue;
 				}
+			}*/
+			Vec3 scale = gameObject->GetTransform()->GetLocalScale();
+
+			if (_frustum.ContainsSphere(
+				gameObject->GetTransform()->GetWorldPosition(),
+				max(max(scale.x, scale.y), scale.z) + 40) == false)
+			{
+				continue;
 			}
 		}
 
@@ -130,7 +140,7 @@ void Camera::SortShadowObject()
 
 		if (gameObject->GetCheckFrustum())
 		{
-			shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
+			/*shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
 			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);
 
 			if (boxCollider) {
@@ -146,6 +156,15 @@ void Camera::SortShadowObject()
 				{
 					continue;
 				}
+			}*/
+			Vec3 scale = gameObject->GetTransform()->GetLocalScale();
+
+
+			if (_frustum.ContainsSphere(
+				gameObject->GetTransform()->GetWorldPosition(),
+				max(max(scale.x, scale.y), scale.z) + 20) == false)
+			{
+				continue;
 			}
 		}
 		_vecShadow.emplace_back(gameObject);
