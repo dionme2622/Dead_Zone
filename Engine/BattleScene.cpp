@@ -214,6 +214,7 @@ void BattleScene::LoadScene()
 			material->SetTexture(0, texture);
 			meshRenderer->SetMaterial(material);
 		}
+		obj->SetCheckFrustum(false);
 		obj->AddComponent(meshRenderer);
 		AddGameObject(obj);
 	}
@@ -356,7 +357,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -382,7 +383,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\Wall.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{

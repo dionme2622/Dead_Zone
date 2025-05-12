@@ -297,7 +297,7 @@ shared_ptr<AnimatorController> Resources::LoadAnimatorPlayerController()
 	auto Death = make_shared<AnimationState>(L"Death", GetAnimClip(L"Death"), 4, 1.0f, true);
 	auto Rifle_Idle = make_shared<AnimationState>(L"Rifle_Idle", GetAnimClip(L"Rifle_Idle"), 5, 1.0f, true);
 	auto Rifle_Reload = make_shared<AnimationState>(L"Rifle_Reload", GetAnimClip(L"Rifle_Reload"), 6, 1.0f, true);
-	auto Rifle_Shoot = make_shared<AnimationState>(L"Rifle_Shoot", GetAnimClip(L"Rifle_Shoot"), 7, 1.0f, true);
+	auto Rifle_Shoot = make_shared<AnimationState>(L"Rifle_Shoot", GetAnimClip(L"Rifle_Shoot"), 7, 4.0f, true);
 	auto Handgun_Idle = make_shared<AnimationState>(L"Handgun_Idle", GetAnimClip(L"Handgun_Idle"), 8, 1.0f, true);
 	auto Handgun_Reload = make_shared<AnimationState>(L"Handgun_Reload", GetAnimClip(L"Handgun_Reload"), 9, 1.0f, true);
 	auto Handgun_Shoot = make_shared<AnimationState>(L"Handgun_Shoot", GetAnimClip(L"Handgun_Shoot"), 10, 1.0f, true);
