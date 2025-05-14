@@ -208,37 +208,38 @@ void BattleScene::LoadScene()
 
 
 #pragma region UI_Test
-	//for (int32 i = 0; i < 6; i++)
-	//{
-	//	shared_ptr<GameObject> obj = make_shared<GameObject>();
-	//	obj->SetLayerIndex(LayerNameToIndex(L"UI")); // UI
-	//	obj->AddComponent(make_shared<Transform>());
-	//	obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
-	//	obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));
-	//	shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
-	//	{
-	//		shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
-	//		meshRenderer->SetMesh(mesh);
-	//	}
-	//	{
-	//		shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
+	for (int32 i = 0; i < 6; i++)
+	{
+		shared_ptr<GameObject> obj = make_shared<GameObject>();
+		obj->SetLayerIndex(LayerNameToIndex(L"UI")); // UI
+		obj->AddComponent(make_shared<Transform>());
+		obj->GetTransform()->SetLocalScale(Vec3(100.f, 100.f, 100.f));
+		obj->GetTransform()->SetLocalPosition(Vec3(-350.f + (i * 120), 250.f, 500.f));
+		obj->SetCheckFrustum(false);
+		shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+		{
+			shared_ptr<Mesh> mesh = GET_SINGLE(Resources)->LoadRectangleMesh();
+			meshRenderer->SetMesh(mesh);
+		}
+		{
+			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Texture");
 
-	//		shared_ptr<Texture> texture;
-	//		if (i < 3)
-	//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
-	//		else if (i < 5)
-	//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
-	//		else
-	//			texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
+			shared_ptr<Texture> texture;
+			if (i < 3)
+				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::G_BUFFER)->GetRTTexture(i);
+			else if (i < 5)
+				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::LIGHTING)->GetRTTexture(i - 3);
+			else
+				texture = GEngine->GetRTGroup(RENDER_TARGET_GROUP_TYPE::SHADOW)->GetRTTexture(0);
 
-	//		shared_ptr<Material> material = make_shared<Material>();
-	//		material->SetShader(shader);
-	//		material->SetTexture(0, texture);
-	//		meshRenderer->SetMaterial(material);
-	//	}
-	//	obj->AddComponent(meshRenderer);
-	//	AddGameObject(obj);
-	//}
+			shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(shader);
+			material->SetTexture(0, texture);
+			meshRenderer->SetMaterial(material);
+		}
+		obj->AddComponent(meshRenderer);
+		AddGameObject(obj);
+	}
 #pragma endregion
 
 #pragma region ParticleSystem
@@ -411,16 +412,16 @@ void BattleScene::LoadScene()
 		_mainLight->AddComponent(make_shared<Light>());
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, -1.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		_mainLight->GetLight()->SetDiffuse(Vec3(0.2f, 0.2f, 0.2f));   // π‡¿∫ »Úªˆ
+		_mainLight->GetLight()->SetDiffuse(Vec3(1.f, 1.f, 1.f));   // π‡¿∫ »Úªˆ
 		_mainLight->GetLight()->SetAmbient(Vec3(0.3f, 0.3f, 0.3f));   // ¿˚¥Á«— »Ø∞Ê±§
-		_mainLight->GetLight()->SetSpecular(Vec3(0.6f, 0.6f, 0.6f));  // Ω∫∆Â≈ß∑Ø ∞≠¡∂
+		_mainLight->GetLight()->SetSpecular(Vec3(0.2f, 0.2f, 0.2f));  // Ω∫∆Â≈ß∑Ø ∞≠¡∂
 
 		//_mainLight->GetLight()->SetDiffuse(Vec3(1.0, 1.0, 1.0));   // π‡¿∫ »Úªˆ
 		//_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // ¿˚¥Á«— »Ø∞Ê±§
 		//_mainLight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));  // Ω∫∆Â≈ß∑Ø ∞≠¡∂
 
 
-		_mainLight->GetLight()->SetSunObject(_sunObject);
+		//_mainLight->GetLight()->SetSunObject(_sunObject);
 		_mainLight->GetTransform()->SetLocalPosition(Vec3(0, 200, 50));
 		_mainLight->GetLight()->SetLightIndex(0);
 		//_sunObject->GetTransform()->LookAt(Vec3(0, -1, 0));
@@ -543,8 +544,6 @@ void BattleScene::UpdateZombieMove()
 		// ¿Ãµø º”µµ º≥¡§
 		float zombieSpeed = 0.5f; // √ ¥Á 2 ¿Ø¥÷ ¿Ãµø
 		Vec3 moveVector = direction * zombieSpeed * DELTA_TIME;
-
-		cout << moveVector.x << "," << moveVector.y << ", " << moveVector.z << endl;
 
 		bool p = zombie[23]->GetCharacterController()->GetIsPushing();
 
