@@ -1,0 +1,250 @@
+﻿  pch.cpp
+  AnimationState.cpp
+  Animator.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Animator.cpp(97,39): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Animator.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Animator.cpp(100,28): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Animator.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Animator.cpp(121,22): warning C4244: '초기화 중': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Animator.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Animator.cpp(130,42): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/Animator.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Animator.cpp(133,45): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/Animator.cpp'을(를) 컴파일하는 중)
+  
+  AnimatorController.cpp
+  BaseCollider.cpp
+  BattleScene.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.h(23,55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BattleScene.cpp(369,20): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BattleScene.cpp(369,9): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BattleScene.cpp(370,20): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BattleScene.cpp(370,9): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BattleScene.cpp(371,21): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BattleScene.cpp(371,9): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(389,75): warning C4244: '인수': '_Ty'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(389,75): warning C4244:         with
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(389,75): warning C4244:         [
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(389,75): warning C4244:             _Ty=double
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(389,75): warning C4244:         ]
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(389,75):
+      템플릿 인스턴스화 컨텍스트(가장 오래된 인스턴스화 컨텍스트)가
+          C:\Dead_Zone\Dead_Zone\Dead_Zone\BattleScene.cpp(113,24):
+          컴파일되는 함수 템플릿 인스턴스화 'std::shared_ptr<CharacterController> std::make_shared<CharacterController,std::shared_ptr<GameObject>&,double,double,float>(std::shared_ptr<GameObject> &,double &&,double &&,float &&)'에 대한 참조를 확인하세요.
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\memory(2906,46):
+          컴파일되는 함수 템플릿 인스턴스화 'std::_Ref_count_obj2<CharacterController>::_Ref_count_obj2<std::shared_ptr<GameObject>&,_Ty,_Ty,float>(std::shared_ptr<GameObject> &,_Ty &&,_Ty &&,float &&)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=double
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\memory(2095,18):
+          컴파일되는 함수 템플릿 인스턴스화 'void std::_Construct_in_place<_Ty,std::shared_ptr<GameObject>&,double,double,float>(_Ty &,std::shared_ptr<GameObject> &,double &&,double &&,float &&) noexcept(false)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=CharacterController
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(399,14):
+          컴파일되는 함수 템플릿 인스턴스화 '_Ty *std::construct_at<_Ty,std::shared_ptr<GameObject>&,double,double,float>(_Ty *const ,std::shared_ptr<GameObject> &,double &&,double &&,float &&) noexcept(<expr>)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=CharacterController
+          ]
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(403,82): warning C4244: '인수': '_Ty'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(403,82): warning C4244:         with
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(403,82): warning C4244:         [
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(403,82): warning C4244:             _Ty=double
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(403,82): warning C4244:         ]
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+  
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(390,90): warning C4244: '인수': '_Ty'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(390,90): warning C4244:         with
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(390,90): warning C4244:         [
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(390,90): warning C4244:             _Ty=double
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(390,90): warning C4244:         ]
+  (소스 파일 '/BattleScene.cpp'을(를) 컴파일하는 중)
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(390,90):
+      템플릿 인스턴스화 컨텍스트(가장 오래된 인스턴스화 컨텍스트)가
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\memory(2095,18):
+          컴파일되는 함수 템플릿 인스턴스화 'void std::_Construct_in_place<_Ty,std::shared_ptr<GameObject>&,double,double,float>(_Ty &,std::shared_ptr<GameObject> &,double &&,double &&,float &&) noexcept(false)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=CharacterController
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.41.34120\include\xutility(399,14):
+          컴파일되는 함수 템플릿 인스턴스화 '_Ty *std::construct_at<_Ty,std::shared_ptr<GameObject>&,double,double,float>(_Ty *const ,std::shared_ptr<GameObject> &,double &&,double &&,float &&) noexcept(false)'에 대한 참조를 확인하세요.
+          with
+          [
+              _Ty=CharacterController
+          ]
+  
+  BinaryLoader.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BinaryLoader.cpp(174,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/BinaryLoader.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BinaryLoader.cpp(205,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/BinaryLoader.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BinaryLoader.cpp(232,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/BinaryLoader.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BinaryLoader.cpp(250,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/BinaryLoader.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BinaryLoader.cpp(268,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/BinaryLoader.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BinaryLoader.cpp(508,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/BinaryLoader.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\BinaryLoader.cpp(527,24): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/BinaryLoader.cpp'을(를) 컴파일하는 중)
+  
+  BoxCollider.cpp
+  Bullet.cpp
+  Camera.cpp
+  CameraScript.cpp
+  CapsuleCollider.cpp
+  CommandQueue.cpp
+  Component.cpp
+  ConstantBuffer.cpp
+  Dead_Zone.cpp
+  DebugRenderer.cpp
+  Device.cpp
+  Engine.cpp
+  EnginePch.cpp
+  Frustum.cpp
+  컴파일하고 있습니다...
+  GameFrameWork.cpp
+  GameObject.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.h(23,55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/GameObject.cpp'을(를) 컴파일하는 중)
+  
+  GunWeapon.cpp
+  Input.cpp
+  InstancingBuffer.cpp
+  InstancingManager.cpp
+  KeyInput.cpp
+  Light.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Light.cpp(102,39): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/Light.cpp'을(를) 컴파일하는 중)
+  
+  LobbyScene.cpp
+  Material.cpp
+  Mesh.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Mesh.cpp(174,36): warning C4267: '초기화 중': 'size_t'에서 'int32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Mesh.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Mesh.cpp(174,26): warning C4267: '초기화 중': 'size_t'에서 'const int32'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Mesh.cpp'을(를) 컴파일하는 중)
+  
+  MeshCollider.cpp
+  MeshData.cpp
+  MeshRenderer.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.h(23,55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/MeshRenderer.cpp'을(를) 컴파일하는 중)
+  
+  MonoBehaviour.cpp
+  MouseInput.cpp
+  Object.cpp
+  OneHandedMeleeWeapon.cpp
+  ParticleSystem.cpp
+  PhysicsSystem.cpp
+  컴파일하고 있습니다...
+  PlayerScript.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.h(23,55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/PlayerScript.cpp'을(를) 컴파일하는 중)
+  
+  PlayerStats.cpp
+  RenderTargetGroup.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\RenderTargetGroup.cpp(38,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+  (소스 파일 '/RenderTargetGroup.cpp'을(를) 컴파일하는 중)
+  
+  Resources.cpp
+  RigidBody.cpp
+  RootSignature.cpp
+  Scene.cpp
+  SceneManager.cpp
+  Shader.cpp
+  SimpleMath.cpp
+  StructuredBuffer.cpp
+  SwapChain.cpp
+  TableDescriptorHeap.cpp
+  Texture.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\Texture.cpp(88,73): warning C4244: '인수': 'uint64'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/Texture.cpp'을(를) 컴파일하는 중)
+  
+  ThrowingWeapon.cpp
+  Timer.cpp
+  Transform.cpp
+  Transition.cpp
+  TwoHandedMeleeWeapon.cpp
+  Weapon.cpp
+  컴파일하고 있습니다...
+  WeaponManager.cpp
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.h(23,55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(62,68): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(62,60): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(62,52): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(82,64): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(82,56): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(82,48): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(100,71): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(100,59): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+C:\Dead_Zone\Dead_Zone\Dead_Zone\WeaponManager.cpp(100,48): warning C4305: '인수': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '/WeaponManager.cpp'을(를) 컴파일하는 중)
+  
+  코드를 생성하고 있습니다.
+  Previous IPDB not found, fall back to full compilation.
+  All 6127 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  코드를 생성했습니다.
+DirectXTex.lib(DirectXTexImage.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexImage.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(DirectXTexDDS.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexDDS.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(DirectXTexTGA.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexTGA.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(DirectXTexWIC.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexWIC.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(DirectXTexD3D12.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexD3D12.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(DirectXTexUtil.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexUtil.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(DirectXTexConvert.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexConvert.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(DirectXTexMipMaps.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexMipMaps.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(DirectXTexCompress.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(DirectXTexCompress.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(BC.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(BC.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(BC4BC5.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(BC4BC5.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+DirectXTex.lib(BC6HBC7.obj) : warning LNK4099: '' PDB를 'DirectXTex.lib(BC6HBC7.obj)' 또는 ''에서 찾을 수 없습니다. 디버그 정보가 없는 것처럼 개체를 링크합니다.
+  Dead_Zone.vcxproj -> C:\Dead_Zone\Dead_Zone\x64\Release\Dead_Zone.exe
