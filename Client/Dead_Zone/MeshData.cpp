@@ -7,6 +7,7 @@
 #include "MeshRenderer.h"
 #include "BinaryLoader.h"
 #include "Animator.h"
+#include "TestAnimation.h"
 #include "BoxCollider.h"
 #include "RigidBody.h"
 #include "MeshCollider.h"

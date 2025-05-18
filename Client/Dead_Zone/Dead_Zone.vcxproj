@@ -73,18 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)Library\Include</IncludePath>
     <LibraryPath>$(SolutionDir)Library\Lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Output</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(SolutionDir)Library\Include</IncludePath>
     <LibraryPath>$(SolutionDir)Library\Lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Output</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>$(SolutionDir)Library\Include</IncludePath>
     <LibraryPath>$(SolutionDir)Library\Lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Output</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)Library\Include</IncludePath>
     <LibraryPath>$(SolutionDir)Library\Lib;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)Output</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -179,6 +183,7 @@
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GameFrameWork.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="game_header.h" />
     <ClInclude Include="GunWeapon.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="InstancingBuffer.h" />
@@ -193,6 +198,7 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="MonoBehaviour.h" />
     <ClInclude Include="MouseInput.h" />
+    <ClInclude Include="NetworkClient.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="OneHandedMeleeWeapon.h" />
     <ClInclude Include="ParticleSystem.h" />
@@ -270,10 +276,10 @@
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="MouseInput.cpp" />
     <ClCompile Include="NetworkClient.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OneHandedMeleeWeapon.cpp" />

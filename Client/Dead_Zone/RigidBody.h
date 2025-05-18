@@ -50,6 +50,8 @@ public:
     virtual void OnDisable();
     virtual void FinalUpdate() override;
 
+    shared_ptr<btPairCachingGhostObject>GetGhostObject() { return _ghost; }
+    shared_ptr<btKinematicCharacterController> GetController() { return _controller; }
     bool IsOnGround() const {
         return _controller->onGround();
     }

@@ -12,6 +12,7 @@
 #include "Engine.h"
 #include "Resources.h"
 #include "MeshData.h"
+#include "TestAnimation.h"
 #include "ParticleSystem.h"
 #include "BoxCollider.h"
 #include "Animator.h"
@@ -29,14 +30,28 @@
 
 BattleScene::BattleScene()
 {
+
 }
 
 
 
 void BattleScene::LoadScene()
 {
-	int _myID = 1;
+	_myID;
 	int _theirID = 0;
+	if (!g_receivedMyInfo)
+	{
+		std::cout << "[오류] 아직 내 플레이어 정보가 서버에서 도착하지 않았습니다.\n";
+		return;
+	}
+	if (g_myInfo.id == 0)
+		_myID = g_myInfo.id + 1;
+	else
+		_myID = 2;
+	std::cout << "[BattleScene] My ID : " << _myID << ", Position is  ("
+		<< g_myInfo.x << ", " << g_myInfo.y << ", " << g_myInfo.z << ")\n";
+	
+	
 #pragma region LayerMask
 	SetLayerName(0, L"Battle");
 	SetLayerName(1, L"UI");
@@ -107,7 +122,7 @@ void BattleScene::LoadScene()
 		AddGameObject(gameObject);
 	}
 
-	player1->GetTransform()->SetLocalPosition(Vec3(25, 100.f, 15));
+	player1->GetTransform()->SetLocalPosition(Vec3(-63.f, 65.f, 270.f));
 	player1->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
 	player1->AddComponent(make_shared<PlayerStats>());
 	player1->AddComponent(make_shared<CharacterController>(player1, 0.5, 3.0, 0.3f));
@@ -117,31 +132,31 @@ void BattleScene::LoadScene()
 #pragma endregion
 
 #pragma region Player2
-	//_theirID = 2;
-	//islocal = (_theirID == _myID);
+	_theirID = 2;
+	islocal = (_theirID == _myID);
 
-	//shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
+	shared_ptr<MeshData> FemaleHero_data = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Character\\SA_Character_FemaleHero.bin", PLAYER); // MeshData* meshData
 
-	//vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
+	vector<shared_ptr<GameObject>> FemaleHero = FemaleHero_data->Instantiate(PLAYER);
 
-	//shared_ptr<GameObject> player2 = FemaleHero[23];
-	//for (auto& gameObject : FemaleHero)
-	//{	
-	//	//gameObject->SetName(L"FemaleSoldier");
-	//	gameObject->SetCheckFrustum(false);
-	//	gameObject->SetStatic(true);
-	//	gameObject->GetTransform()->FinalUpdate();
-	//	AddGameObject(gameObject);
-	//}
+	shared_ptr<GameObject> player2 = FemaleHero[23];
+	for (auto& gameObject : FemaleHero)
+	{	
+		//gameObject->SetName(L"FemaleSoldier");
+		gameObject->SetCheckFrustum(false);
+		gameObject->SetStatic(true);
+		gameObject->GetTransform()->FinalUpdate();
+		AddGameObject(gameObject);
+	}
 
-	//player2->GetTransform()->SetLocalPosition(Vec3(20, 300.f, 0));
-	////player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
-	//player2->AddComponent(make_shared<PlayerStats>());
-	//player2->AddComponent(make_shared<CharacterController>(player2, 0.5, 3.0, 0.3f));
-	//player2->GetCharacterController()->OnEnable();
-	//player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
+	player2->GetTransform()->SetLocalPosition(Vec3(-58.f, 65.f, 270.f));
+	//player2->AddComponent(make_shared<WeaponManager>());													// Add Weapon Manager
+	player2->AddComponent(make_shared<PlayerStats>());
+	player2->AddComponent(make_shared<CharacterController>(player2, 0.5, 3.0, 0.3f));
+	player2->GetCharacterController()->OnEnable();
+	player2->AddComponent(make_shared<PlayerScript>(_hwnd, islocal, _theirID, player2->GetCharacterController()));										// Add Weapon Manager
 
-	//_player.push_back(player2);
+	_player.push_back(player2);
 
 #pragma endregion 
 
@@ -199,6 +214,7 @@ void BattleScene::LoadScene()
 			material->SetTexture(0, texture);
 			meshRenderer->SetMaterial(material);
 		}
+		obj->SetCheckFrustum(false);
 		obj->AddComponent(meshRenderer);
 		AddGameObject(obj);
 	}
@@ -256,7 +272,7 @@ void BattleScene::LoadScene()
 	{
 		for (int i = 0; i < 1; ++i)
 		{
-			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
+			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Zombie\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
 
 			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate(ZOMBIE);
 
@@ -267,7 +283,7 @@ void BattleScene::LoadScene()
 				AddGameObject(gameObject);
 			}
 
-			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(i * 5.0f, 80.0f, 0.0f));
+			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(-77.f + i * 2.0f, 65.0f, 160.0f));
 			gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
 			gameObjects[23]->GetCharacterController()->SetIsPushing(false);
 			gameObjects[23]->AddComponent(make_shared<PlayerStats>());
@@ -276,6 +292,51 @@ void BattleScene::LoadScene()
 		}
 	}
 
+	{
+		for (int i = 0; i < 1; ++i)
+		{
+			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Zombie\\SA_Zombie_Clown.bin", ZOMBIE); // MeshData* meshData
+
+			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate(ZOMBIE);
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetCheckFrustum(true);
+				gameObject->SetStatic(false);
+				AddGameObject(gameObject);
+			}
+
+			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(-77.f, 65.f, 220.f));
+			gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
+			gameObjects[23]->GetCharacterController()->SetIsPushing(false);
+			gameObjects[23]->AddComponent(make_shared<PlayerStats>());
+			gameObjects[23]->GetCharacterController()->OnEnable();
+			_zombies.push_back(gameObjects);
+		}
+	}
+
+	{
+		for (int i = 0; i < 1; ++i)
+		{
+			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Zombie\\SA_Zombie_FarmersDaughter.bin", ZOMBIE); // MeshData* meshData
+
+			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate(ZOMBIE);
+
+			for (auto& gameObject : gameObjects)
+			{
+				gameObject->SetCheckFrustum(true);
+				gameObject->SetStatic(false);
+				AddGameObject(gameObject);
+			}
+
+			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(-77.f, 65.f, 240.f));
+			gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
+			gameObjects[23]->GetCharacterController()->SetIsPushing(false);
+			gameObjects[23]->AddComponent(make_shared<PlayerStats>());
+			gameObjects[23]->GetCharacterController()->OnEnable();
+			_zombies.push_back(gameObjects);
+		}
+	}
 #pragma endregion
 
 
@@ -296,7 +357,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\BldDemo.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -322,7 +383,7 @@ void BattleScene::LoadScene()
 	{
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\Wall.bin"); // MeshData* meshData
 
-		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, MESH);
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
 
 		for (auto& gameObject : gameObjects)
 		{
@@ -438,10 +499,10 @@ void BattleScene::LoadScene()
 
 void BattleScene::Update()
 {
-	/*Vec3 pos = _player[1]->GetTransform()->GetLocalPosition();
-	printf("%f %f %f\n", pos.x, pos.y, pos.z);*/
+	Vec3 pos = _player[0]->GetTransform()->GetLocalPosition();
+	printf("%f %f %f\n", pos.x, pos.y, pos.z);
 
-	printf("Update 진행중\n");
+
 
 	Scene::Update();
 	UpdateZombieMove();
@@ -472,7 +533,7 @@ void BattleScene::Update()
 		_playerCamera->GetTransform()->SetLocalPosition(newPos);
 
 		// 카메라 부모 유지
-		_playerCamera->GetTransform()->SetParent(_player[0]->GetTransform());
+		_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());
 	}
 }
 
@@ -542,8 +603,6 @@ void BattleScene::UpdateZombieMove()
 		// 이동 속도 설정
 		float zombieSpeed = 0.5f; // 초당 2 유닛 이동
 		Vec3 moveVector = direction * zombieSpeed * DELTA_TIME;
-
-		cout << moveVector.x << "," << moveVector.y << ", " << moveVector.z << endl;
 
 		bool p = zombie[23]->GetCharacterController()->GetIsPushing();
 

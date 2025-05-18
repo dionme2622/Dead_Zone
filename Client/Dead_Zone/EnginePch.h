@@ -3,6 +3,16 @@
 // byte 사용하지 않음
 #define _HAS_STD_BYTE 0
 
+#define NOMINMAX       // 이미 있으면 OK
+#define byte _win_byte //byte 이름 충돌 방지
+// 먼저 Winsock2 헤더 포함
+#define WIN32_LEAN_AND_MEAN
+#include <winsock2.h>
+#include <ws2tcpip.h>
+#include <mswsock.h>
+#include <thread>
+#pragma comment(lib, "ws2_32.lib")
+
 // 각종 include
 #include "iostream"
 #include <windows.h>
@@ -13,6 +23,14 @@
 #include <array>
 #include <list>
 #include <map>
+
+#include <unordered_map>
+#include <tuple>
+#include <mutex>
+
+#include "game_header.h"
+#include "NetworkClient.h"
+
 using namespace std;
 
 #include <filesystem>
@@ -46,6 +64,7 @@ using namespace Microsoft::WRL;
 #pragma comment(lib, "bullet3\\BulletDynamics_Debug.lib")
 #pragma comment(lib, "bullet3\\LinearMath_Debug.lib")
 #else
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #pragma comment(lib, "DirectXTex\\DirectXTex.lib")
 #pragma comment(lib, "bullet3\\BulletCollision.lib")
 #pragma comment(lib, "bullet3\\BulletDynamics.lib")

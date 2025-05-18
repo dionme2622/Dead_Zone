@@ -6,8 +6,14 @@
 
 void GameFrameWork::Init(const WindowInfo& info)
 {
+	if (!ConnectAndLogin()) {
+		std::cout << "서버 연결 또는 로그인 실패\n";
+		return;
+	}
+	std::thread(recv_thread, sock).detach();
+
+
 	// DirectX12 장치초기화
-	//unique_ptr<Engine> GEngine = make_unique<Engine>();
 	GEngine->Init(info);
 
 	// TODO : Scene Load

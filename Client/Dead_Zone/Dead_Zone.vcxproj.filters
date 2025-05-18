@@ -75,9 +75,6 @@
     <ClInclude Include="GameFrameWork.h">
       <Filter>Header</Filter>
     </ClInclude>
-    <ClInclude Include="EnginePch.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -252,6 +249,15 @@
     <ClInclude Include="Frustum.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="game_header.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkClient.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="EnginePch.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dead_Zone.cpp">
@@ -265,12 +271,6 @@
     </ClCompile>
     <ClCompile Include="GameFrameWork.cpp">
       <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkClient.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="EnginePch.cpp">
-      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="CommandQueue.cpp">
       <Filter>Engine</Filter>
@@ -442,6 +442,12 @@
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
       <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkClient.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="EnginePch.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
