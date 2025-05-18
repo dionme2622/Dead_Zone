@@ -76,7 +76,7 @@ void BattleScene::LoadScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Skybox");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\SimpleSky.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\BackGround.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -342,11 +342,32 @@ void BattleScene::LoadScene()
 		{
 			gameObject->SetCheckFrustum(false);
 			gameObject->SetStatic(true);
+			/*shared_ptr<Material> material = make_shared<Material>();
+			material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Skybox"));
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\SimpleSky.dds");
+			material->SetTexture(0, texture);
+			gameObject->GetMeshRenderer()->SetMaterial(material);*/
 			AddGameObject(gameObject);
 			/*if (gameObject->GetName() == L"Sun_1")
 				_sunObject = gameObject*/;
 		}
 
+		{
+			shared_ptr<GameObject> plane = make_shared<GameObject>();
+			shared_ptr<Transform> transform = make_shared<Transform>();
+			shared_ptr<MeshRenderer> meshRenderer = make_shared<MeshRenderer>();
+			shared_ptr<Material> material = make_shared<Material>();
+
+			transform->SetLocalPosition(Vec3(-33.f, 57.f, 98.f));
+			transform->SetLocalScale(Vec3(47.f, 1.f, 52.f));
+
+			meshRenderer->SetMesh(GET_SINGLE(Resources)->LoadCubeMesh());
+			material->SetShader(GET_SINGLE(Resources)->Get<Shader>(L"Forward"));
+			meshRenderer->SetMaterial(material);
+			plane->AddComponent(transform);
+			plane->AddComponent(meshRenderer);
+			AddGameObject(plane);
+		}
 		// ÀÌ·¸°Ô ÇØ¾ß ¸ÊÀÇ Áß¾ÓÀ» º½
 		//_sunObject->GetTransform()->SetLocalRotation(Vec3(-45, 225, 0));
 	}
@@ -411,8 +432,8 @@ void BattleScene::LoadScene()
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, -1.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
 		_mainLight->GetLight()->SetDiffuse(Vec3(0.2f, 0.2f, 0.2f));   // ¹àÀº Èò»ö
-		_mainLight->GetLight()->SetAmbient(Vec3(0.3f, 0.3f, 0.3f));   // Àû´çÇÑ È¯°æ±¤
-		_mainLight->GetLight()->SetSpecular(Vec3(0.6f, 0.6f, 0.6f));  // ½ºÆåÅ§·¯ °­Á¶
+		_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // Àû´çÇÑ È¯°æ±¤
+		_mainLight->GetLight()->SetSpecular(Vec3(0.1f, 0.1f, 0.1f));  // ½ºÆåÅ§·¯ °­Á¶
 
 		//_mainLight->GetLight()->SetDiffuse(Vec3(1.0, 1.0, 1.0));   // ¹àÀº Èò»ö
 		//_mainLight->GetLight()->SetAmbient(Vec3(0.1f, 0.1f, 0.1f));   // Àû´çÇÑ È¯°æ±¤
