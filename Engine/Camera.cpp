@@ -68,10 +68,10 @@ void Camera::SortGameObject()
 
 		if (gameObject->GetCheckFrustum())
 		{
-			shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
-			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);
+			/*shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
+			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);*/
 
-			if (boxCollider) {
+			/*if (boxCollider) {
 
 				Vec3 scale = gameObject->GetTransform()->GetLocalScale();
 				float scaledExtentX = boxCollider->_extents.x * scale.x;
@@ -81,6 +81,23 @@ void Camera::SortGameObject()
 				if (_frustum.ContainsSphere(
 					gameObject->GetTransform()->GetWorldPosition(),
 					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 20) == false)
+				{
+					continue;
+				}
+			}*/
+
+			Vec3 scale = gameObject->GetTransform()->GetLocalScale();
+			if (auto boxCollider = gameObject->GetBoxCollier())
+			{
+				float scaledExtentX = boxCollider->_extents.x;
+				float scaledExtentY = boxCollider->_extents.y;
+				float scaledExtentZ = boxCollider->_extents.z;
+
+				
+
+				if (_frustum.ContainsSphere(
+					gameObject->GetTransform()->GetWorldPosition(),
+					max(max(scaledExtentX, scaledExtentY), scaledExtentZ) + 40) == false)
 				{
 					continue;
 				}
@@ -130,10 +147,10 @@ void Camera::SortShadowObject()
 
 		if (gameObject->GetCheckFrustum())
 		{
-			shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
-			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);
+			/*shared_ptr<BaseCollider> baseCollider = gameObject->GetCollider();
+			shared_ptr<BoxCollider> boxCollider = dynamic_pointer_cast<BoxCollider>(baseCollider);*/
 
-			if (boxCollider) {
+			/*if (boxCollider) {
 
 				Vec3 scale = gameObject->GetTransform()->GetLocalScale();
 				float scaledExtentX = boxCollider->_extents.x * scale.x;
@@ -146,6 +163,15 @@ void Camera::SortShadowObject()
 				{
 					continue;
 				}
+			}*/
+
+			Vec3 scale = gameObject->GetTransform()->GetLocalScale();
+
+			if (_frustum.ContainsSphere(
+				gameObject->GetTransform()->GetWorldPosition(),
+				max(max(scale.x, scale.y), scale.z) + 20) == false)
+			{
+				continue;
 			}
 		}
 		_vecShadow.emplace_back(gameObject);

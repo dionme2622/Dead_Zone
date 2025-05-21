@@ -10,6 +10,7 @@ enum class KEY_TYPE
 	W = 'W',
 	A = 'A',
 	S = 'S',
+	X = 'X',
 	D = 'D',
 
 	Q = 'Q',
@@ -37,6 +38,9 @@ enum class KEY_TYPE
 	TAB = VK_TAB,
 	RIGHTCLICK = RI_MOUSE_BUTTON_2_DOWN,
 	LEFTCLICK = RI_MOUSE_BUTTON_1_DOWN,
+
+
+	F9 = VK_F9,
 };
 
 enum class KEY_STATE

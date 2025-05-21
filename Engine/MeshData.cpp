@@ -91,7 +91,8 @@ vector<shared_ptr<GameObject>> MeshData::Instantiate(int type, int collidertype)
 			for (uint32 i = 0; i < info.materials.size(); i++)
 				gameObject->GetMeshRenderer()->SetMaterial(info.materials[i], i);
 
-			
+			gameObject->SetBoxCollier(info.boxCollider);
+
 			// TODO : AABB 바운딩 박스 데이터 넘겨야 함
 			switch (collidertype)
 			{

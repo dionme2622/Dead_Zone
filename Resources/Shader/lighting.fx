@@ -41,50 +41,86 @@ VS_OUT VS_DirLight(VS_IN input)
     return output;
 }
 
+//float SampleShadowMap(float2 uv, float depth, float bias)
+//{
+//    float shadow = 0.0;
+//    float2 texelSize = 1.0 / 400.0; // 섀도우 맵 해상도에 따라 조정
+//    for (int x = -1; x <= 1; ++x)
+//    {
+//        for (int y = -1; y <= 1; ++y)
+//        {
+//            float2 sampleUV = uv + float2(x, y) * texelSize;
+//            float shadowDepth = g_tex_2.Sample(g_sam_0, sampleUV).x;
+//            shadow += (shadowDepth > 0 && depth > shadowDepth + bias) ? 0.0 : 1.0;
+//        }
+//    }
+//    return shadow / 9.0;
+//}
+
 PS_OUT PS_DirLight(VS_OUT input)
 {
     PS_OUT output = (PS_OUT) 0;
 
     float3 viewPos = g_tex_0.Sample(g_sam_0, input.uv).xyz;
-    if (viewPos.z <= 0.f)
+    if (viewPos.z <= 0.01f)
         clip(-1);
 
     float3 viewNormal = g_tex_1.Sample(g_sam_0, input.uv).xyz;
-
+    
+    float3 worldNormal = normalize(mul(viewNormal, (float3x3) g_matViewInv));
+    
     LightColor color = CalculateLightColor(g_int_0, viewNormal, viewPos);
 
+    float NdotL = dot(worldNormal, g_light[0].direction); // 법선과 광원 방향의 내적
+    
     // 그림자
-    if (length(color.diffuse) != 0)
+    if (length(color.diffuse) != 0/* && NdotL > 0.1*/)
     {
         matrix shadowCameraVP = g_mat_0;
 
         float4 worldPos = mul(float4(viewPos.xyz, 1.f), g_matViewInv);
         float4 shadowClipPos = mul(worldPos, shadowCameraVP);
-        float depth = shadowClipPos.z;
+        float depth = shadowClipPos.z / max(shadowClipPos.w, 0.1f);
 
         // x [-1 ~ 1] -> u [0 ~ 1]
         // y [1 ~ -1] -> v [0 ~ 1]
-        float2 uv = shadowClipPos.xy;
+        float2 uv = shadowClipPos.xy / max(shadowClipPos.w, 0.1f);
         uv.y = -uv.y;
         uv = uv * 0.5 + 0.5;
 
         if (0 < uv.x && uv.x < 1 && 0 < uv.y && uv.y < 1)
         {
             float shadowDepth = g_tex_2.Sample(g_sam_0, uv).x;
-            if (shadowDepth > 0 && depth > shadowDepth + 0.00001f)
+            float bias = 0.0002f + 0.0002f * (1.0f - dot(viewNormal, g_light[0].direction));
+            if (shadowDepth > 0 && depth > shadowDepth + 0.0004)
             {
                 color.diffuse *= 0.5f;
                 color.specular = (float4) 0.f;
             }
         }
     }
-     // 메탈릭 값 계산 (예: 노멀의 z값을 기반으로 메탈릭 정도를 설정)
-    float metalicFactor = saturate(viewNormal.z); // 0 ~ 1 범위로 제한
-    
+
     output.diffuse = color.diffuse + color.ambient;
     output.specular = color.specular;
-    output.metalic = float4(metalicFactor, metalicFactor, metalicFactor, 1.0f); // 메탈릭 값 설정
+    
     return output;
+}
+
+
+float SampleShadowMap(float2 uv, float depth, float bias)
+{
+    float shadow = 0.0;
+    float2 texelSize = 1.0 / 2048.0; // 섀도우 맵 해상도에 따라 조정
+    for (int x = -1; x <= 1; ++x)
+    {
+        for (int y = -1; y <= 1; ++y)
+        {
+            float2 sampleUV = uv + float2(x, y) * texelSize;
+            float shadowDepth = g_tex_2.Sample(g_sam_0, sampleUV).x;
+            shadow += (shadowDepth > 0 && depth > shadowDepth + bias) ? 0.0 : 1.0;
+        }
+    }
+    return shadow / 9.0;
 }
 
 
@@ -201,14 +237,8 @@ float4 PS_Final(VS_OUT input) : SV_Target
 
     float4 color = g_tex_0.Sample(g_sam_0, input.uv);
     float4 specular = g_tex_2.Sample(g_sam_0, input.uv);
-    float4 metalic = g_tex_3.Sample(g_sam_0, input.uv);
 
-    // 메탈릭 값에 따라 디퓨즈와 스페큘러 조정
-    float metalicFactor = metalic.r; // 메탈릭은 단일 채널로 가정
-    float diffuseFactor = 1.0f - metalicFactor; // 메탈릭이 높을수록 디퓨즈 감소
-    float specularFactor = 1.0f; // 메탈릭이 높을수록 스페큘러 유지
-
-    output = (color * lightPower * diffuseFactor) + (specular * specularFactor);
+    output = (color * lightPower) + specular;
     return output;
 }
 

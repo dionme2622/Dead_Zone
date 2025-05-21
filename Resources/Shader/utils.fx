@@ -12,10 +12,6 @@ LightColor CalculateLightColor(int lightIndex, float3 viewNormal, float3 viewPos
     float diffuseRatio = 0.f;
     float specularRatio = 0.f;
     float distanceRatio = 1.f;
-    float volumetricRatio = 0.f; // 볼류메트릭 효과를 위한 세기 (상단에서 선언)
-
-    // 메탈릭 값 가져오기 (0.0 ~ 1.0)
-    float metallic = g_float_2;
 
     if (g_light[lightIndex].lightType == 0)
     {
@@ -38,79 +34,42 @@ LightColor CalculateLightColor(int lightIndex, float3 viewNormal, float3 viewPos
     }
     else
     {
-        // Spot Light (lightType == 2)
+        // Spot Light
         float3 viewLightPos = mul(float4(g_light[lightIndex].position.xyz, 1.f), g_matView).xyz;
         viewLightDir = normalize(viewPos - viewLightPos);
         diffuseRatio = saturate(dot(-viewLightDir, viewNormal));
 
-        if (diffuseRatio > 0.f)
-        {
-            float3 viewDir = normalize(-viewPos);
-            float3 halfVector = normalize(viewLightDir + viewDir);
-            specularRatio = pow(saturate(dot(viewNormal, halfVector)), 16.0f);
-        }
-
-        if (g_light[lightIndex].range == 0.f)   
+        if (g_light[lightIndex].range == 0.f)
             distanceRatio = 0.f;
         else
         {
-            // 스포트라이트 방향과 거리 계산
+            float halfAngle = g_light[lightIndex].angle / 2;
+
             float3 viewLightVec = viewPos - viewLightPos;
             float3 viewCenterLightDir = normalize(mul(float4(g_light[lightIndex].direction.xyz, 0.f), g_matView).xyz);
+
             float centerDist = dot(viewLightVec, viewCenterLightDir);
+            distanceRatio = saturate(1.f - centerDist / g_light[lightIndex].range);
 
-            // 내/외부 콘 각도 설정
-            float outerAngle = g_light[lightIndex].angle / 2; // 외부 콘 반각
-            float innerAngle = outerAngle * 0.6f; // 내부 콘 반각 (60%로 조정, 감쇠 구간 확장)
-            
-            // 각도 계산
             float lightAngle = acos(dot(normalize(viewLightVec), viewCenterLightDir));
-            
-            // 부드러운 각도 감쇠 (비선형)
-            float angleAttenuation = 0.f;
-            if (lightAngle < innerAngle)
-                angleAttenuation = 1.0f;
-            else if (lightAngle < outerAngle)
-            {
-                float t = (outerAngle - lightAngle) / (outerAngle - innerAngle);
-                angleAttenuation = saturate(pow(t, 8.0f)); // 더 부드러운 제곱 감쇠
-            }
-            else
-                angleAttenuation = 0.f;
 
-            // 부드러운 거리 감쇠 (비선형)
-            distanceRatio = 0.f;
-            if (centerDist >= 0.f && centerDist <= g_light[lightIndex].range)
-            {
-                float distRatio = centerDist / g_light[lightIndex].range;
-                distanceRatio = saturate(pow(1.f - distRatio, 2.0f)); // 지수 기반 감쇠
-                
-                // 볼류메트릭 효과: 원뿔 내부의 세기 계산
-                volumetricRatio = angleAttenuation * distanceRatio * 1.0f; // 세기 강화
-            }
-
-            // 최종 감쇠 계산
-            distanceRatio *= angleAttenuation;
+            if (centerDist < 0.f || centerDist > g_light[lightIndex].range) // 최대 거리를 벗어났는지
+                distanceRatio = 0.f;
+            else if (lightAngle > halfAngle) // 최대 시야각을 벗어났는지
+                distanceRatio = 0.f;
+            else // 거리에 따라 적절히 세기를 조절
+                distanceRatio = saturate(1.f - pow(centerDist / g_light[lightIndex].range, 2));
         }
     }
 
-    // 스페큘러 계산
     float3 reflectionDir = normalize(viewLightDir + 2 * (saturate(dot(-viewLightDir, viewNormal)) * viewNormal));
     float3 eyeDir = normalize(viewPos);
     specularRatio = saturate(dot(-eyeDir, reflectionDir));
     specularRatio = pow(specularRatio, 2);
 
-    // 메탈릭에 따라 디퓨즈와 스페큘러 조정
-    float diffuseFactor = 1.0f - metallic;
-    float specularFactor = 1.0f + metallic;
-
-    color.diffuse = g_light[lightIndex].color.diffuse * diffuseRatio * distanceRatio * diffuseFactor;
+    color.diffuse = g_light[lightIndex].color.diffuse * diffuseRatio * distanceRatio;
     color.ambient = g_light[lightIndex].color.ambient * distanceRatio;
-    color.specular = g_light[lightIndex].color.specular * specularRatio * distanceRatio * specularFactor;
-
-    // 볼류메트릭 효과 추가 (디퓨즈에 혼합)
-    if (g_light[lightIndex].lightType == 2) // 스포트라이트에만 적용
-        color.diffuse += g_light[lightIndex].color.diffuse * volumetricRatio * 0.5f; // 경계 흐림 효과
+    color.specular = g_light[lightIndex].color.specular * specularRatio * distanceRatio;
 
     return color;
 }

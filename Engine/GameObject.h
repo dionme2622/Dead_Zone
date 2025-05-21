@@ -14,6 +14,7 @@ class WeaponManager;
 class Weapon;
 class Bullet;
 class PlayerStats;
+class BoxCollider;
 
 class GameObject : public Object, public enable_shared_from_this<GameObject>
 {
@@ -55,8 +56,15 @@ public:
 	void SetLayerIndex(uint8 layer) { _layerIndex = layer; }
 	uint8 GetLayerIndex() { return _layerIndex; }
 
+
+
 	void SetStatic(bool flag) { _static = flag; }
 	bool IsStatic() { return _static; }
+
+
+	shared_ptr<BoxCollider> GetBoxCollier() { return _boxCollider; }
+	void SetBoxCollier(shared_ptr<BoxCollider> boxCollider) { _boxCollider = boxCollider; }
+
 
 private:
 	array<shared_ptr<Component>, FIXED_COMPONENT_COUNT> _components;
@@ -65,5 +73,11 @@ private:
 	bool _checkFrustum = true;
 	uint8 _layerIndex = 0;
 	bool _static = true;
+
+
+
+private:
+	shared_ptr<BoxCollider> _boxCollider;
+
 };
 

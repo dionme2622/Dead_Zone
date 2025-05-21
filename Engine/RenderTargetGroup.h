@@ -41,6 +41,7 @@ public:
 
 	shared_ptr<Texture> GetRTTexture(uint32 index) { return _rtVec[index].target; }
 	shared_ptr<Texture> GetDSTexture() { return _dsTexture; }
+	uint32				GetRTCount() { return _rtCount; }		
 
 	void WaitTargetToResource();
 	void WaitResourceToTarget();
