@@ -95,7 +95,7 @@ void BattleScene::LoadScene()
 		}
 		{
 			shared_ptr<Shader> shader = GET_SINGLE(Resources)->Get<Shader>(L"Skybox");
-			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\SimpleSky.png");
+			shared_ptr<Texture> texture = GET_SINGLE(Resources)->Load<Texture>(L"Sky01", L"..\\Resources\\Texture\\BackGround.png");
 			shared_ptr<Material> material = make_shared<Material>();
 			material->SetShader(shader);
 			material->SetTexture(0, texture);
@@ -181,7 +181,7 @@ void BattleScene::LoadScene()
 	//_playerCamera->GetTransform()->SetParent(_player[_myID - 1]->GetTransform());						// Playerø°∞‘ Camera ∏¶ ∫Ÿ¿Œ¥Ÿ.
 
 #pragma endregion
-	
+
 
 #pragma region UI_Camera
 	{
@@ -401,6 +401,33 @@ void BattleScene::LoadScene()
 	}
 
 	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Kiosk_01.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(false);
+			gameObject->SetStatic(true);
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(57.f, 62.9, -34.5));
+			AddGameObject(gameObject);
+		}
+	}
+
+	{
+		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Kiosk_02.bin"); // MeshData* meshData
+
+		vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, BOX);
+
+		for (auto& gameObject : gameObjects)
+		{
+			gameObject->SetCheckFrustum(false);
+			gameObject->SetStatic(true);
+			//gameObject->GetTransform()->SetLocalPosition(Vec3(57.f, 62.9, -34.5));
+			AddGameObject(gameObject);
+		}
+	}
+	{
 		// ø©±‚ø° Ω„ ø¿∫Í¡ß∆Æ ¿÷¿Ω
 		shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\SkyDome.bin"); // MeshData* meshData
 
@@ -420,10 +447,6 @@ void BattleScene::LoadScene()
 	}
 
 	{
-		// ∞°∑ŒµÓ ø¿∫Í¡ß∆Æ
-		//shared_ptr<MeshData> scene = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Map\\SpotLight.bin"); // MeshData* meshData
-
-		//vector<shared_ptr<GameObject>> gameObjects = scene->Instantiate(OBJECT, NONE);
 		int spotLightIndex = 0;
 
 		// ¡∂∏Ì ¿ßƒ°
@@ -478,8 +501,8 @@ void BattleScene::LoadScene()
 		_mainLight->AddComponent(make_shared<Light>());
 		_mainLight->GetLight()->SetLightDirection(Vec3(0, -1.0, -1.f));
 		_mainLight->GetLight()->SetLightType(LIGHT_TYPE::DIRECTIONAL_LIGHT);
-		_mainLight->GetLight()->SetDiffuse(Vec3(0.2f, 0.2f, 0.2f));   // π‡¿∫ »Úªˆ
-		_mainLight->GetLight()->SetAmbient(Vec3(0.3f, 0.3f, 0.3f));   // ¿˚¥Á«— »Ø∞Ê±§
+		_mainLight->GetLight()->SetDiffuse(Vec3(0.7f, 0.7f, 0.7f));   // π‡¿∫ »Úªˆ
+		_mainLight->GetLight()->SetAmbient(Vec3(0.5f, 0.5f, 0.5f));   // ¿˚¥Á«— »Ø∞Ê±§
 		_mainLight->GetLight()->SetSpecular(Vec3(0.6f, 0.6f, 0.6f));  // Ω∫∆Â≈ß∑Ø ∞≠¡∂
 
 		//_mainLight->GetLight()->SetDiffuse(Vec3(1.0, 1.0, 1.0));   // π‡¿∫ »Úªˆ

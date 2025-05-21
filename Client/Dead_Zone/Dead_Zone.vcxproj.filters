@@ -14,22 +14,11 @@
     <Filter Include="Manager">
       <UniqueIdentifier>{a972faf2-c276-4524-96ee-8932d4035a92}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{b94458af-0345-40f0-afaa-0cfbfbdfb8c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Manager\Input">
       <UniqueIdentifier>{abebd6c6-1a49-4e81-8e8b-d31068189f21}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Manager\Scene">
-      <UniqueIdentifier>{faf33331-5871-48df-b2a4-5250d51b51b3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Object">
       <UniqueIdentifier>{f18b7516-e415-47d4-8c60-195cc9595b49}</UniqueIdentifier>
@@ -51,6 +40,9 @@
     </Filter>
     <Filter Include="Object\Script">
       <UniqueIdentifier>{18c8d1f5-3cfd-4680-a100-4b9d34b59635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{faf33331-5871-48df-b2a4-5250d51b51b3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -229,16 +221,16 @@
       <Filter>Manager</Filter>
     </ClInclude>
     <ClInclude Include="BattleScene.h">
-      <Filter>Manager\Scene</Filter>
+      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="LobbyScene.h">
-      <Filter>Manager\Scene</Filter>
+      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
-      <Filter>Manager\Scene</Filter>
+      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="SceneManager.h">
-      <Filter>Manager\Scene</Filter>
+      <Filter>Scene</Filter>
     </ClInclude>
     <ClInclude Include="CameraScript.h">
       <Filter>Object\Script</Filter>
@@ -423,16 +415,16 @@
       <Filter>Manager</Filter>
     </ClCompile>
     <ClCompile Include="BattleScene.cpp">
-      <Filter>Manager\Scene</Filter>
+      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="LobbyScene.cpp">
-      <Filter>Manager\Scene</Filter>
+      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
-      <Filter>Manager\Scene</Filter>
+      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="SceneManager.cpp">
-      <Filter>Manager\Scene</Filter>
+      <Filter>Scene</Filter>
     </ClCompile>
     <ClCompile Include="CameraScript.cpp">
       <Filter>Object\Script</Filter>
@@ -462,11 +454,6 @@
     <Image Include="Dead_Zone.ico">
       <Filter>리소스 파일</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SimpleMath.inl">
-      <Filter>Header</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\Resources\Shader\animation.fx">
@@ -502,5 +489,10 @@
     <FxCompile Include="..\Resources\Shader\utils.fx">
       <Filter>Shader</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="SimpleMath.inl">
+      <Filter>Utils</Filter>
+    </None>
   </ItemGroup>
 </Project>
