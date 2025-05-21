@@ -26,6 +26,10 @@
 #include "PhysicsSystem.h"
 // TEST
 #include "KeyInput.h"
+#include <random>
+
+random_device rd;
+mt19937       rng(rd());
 
 
 BattleScene::BattleScene()
@@ -269,8 +273,11 @@ void BattleScene::LoadScene()
 
 
 #pragma region Zombie
+
+	uniform_real_distribution<float> distX(-70.0f, 0.0f);
+	uniform_real_distribution<float> distZ(150.0f, 200.0f);
 	{
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < 40; ++i)
 		{
 			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Zombie\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
 
@@ -283,7 +290,7 @@ void BattleScene::LoadScene()
 				AddGameObject(gameObject);
 			}
 
-			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(-77.f + i * 2.0f, 65.0f, 160.0f));
+			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(distX(rng), 65.0f, distZ(rng)));
 			gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
 			gameObjects[23]->GetCharacterController()->SetIsPushing(false);
 			gameObjects[23]->AddComponent(make_shared<PlayerStats>());

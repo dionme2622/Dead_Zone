@@ -175,7 +175,8 @@ void CharacterController::OnEnable()
     world->addCollisionObject(
         _ghost.get(),
         btBroadphaseProxy::CharacterFilter,
-        btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter
+        btBroadphaseProxy::StaticFilter | btBroadphaseProxy::DefaultFilter 
+        | btBroadphaseProxy::CharacterFilter
     );
 
     // Controller µî·Ï
