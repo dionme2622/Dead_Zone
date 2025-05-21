@@ -292,28 +292,28 @@ void BattleScene::LoadScene()
 		}
 	}
 
-	{
-		for (int i = 0; i < 1; ++i)
-		{
-			shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Zombie\\SA_Zombie_Clown.bin", ZOMBIE); // MeshData* meshData
+	//{
+	//	for (int i = 0; i < 1; ++i)
+	//	{
+	//		shared_ptr<MeshData> Zombie = GET_SINGLE(Resources)->LoadModelFromBinary(L"..\\Resources\\Model\\Zombie\\SA_Zombie_Cheerleader.bin", ZOMBIE); // MeshData* meshData
 
-			vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate(ZOMBIE);
+	//		vector<shared_ptr<GameObject>> gameObjects = Zombie->Instantiate(ZOMBIE);
 
-			for (auto& gameObject : gameObjects)
-			{
-				gameObject->SetCheckFrustum(true);
-				gameObject->SetStatic(false);
-				AddGameObject(gameObject);
-			}
+	//		for (auto& gameObject : gameObjects)
+	//		{
+	//			gameObject->SetCheckFrustum(true);
+	//			gameObject->SetStatic(false);
+	//			AddGameObject(gameObject);
+	//		}
 
-			gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(-77.f, 65.f, 220.f));
-			gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
-			gameObjects[23]->GetCharacterController()->SetIsPushing(false);
-			gameObjects[23]->AddComponent(make_shared<PlayerStats>());
-			gameObjects[23]->GetCharacterController()->OnEnable();
-			_zombies.push_back(gameObjects);
-		}
-	}
+	//		gameObjects[23]->GetTransform()->SetLocalPosition(Vec3(-77.f, 65.f, 220.f));
+	//		gameObjects[23]->AddComponent(make_shared<CharacterController>(gameObjects[23], 0.5, 3.0, 0.3f));
+	//		gameObjects[23]->GetCharacterController()->SetIsPushing(false);
+	//		gameObjects[23]->AddComponent(make_shared<PlayerStats>());
+	//		gameObjects[23]->GetCharacterController()->OnEnable();
+	//		_zombies.push_back(gameObjects);
+	//	}
+	//}
 
 	{
 		for (int i = 0; i < 1; ++i)
