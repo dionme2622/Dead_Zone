@@ -252,6 +252,9 @@
     <ClInclude Include="Frustum.h">
       <Filter>Object\Component</Filter>
     </ClInclude>
+    <ClInclude Include="TestAnimation.h">
+      <Filter>Object\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Dead_Zone.cpp">
@@ -264,9 +267,6 @@
       <Filter>Header</Filter>
     </ClCompile>
     <ClCompile Include="GameFrameWork.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="NetworkClient.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="EnginePch.cpp">
@@ -442,6 +442,9 @@
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
       <Filter>Object\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="TestAnimation.cpp">
+      <Filter>Object\Script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

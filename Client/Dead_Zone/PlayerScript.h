@@ -19,12 +19,6 @@ public:
 
 	void UpdateMouseInput();
 
-	
-public:
-	void SetCameraTransform(shared_ptr<Transform> cameraTransform){
-		_cameraTransform = cameraTransform;
-	}
-
 private:
 	HWND _hwnd;
 	bool _isLocal;
@@ -42,8 +36,6 @@ private:
 	float _yaw = 0.0f; // 좌우 각도
 	Vec3 rotation; // 카메라 회전
 
-	bool _isAiming = false;
-	bool _isShoot = false;
 	bool _mouseMove;
 	shared_ptr<Transform> _cameraTransform;
 	Vec3 _prevPosition{ 0,0,0 };

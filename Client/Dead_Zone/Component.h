@@ -39,8 +39,6 @@ class Bullet;
 class PlayerStats;
 class RigidBody;
 class CharacterController;
-class PlayerScript;
-class MonoBehaviour;
 
 class Component : public Object
 {
@@ -70,7 +68,6 @@ public:
 	shared_ptr<PlayerStats> GetPlayerStats();
 	shared_ptr<RigidBody> GetRigidBody();
 	shared_ptr<CharacterController> GetCharacterController();
-	shared_ptr<MonoBehaviour> GetMonoBehaviour();
 
 private:
 	friend class GameObject;

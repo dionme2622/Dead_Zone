@@ -123,7 +123,7 @@ void MeshRenderer::Render(shared_ptr<InstancingBuffer>& buffer)			// Instancing 
 
 void MeshRenderer::RenderShadow()
 {
-	GetTransform()->PushData();
+	GetTransform()->PushShadowData();
 	GET_SINGLE(Resources)->Get<Material>(L"Shadow")->PushGraphicsData();
 	_mesh->Render();
 }

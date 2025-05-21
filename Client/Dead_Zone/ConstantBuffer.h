@@ -29,6 +29,8 @@ public:
 	D3D12_GPU_VIRTUAL_ADDRESS GetGpuVirtualAddress(uint32 index);
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(uint32 index);
 
+	void ClearForResize();
+
 private:
 	void CreateBuffer();
 	void CreateView();

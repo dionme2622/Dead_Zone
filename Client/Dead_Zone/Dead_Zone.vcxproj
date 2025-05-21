@@ -213,6 +213,7 @@
     <ClInclude Include="SwapChain.h" />
     <ClInclude Include="TableDescriptorHeap.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="TestAnimation.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="ThrowingWeapon.h" />
     <ClInclude Include="Timer.h" />
@@ -269,12 +270,6 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="MonoBehaviour.cpp" />
     <ClCompile Include="MouseInput.cpp" />
-    <ClCompile Include="NetworkClient.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="OneHandedMeleeWeapon.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
@@ -307,6 +302,7 @@
     <ClCompile Include="StructuredBuffer.cpp" />
     <ClCompile Include="SwapChain.cpp" />
     <ClCompile Include="TableDescriptorHeap.cpp" />
+    <ClCompile Include="TestAnimation.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="ThrowingWeapon.cpp" />
     <ClCompile Include="Timer.cpp" />

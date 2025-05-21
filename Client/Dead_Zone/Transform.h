@@ -16,6 +16,8 @@ public:
 	bool _no = false;
 	void PushData();
 
+	void PushShadowData();
+
 public:
 	// Parent 기준
 	const Vec3& GetLocalPosition() { return _localPosition; }
@@ -38,9 +40,12 @@ public:
 	void SetLocalScale(const Vec3& scale) { _localScale = scale; }
 	void SetLocalMatrix(Matrix& matrix) { _matLocal = matrix;}
 	void LookAt(const Vec3& dir);
+	void LightLookAt(const Vec3& dir);
 
 	static bool CloseEnough(const float& a, const float& b, const float& epsilon = numeric_limits<float>::epsilon());
 	static Vec3 DecomposeRotationMatrix(const Matrix& rotation);
+	// 라이트 전용 함수
+	Vec3 DecomposeRotationMatrixForLight(const Matrix& rotation, const Vec3& lightDir);
 
 	shared_ptr<Transform> Clone();
 
