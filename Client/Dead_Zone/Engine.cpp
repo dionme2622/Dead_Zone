@@ -50,6 +50,10 @@ void Engine::Update()
 	GET_SINGLE(SceneManager)->Update();
 	GET_SINGLE(InstancingManager)->ClearBuffer();
 
+	if (INPUT->GetButtonDown(KEY_TYPE::F9)) {
+		ToggleFullscreen();
+	}
+
 	Render();
 
 	ShowFps();
@@ -112,7 +116,7 @@ void Engine::CreateRenderTargetGroups()
 		DXGI_FORMAT_D32_FLOAT, _window.width, _window.height,
 		CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
 		D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
-
+	
 	// SwapChain Group
 	{
 		vector<RenderTarget> rtVec(SWAP_CHAIN_BUFFER_COUNT);
@@ -193,6 +197,20 @@ void Engine::CreateRenderTargetGroups()
 		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::LIGHTING)]->Create(RENDER_TARGET_GROUP_TYPE::LIGHTING, rtVec, dsTexture);
 	}
 
+	// Post Processing Group
+	{
+		vector<RenderTarget> rtVec(RENDER_TARGET_POST_PROCCESING_GROUP_MEMBER_COUNT);
+
+		rtVec[0].target = GET_SINGLE(Resources)->CreateTexture(L"PostProcessTarget",
+			DXGI_FORMAT_R8G8B8A8_UNORM, _window.width, _window.height,
+			CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+			D3D12_HEAP_FLAG_NONE, D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET);
+
+		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::POST_PROCESSING)] = make_shared<RenderTargetGroup>();
+		_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::POST_PROCESSING)]->Create(RENDER_TARGET_GROUP_TYPE::POST_PROCESSING, rtVec, dsTexture);
+	}
+
+
 	//// Final Render Group
 	//{
 	//	vector<RenderTarget> rtVec(RENDER_TARGET_BLUR_GROUP_MEMBER_COUNT);
@@ -210,4 +228,57 @@ void Engine::CreateRenderTargetGroups()
 	//	_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::BLUR)] = make_shared<RenderTargetGroup>();
 	//	_rtGroups[static_cast<uint8>(RENDER_TARGET_GROUP_TYPE::BLUR)]->Create(RENDER_TARGET_GROUP_TYPE::BLUR, rtVec, blurDepthTexture);
 	//}
+}
+
+void Engine::ToggleFullscreen()
+{
+    _graphicsCmdQueue->FlushResourceCommandQueue();   
+	_computeCmdQueue->FlushComputeCommandQueue();
+
+	_graphicsCmdQueue->WaitSync();
+	_computeCmdQueue->WaitSync();
+
+	for (auto& cb : _constantBuffers)
+		cb->ClearForResize();
+
+    ReleaseRenderTargets();      
+
+    _swapChain->ChangeSwapChainState(_window,
+                                     _device->GetDXGI(),
+                                     _graphicsCmdQueue->GetCmdQueue());
+
+    CreateRenderTargetGroups();
+}
+
+void Engine::ReleaseRenderTargets()
+{
+	// 2) 각 RenderTargetGroup 순회
+	for (auto& grp : _rtGroups)
+	{
+		if (!grp) continue;
+
+		/* --- 2-A) 각 RenderTarget(ID3D12Resource) 참조 해제 --- */
+		// rtVec 개수는 grp 내부에 저장돼 있으므로 size_t로 반복
+		const uint32 rtCount = static_cast<uint32>(grp->GetRTCount());
+		for (uint32 i = 0; i < rtCount; ++i)
+		{
+			auto tex = grp->GetRTTexture(i);   // shared_ptr<Texture>
+			if (tex)
+				tex->GetTex2D().Reset();    // ComPtr<ID3D12Resource>::Reset()
+		}
+		
+		/* --- 2-B) DepthStencil 리소스 해제 --- */
+		auto dsTex = grp->GetDSTexture();
+		if (dsTex)
+			dsTex->GetTex2D().Reset();
+
+		/* --- 2-C) RTV/DSV Heap 자체는 COM 객체라 shared_ptr 끊기면 ref-count ↓ */
+		// grp 안의 ComPtr<ID3D12DescriptorHeap> 는 grp 소멸 시 자동 Release
+
+		/* --- 2-D) shared_ptr<RenderTargetGroup> 끊기 --- */
+		grp.reset();
+	}
+
+	/* 3) std::array 이므로 clear 대신 fill(nullptr) */
+	_rtGroups.fill(nullptr);
 }

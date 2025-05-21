@@ -125,3 +125,19 @@ D3D12_CPU_DESCRIPTOR_HANDLE ConstantBuffer::GetCpuHandle(uint32 index)
 {
 	return CD3DX12_CPU_DESCRIPTOR_HANDLE(_cpuHandleBegin, index * _handleIncrementSize);
 }
+
+
+void ConstantBuffer::ClearForResize()
+{
+	// 매핑 해제
+	if (_mappedBuffer && _cbvBuffer)
+	{
+		_cbvBuffer->Unmap(0, nullptr);
+		_mappedBuffer = nullptr;
+	}
+
+	// 자원 및 디스크립터 힙 해제
+	_cbvBuffer.Reset();
+	_cbvHeap.Reset();
+	_currentIndex = 0;
+}

@@ -9,6 +9,7 @@ enum class SHADER_TYPE : uint8
 	PARTICLE,
 	COMPUTE,
 	SHADOW,
+	POSTPROCCESS,
 };
 
 enum class RASTERIZER_TYPE : uint8

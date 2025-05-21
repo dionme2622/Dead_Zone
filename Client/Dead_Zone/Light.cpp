@@ -25,27 +25,22 @@ void Light::FinalUpdate()
 {
 	_lightInfo.position = GetTransform()->GetWorldPosition();
 
-	if(static_cast<LIGHT_TYPE>(_lightInfo.lightType) == LIGHT_TYPE::DIRECTIONAL_LIGHT)
-	{
-		//GetTransform()->SetLocalPosition(_sunObject->GetTransform()->GetLocalPosition());
+	Vec3 lightDir = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
 
-		_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetWorldPosition());
-
-		// 빛의 방향에 따라 그림자 카메라의 회전 설정
-		Vec3 lightDirection = Vec3(_lightInfo.direction.x, _lightInfo.direction.y, _lightInfo.direction.z);
-		lightDirection.Normalize();
-
-		// 빛의 방향을 기준으로 회전 값 계산
-		float pitch = atan2f(lightDirection.y, sqrtf(lightDirection.x * lightDirection.x + lightDirection.z * lightDirection.z));
-		float yaw = atan2f(lightDirection.x, lightDirection.z);
-
-		// 회전 값 적용
-		_shadowCamera->GetTransform()->SetLocalRotation(-Vec3(pitch * (180.0f / XM_PI), yaw * (180.0f / XM_PI), 0));
-
-		_shadowCamera->GetTransform()->SetLocalScale(GetTransform()->GetLocalScale());
-
-		_shadowCamera->FinalUpdate();
+	/*if (INPUT->GetButton(KEY_TYPE::UP)) {
+		a += 5;
 	}
+	if (INPUT->GetButton(KEY_TYPE::DOWN)) {
+		a -= 5;
+	}*/
+
+	_shadowCamera->GetTransform()->SetLocalPosition(GetTransform()->GetLocalPosition());
+
+	_shadowCamera->GetTransform()->SetLocalRotation(Vec3(35.0, 15.01, 0.01));
+
+	Vec3 rot = _shadowCamera->GetTransform()->GetLocalRotation();
+
+	_shadowCamera->FinalUpdate();
 }
 
 void Light::Render()
@@ -86,6 +81,7 @@ void Light::SetLightDirection(Vec3 direction)
 
 	_lightInfo.direction = direction;
 	GetTransform()->LookAt(direction);
+
 }
 
 void Light::SetLightType(LIGHT_TYPE type)
@@ -99,10 +95,10 @@ void Light::SetLightType(LIGHT_TYPE type)
 		_lightMaterial = GET_SINGLE(Resources)->Get<Material>(L"DirLight");
 
 		_shadowCamera->GetCamera()->SetScale(1.f);
-		_shadowCamera->GetCamera()->SetNear(0.01);
+		_shadowCamera->GetCamera()->SetNear(0.1);
 		_shadowCamera->GetCamera()->SetFar(1000);
-		_shadowCamera->GetCamera()->SetWidth(400);
-		_shadowCamera->GetCamera()->SetHeight(400);
+		_shadowCamera->GetCamera()->SetWidth(700);
+		_shadowCamera->GetCamera()->SetHeight(700);
 
 		break;
 	case LIGHT_TYPE::POINT_LIGHT:
